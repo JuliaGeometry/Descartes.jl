@@ -10,6 +10,6 @@ include("frep.jl")
 export Cuboid, Cylinder, Sphere
 
 # frep
-export frep
+export FRep
 
 end # module

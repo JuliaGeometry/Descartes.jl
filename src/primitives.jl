@@ -33,3 +33,12 @@ immutable CSGIntersect{N, T} <: AbstractCSGTree{N, T}
     left::AbstractPrimitive{N, T}
     right::AbstractPrimitive{N, T}
 end
+
+abstract AbstractFRep{N,T} <: AbstractPrimitive{N, T}
+
+immutable FRep{N, T} <: AbstractFRep{N,T}
+    primitive::AbstractPrimitive{N,T}
+    func::Function
+end
+
+call{T<:FRep}(f::T, x...) = f.func(x...)

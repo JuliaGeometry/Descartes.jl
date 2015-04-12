@@ -1,26 +1,34 @@
 # http://en.wikipedia.org/wiki/Function_representation
 
 
-function frep(s::Sphere)
+function FRep(s::Sphere)
+    FRep(s,
     function sphere_frep(x,y,z)
         sqrt((x-s.location[1])^2 + (y-s.location[2])^2 + (z-s.location[3])^2) - s.radius
     end
+    )
 end
 
-function frep(u::CSGUnion)
+function FRep(u::CSGUnion)
+    FRep(u,
     function csgunion_frep(x,y,z)
-        min(frep(u.left)(x,y,z),frep(u.right)(x,y,z))
+        min(FRep(u.left)(x,y,z),FRep(u.right)(x,y,z))
     end
+    )
 end
 
-function frep(u::CSGDiff)
+function FRep(u::CSGDiff)
+    FRep(u,
     function csgdiff_frep(x,y,z)
-        max(frep(u.left)(x,y,z), -frep(u.right)(x,y,z))
+        max(FRep(u.left)(x,y,z), -FRep(u.right)(x,y,z))
     end
+    )
 end
 
-function frep(u::CSGIntersect)
+function FRep(u::CSGIntersect)
+    Frep(u,
     function csgintersect_frep(x,y,z)
-        max(frep(u.left)(x,y,z), frep(u.right)(x,y,z))
+        max(FRep(u.left)(x,y,z), FRep(u.right)(x,y,z))
     end
+    )
 end
