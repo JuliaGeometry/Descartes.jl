@@ -2,18 +2,18 @@
 
 [![Build Status](https://travis-ci.org/sjkelly/Descartes.jl.svg?branch=master)](https://travis-ci.org/sjkelly/Descartes.jl)
 
-Descrates is a research project into the representation of solid geometry. It
+Descartes is a research project into the representation of solid geometry. It
 is designed to leverage Julia's multiple dispatch and JIT compilation to
-create a platform which unifies otherwise desparate geometric representations.
+create a platform which unifies otherwise disparate geometric representations.
 The long term goal is to deliver a geometry kernel suited for the growing
 capabilities of digital manufacturing.
 
 Initially the focus will be on the following representations:
 
-- BRep
-- Implicit
-- CSG
-- Analytic CSG
+- [BRep](http://en.wikipedia.org/wiki/Boundary_representation)
+- [Functional](http://en.wikipedia.org/wiki/Function_representation)
+- [CSG](http://en.wikipedia.org/wiki/Constructive_solid_geometry)
+- [Analytic CSG](http://en.wikipedia.org/wiki/Rvachev_function)
 
 ## License
 This package is available under the MIT "Expat" License. See [LICENSE.md](./LICENSE.md).
