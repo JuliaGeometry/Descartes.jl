@@ -1,20 +1,23 @@
 # http://en.wikipedia.org/wiki/Constructive_solid_geometry
 
-function Base.union{T<:Real}(primitives::AbstractPrimitive{3,T}...)
-    if length(primitives) == 1
-        return primitives[1]
-    elseif length(primitives) == 2
-        return CSGUnion(primitives[1], primitives[2])
-    else
-        return CSGUnion(primitives[1], union(primitives[2:end]...))
-    end
+abstract AbstractCSGTree{N,T} <: AbstractPrimitive{N, T}
+
+immutable CSGUnion{N, T, L, R} <: AbstractCSGTree{N, T}
+    left::L
+    right::R
 end
 
-function Base.diff{T<:Real}(primitives::AbstractPrimitive{3,T}...)
-    @show primitives
+function CSGUnion{N1, N2, T1, T2}(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2})
+    N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
+    return CSGUnion{N1,T1, typeof(l), typeof(r)}(l,r)
 end
 
-function Base.intersect{T<:Real}(primitives::AbstractPrimitive{3,T}...)
-    @show primitives
+immutable CSGDiff{N, T, L, R} <: AbstractCSGTree{N, T}
+    left::L
+    right::R
 end
 
+immutable CSGIntersect{N, T, L, R} <: AbstractCSGTree{N, T}
+    left::L
+    right::R
+end

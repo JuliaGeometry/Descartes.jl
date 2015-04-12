@@ -17,23 +17,6 @@ type Sphere{N, T} <: AbstractPrimitive{N, T}
     location::NTuple{N, T}
 end
 
-abstract AbstractCSGTree{N,T} <: AbstractPrimitive{N, T}
-
-immutable CSGUnion{N, T} <: AbstractCSGTree{N, T}
-    left::AbstractPrimitive{N, T}
-    right::AbstractPrimitive{N, T}
-end
-
-immutable CSGDiff{N, T} <: AbstractCSGTree{N, T}
-    left::AbstractPrimitive{N, T}
-    right::AbstractPrimitive{N, T}
-end
-
-immutable CSGIntersect{N, T} <: AbstractCSGTree{N, T}
-    left::AbstractPrimitive{N, T}
-    right::AbstractPrimitive{N, T}
-end
-
 abstract AbstractFRep{N,T} <: AbstractPrimitive{N, T}
 
 immutable FRep{N, T} <: AbstractFRep{N,T}
