@@ -1,5 +1,15 @@
 module Descartes
 
-# package code goes here
+using Meshes
+
+include("primitives.jl")
+include("csg.jl")
+include("frep.jl")
+
+# primitives
+export Cuboid, Cylinder, Sphere
+
+# frep
+export frep
 
 end # module
