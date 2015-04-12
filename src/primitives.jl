@@ -21,12 +21,3 @@ type Sphere{N, T} <: AbstractPrimitive{N, T}
     radius::T
     location::NTuple{N, T}
 end
-
-abstract AbstractFRep{N,T} <: AbstractPrimitive{N, T}
-
-immutable FRep{N, T} <: AbstractFRep{N,T}
-    primitive::AbstractPrimitive{N,T}
-    func::Function
-end
-
-call{T<:FRep}(f::T, x...) = f.func(x...)
