@@ -1,11 +1,13 @@
 module Descartes
 
 #using Meshes
+using HyperRectangles
 
 include("primitives.jl")
 include("transforms.jl")
 include("csg.jl")
 include("frep.jl")
+include("hyperrectangles.jl")
 
 # primitives
 export Cuboid, Cylinder, Sphere
