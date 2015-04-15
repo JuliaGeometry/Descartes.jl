@@ -1,6 +1,6 @@
 module Descartes
 
-#using Meshes
+using Meshes
 using HyperRectangles
 
 include("primitives.jl")
@@ -8,6 +8,7 @@ include("transforms.jl")
 include("csg.jl")
 include("frep.jl")
 include("hyperrectangles.jl")
+include("meshes.jl")
 
 # primitives
 export Cuboid, Cylinder, Sphere
