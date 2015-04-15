@@ -1,19 +1,17 @@
 abstract AbstractTransform{N, T}
 
 type Translation{N,T} <: AbstractTransform{N,T}
-    location::NTuple{N, T}
+    location::Vector{T}
 end
 
 function (*){N,T}(translation::Translation{N,T}, obj::AbstractPrimitive{N,T})
     translate(obj, translation.location)
 end
 
-function translate{T}(c::Cuboid{T}, loc::NTuple{3,T})
-    new_loc = (c.location[1]+loc[1], c.location[2]+loc[2], c.location[3]+loc[3])
-    Cuboid{3,T}(c.dimensions, new_loc)
+function translate{T}(c::Cuboid{T}, loc::Vector)
+    Cuboid{T}(c.dimensions, c.location+loc)
 end
 
-function translate{T}(c::Sphere{T}, loc::NTuple{3,T})
-    new_loc = (c.location[1]+loc[1], c.location[2]+loc[2], c.location[3]+loc[3])
-    Sphere{3,T}(c.radius, new_loc)
+function translate{T}(s::Sphere{T}, loc::Vector)
+    Sphere{T}(s.radius, s.location+loc)
 end
