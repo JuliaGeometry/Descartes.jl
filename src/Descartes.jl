@@ -2,6 +2,7 @@ module Descartes
 
 using Meshes
 using HyperRectangles
+using HyperRectangles.Operations
 
 include("primitives.jl")
 include("transforms.jl")

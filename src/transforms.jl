@@ -1,17 +1,19 @@
 abstract AbstractTransform{N, T}
 
-type Translation{N,T} <: AbstractTransform{N,T}
-    location::Vector{T}
+type Transform{N,T} <: AbstractTransform{N,T}
+    transform::Matrix{T}
 end
 
-function (*){N,T}(translation::Translation{N,T}, obj::AbstractPrimitive{N,T})
-    translate(obj, translation.location)
+function translate(vect::Vector)
+    n = length(vect)
+    N = n + 1
+    transform = eye(N)
+    transform[1:n, N] = vect
+    Transform{n, Float64}(transform)
 end
 
-function translate{T}(c::Cuboid{T}, loc::Vector)
-    Cuboid{T}(c.dimensions, c.location+loc)
-end
-
-function translate{T}(s::Sphere{T}, loc::Vector)
-    Sphere{T}(s.radius, s.location+loc)
+function (*){N,T}(transform::Transform{N,Float64}, obj::AbstractPrimitive{N,T})
+    obj.transform = obj.transform*transform.transform
+    obj.inv_transform = inv(obj.transform)
+    obj
 end

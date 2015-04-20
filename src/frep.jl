@@ -2,7 +2,20 @@
 
 
 @inline function FRep(s::Sphere, x, y, z)
-    sqrt((x-s.location[1])^2 + (y-s.location[2])^2 + (z-s.location[3])^2) - s.radius
+    x,y,z,h = s.inv_transform*[x,y,z,1]
+    sqrt(x*x + y*y + z*z) - s.radius
+end
+
+@inline function FRep(c::Cylinder, x, y, z)
+    x,y,z,h = c.inv_transform*[x,y,z,1]
+    max(max(-z,z-c.height), sqrt(x*x + y*y) - s.radius)
+end
+
+@inline function FRep(c::Cuboid, x, y, z)
+    x,y,z,h = c.inv_transform*[x,y,z,1]
+    max(max(-x, x-c.dimensions[1]),
+        max(-y, y-c.dimensions[2]),
+        max(-z, z-c.dimensions[3]))
 end
 
 @inline function FRep(u::CSGUnion, x, y, z)
