@@ -45,7 +45,12 @@ end
 type PrismaticCylinder{T} <: AbstractPrimitive{3, T}
     sides::Int
     height::T
-    apothem::T
+    radius::T
     transform::Matrix{Float64}
     inv_transform::Matrix{Float64}
 end
+
+function PrismaticCylinder{T}(sides, height::T, radius::T)
+    PrismaticCylinder(sides, height, radius, eye(4), eye(4))
+end
+

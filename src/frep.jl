@@ -18,6 +18,16 @@ end
         max(-z, z-c.dimensions[3]))
 end
 
+@inline function FRep(p::PrismaticCylinder, x, y, z)
+    # http://math.stackexchange.com/questions/41940/is-there-an-equation-to-describe-regular-polygons
+    x,y,z,h = p.inv_transform*[x,y,z,1]
+    sn = sin(pi/p.sides)
+    cn = cos(pi/p.sides)
+    r = p.radius
+    b = abs(abs(r*sn-abs(y))-(r*sn-abs(y)))+abs(x-r*cn)
+    max(max(-z, z-p.height), b)
+end
+
 @inline function FRep(u::CSGUnion, x, y, z)
     min(FRep(u.left, x,y,z),FRep(u.right, x,y,z))
 end

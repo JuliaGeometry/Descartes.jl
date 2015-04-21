@@ -12,7 +12,7 @@ include("hyperrectangles.jl")
 include("meshes.jl")
 
 # primitives
-export Cuboid, Cylinder, Sphere
+export Cuboid, Cylinder, Sphere, PrismaticCylinder
 
 # transforms
 export Translation, translate
