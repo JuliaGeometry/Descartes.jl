@@ -29,3 +29,14 @@ end
 @inline function FRep(u::CSGIntersect, x, y, z)
     max(FRep(u.left, x,y,z), FRep(u.right, x,y,z))
 end
+
+@inline function FRep(u::RadiusedCSGUnion, x, y, z)
+    a = FRep(u.left, x,y,z)
+    b = FRep(u.right, x,y,z)
+    r = u.radius
+    if abs(a-b) >= r
+        return min(a,b)
+    else
+        return b+r*sin(pi/4+asin((a-b)/(r*sqrt(2))))-r
+    end
+end

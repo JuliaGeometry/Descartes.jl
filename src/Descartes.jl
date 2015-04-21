@@ -18,7 +18,7 @@ export Cuboid, Cylinder, Sphere
 export Translation, translate
 
 # CSG
-export CSGUnion, CSGDiff, CSGIntersect
+export CSGUnion, RadiusedCSGUnion, CSGDiff, CSGIntersect
 
 # frep
 export FRep

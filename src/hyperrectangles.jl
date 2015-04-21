@@ -28,6 +28,10 @@ function HyperRectangle{N, T, L, R}(csg::CSGUnion{N, T, L, R})
     union(HyperRectangle(csg.left), HyperRectangle(csg.right))
 end
 
+function HyperRectangle{N, T, L, R}(csg::RadiusedCSGUnion{N, T, L, R})
+    union(HyperRectangle(csg.left), HyperRectangle(csg.right))
+end
+
 function HyperRectangle{N, T, L, R}(csg::CSGIntersect{N, T, L, R})
     intersect(HyperRectangle(csg.left), HyperRectangle(csg.right))
 end
