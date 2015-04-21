@@ -52,6 +52,7 @@ function example001()
                      rotcy([0, 1, 0], cy_r, cy_h))))
 end
 
-example001()
+m = Mesh(example001())
+exportAsciiPly(m, "example001.ply")
 
 
