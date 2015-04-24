@@ -19,6 +19,11 @@ type Cylinder{T} <: AbstractPrimitive{3, T}
     inv_transform::Matrix{Float64}
 end
 
+function Cylinder{T}(r::T, h)
+    Cylinder(r, h, eye(4), eye(4))
+end
+
+
 type Sphere{T} <: AbstractPrimitive{3, T}
     radius::T
     transform::Matrix{Float64}

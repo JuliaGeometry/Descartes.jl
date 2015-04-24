@@ -8,7 +8,7 @@ end
 
 @inline function FRep(c::Cylinder, x, y, z)
     x,y,z,h = c.inv_transform*[x,y,z,1]
-    max(max(-z,z-c.height), sqrt(x*x + y*y) - s.radius)
+    max(max(-z,z-c.height), sqrt(x*x + y*y) - c.radius)
 end
 
 @inline function FRep(c::Cuboid, x, y, z)
@@ -24,7 +24,7 @@ end
     sn = sin(pi/p.sides)
     cn = cos(pi/p.sides)
     r = p.radius
-    b = abs(abs(r*sn-abs(y))-(r*sn-abs(y)))+abs(x-r*cn)
+    b = max(max(r*sn, max(-y, y-r)),max(r*sn,max(-y, y-r)),(x-r*cn))
     max(max(-z, z-p.height), b)
 end
 
