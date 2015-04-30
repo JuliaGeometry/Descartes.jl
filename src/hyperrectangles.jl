@@ -1,12 +1,11 @@
 import HyperRectangles: HyperRectangle
 
 function HyperRectangle{T}(cube::Cuboid{T})
-    orig = HyperRectangle{T,3}(fill(zero(T), 3), cube.dimensions)
-    pts = points(orig)
+    orig = HyperRectangle{T,3}(fill(zero(T), 3), cube.dimensions[1:3])
+    pts = copy(points(orig))
     hrect_new = HyperRectangle{T,3}()
     for pt in pts
-        push!(pt, one(T))
-        pt = cube.transform*pt
+        _pt = transform(cube.transform, pt...)
         update!(hrect_new, pt)
     end
     hrect_new

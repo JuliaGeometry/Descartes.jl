@@ -1,26 +1,37 @@
 # http://en.wikipedia.org/wiki/Function_representation
 
-
-@inline function FRep(s::Sphere, x, y, z)
-    x,y,z,h = s.inv_transform*[x,y,z,1]
-    sqrt(x*x + y*y + z*z) - s.radius
+@inline function FRep(p::Sphere, _x, _y, _z)
+    it = p.inv_transform
+    @inbounds x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
+    @inbounds y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
+    @inbounds z = _x*it[3,1]+_y*it[3,2]+_z*it[3,3]+it[3,4]
+    sqrt(x*x + y*y + z*z) - p.radius
 end
 
-@inline function FRep(c::Cylinder, x, y, z)
-    x,y,z,h = c.inv_transform*[x,y,z,1]
-    max(max(-z,z-c.height), sqrt(x*x + y*y) - c.radius)
+@inline function FRep(p::Cylinder, _x, _y, _z)
+    it = p.inv_transform
+    @inbounds x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
+    @inbounds y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
+    @inbounds z = _x*it[3,1]+_y*it[3,2]+_z*it[3,3]+it[3,4]
+    max(max(-z,z-p.height), sqrt(x*x + y*y) - p.radius)
 end
 
-@inline function FRep(c::Cuboid, x, y, z)
-    x,y,z,h = c.inv_transform*[x,y,z,1]
-    max(max(-x, x-c.dimensions[1]),
-        max(-y, y-c.dimensions[2]),
-        max(-z, z-c.dimensions[3]))
+@inline function FRep(p::Cuboid, _x, _y, _z)
+    it = p.inv_transform
+    @inbounds x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
+    @inbounds y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
+    @inbounds z = _x*it[3,1]+_y*it[3,2]+_z*it[3,3]+it[3,4]
+    max(max(-x, x-p.dimensions[1]),
+        max(-y, y-p.dimensions[2]),
+        max(-z, z-p.dimensions[3]))
 end
 
-@inline function FRep(p::PrismaticCylinder, x, y, z)
+@inline function FRep(p::PrismaticCylinder, _x, _y, _z)
     # http://math.stackexchange.com/questions/41940/is-there-an-equation-to-describe-regular-polygons
-    x,y,z,h = p.inv_transform*[x,y,z,1]
+    it = p.inv_transform
+    @inbounds x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
+    @inbounds y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
+    @inbounds z = _x*it[3,1]+_y*it[3,2]+_z*it[3,3]+it[3,4]
     sn = sin(pi/p.sides)
     cn = cos(pi/p.sides)
     r = p.radius
