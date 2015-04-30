@@ -1,6 +1,6 @@
 # http://en.wikipedia.org/wiki/Function_representation
 
-@inline function FRep(p::Sphere, _x, _y, _z)
+function FRep(p::Sphere, _x, _y, _z)
     it = p.inv_transform
     @inbounds x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
     @inbounds y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
@@ -8,7 +8,7 @@
     sqrt(x*x + y*y + z*z) - p.radius
 end
 
-@inline function FRep(p::Cylinder, _x, _y, _z)
+function FRep(p::Cylinder, _x, _y, _z)
     it = p.inv_transform
     @inbounds x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
     @inbounds y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
@@ -16,7 +16,7 @@ end
     max(max(-z,z-p.height), sqrt(x*x + y*y) - p.radius)
 end
 
-@inline function FRep(p::Cuboid, _x, _y, _z)
+function FRep(p::Cuboid, _x, _y, _z)
     it = p.inv_transform
     @inbounds x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
     @inbounds y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
@@ -26,7 +26,7 @@ end
         max(-z, z-p.dimensions[3]))
 end
 
-@inline function FRep(p::PrismaticCylinder, _x, _y, _z)
+function FRep(p::PrismaticCylinder, _x, _y, _z)
     # http://math.stackexchange.com/questions/41940/is-there-an-equation-to-describe-regular-polygons
     it = p.inv_transform
     @inbounds x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
@@ -51,7 +51,7 @@ end
     max(FRep(u.left, x,y,z), FRep(u.right, x,y,z))
 end
 
-@inline function FRep(u::RadiusedCSGUnion, x, y, z)
+function FRep(u::RadiusedCSGUnion, x, y, z)
     a = FRep(u.left, x,y,z)
     b = FRep(u.right, x,y,z)
     r = u.radius
