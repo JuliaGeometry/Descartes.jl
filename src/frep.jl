@@ -51,6 +51,11 @@ end
     max(FRep(u.left, x,y,z), FRep(u.right, x,y,z))
 end
 
+@inline function FRep(s::Shell, x, y, z)
+    r = FRep(s.primitive, x, y, z)
+    max(r, -r-s.distance)
+end
+
 function FRep(u::RadiusedCSGUnion, x, y, z)
     a = FRep(u.left, x,y,z)
     b = FRep(u.right, x,y,z)

@@ -6,6 +6,7 @@ using HyperRectangles.Operations
 
 include("primitives.jl")
 include("transforms.jl")
+include("operations.jl")
 include("csg.jl")
 include("frep.jl")
 include("hyperrectangles.jl")
@@ -16,6 +17,9 @@ export Cuboid, Cylinder, Sphere, PrismaticCylinder
 
 # transforms
 export Translation, translate
+
+# operations
+export Shell
 
 # CSG
 export CSGUnion, RadiusedCSGUnion, CSGDiff, CSGIntersect

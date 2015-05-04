@@ -62,3 +62,7 @@ end
 function HyperRectangle{N, T, L, R}(csg::CSGDiff{N, T, L, R})
     diff(HyperRectangle(csg.left), HyperRectangle(csg.right))
 end
+
+function HyperRectangle(s::Shell)
+    HyperRectangle(s.primitive)
+end

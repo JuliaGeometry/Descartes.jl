@@ -29,7 +29,18 @@ immutable CSGDiff{N, T, L, R} <: AbstractCSGTree{N, T}
     right::R
 end
 
+function CSGDiff{N1, N2, T1, T2}(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2})
+    N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
+    return CSGDiff{N1,T1, typeof(l), typeof(r)}(l,r)
+end
+
 immutable CSGIntersect{N, T, L, R} <: AbstractCSGTree{N, T}
     left::L
     right::R
 end
+
+function CSGIntersect{N1, N2, T1, T2}(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2})
+    N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
+    return CSGIntersect{N1,T1, typeof(l), typeof(r)}(l,r)
+end
+
