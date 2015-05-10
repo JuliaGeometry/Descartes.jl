@@ -1,23 +1,25 @@
 import Meshes: Mesh
 
-function Mesh{T}(primitive::AbstractPrimitive{3, T}, points=(100,100,100))
+function Mesh{T}(primitive::AbstractPrimitive{3, T}, resolution=0.1)
     bounds = HyperRectangle(primitive)
-    x_min, y_min, z_min = bounds.min-1
-    x_max, y_max, z_max = bounds.max+1
+    x_min, y_min, z_min = bounds.min
+    x_max, y_max, z_max = bounds.max
 
-    x_rng, y_rng, z_rng = bounds.max - bounds.min+2
+    x_rng, y_rng, z_rng = bounds.max - bounds.min
 
-    vol = Array{Float64}(points)
+    nx = ceil(Int, x_rng/resolution)
+    ny = ceil(Int, y_rng/resolution)
+    nz = ceil(Int, z_rng/resolution)
 
-    nx = points[1]
-    ny = points[2]
-    nz = points[3]
+    vol = Array{Float64}(nx+1, ny+1, nz+1)
 
-    @fastmath for i = 1:nx, j = 1:ny, k = 1:nz
-        x = x_min + x_rng*(i/nx)
-        y = y_min + y_rng*(j/ny)
-        z = z_min + z_rng*(k/nz)
-        @inbounds vol[i,j,k] = FRep(primitive,x,y,z)
+    @show size(vol)
+
+    @fastmath for i = 0:nx, j = 0:ny, k = 0:nz
+        x = x_min + resolution*i
+        y = y_min + resolution*j
+        z = z_min + resolution*k
+        @inbounds vol[i+1,j+1,k+1] = FRep(primitive,x,y,z)
     end
     Meshes.isosurface(vol, 0.0)
 end
