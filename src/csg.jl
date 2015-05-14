@@ -12,6 +12,13 @@ function CSGUnion{N1, N2, T1, T2}(l::AbstractPrimitive{N1,T1}, r::AbstractPrimit
     return CSGUnion{N1,T1, typeof(l), typeof(r)}(l,r)
 end
 
+function CSGUnion{N1, N2, T1, T2}(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2}...)
+    N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
+    return CSGUnion(l,CSGUnion(r[1], r[2:end]...))
+end
+
+CSGUnion(x::AbstractPrimitive) = x
+
 immutable RadiusedCSGUnion{N, T, L, R} <: AbstractCSGTree{N, T}
     radius::T
     left::L
