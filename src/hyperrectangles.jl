@@ -47,6 +47,18 @@ function HyperRectangle{T}(p::Cylinder{T})
     hrect_new
 end
 
+function HyperRectangle{T}(p::Pipe{T})
+    hrect_new = HyperRectangle{T,3}()
+    for pt in p.points
+        push!(pt, one(T))
+        update!(hrect_new, p.transform*pt)
+        pop!(pt) # this is the worst, but im too tired to give a shit
+    end
+    hrect_new.min -= p.radius
+    hrect_new.max += p.radius
+    hrect_new
+end
+
 function HyperRectangle{N, T, L, R}(csg::CSGUnion{N, T, L, R})
     union(HyperRectangle(csg.left), HyperRectangle(csg.right))
 end

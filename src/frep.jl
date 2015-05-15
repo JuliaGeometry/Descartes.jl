@@ -66,3 +66,26 @@ function FRep(u::RadiusedCSGUnion, x, y, z)
         return b+r*sin(pi/4+asin((a-b)/(r*sqrt(2))))-r
     end
 end
+
+function FRep{T}(p::Pipe{T}, x, y, z)
+    num_pts = length(p.points)
+    pt = [x,y,z]
+
+    val = typemax(T)
+
+    for i = 1:num_pts-1
+        e1 = p.points[i]
+        e2 = p.points[i+1]
+        v = e2 - e1
+        w = pt - e1
+        if dot(w,v) <= 0
+            nv = norm(pt - e1)
+        elseif dot(v,v) <= dot(w,v)
+            nv = norm(pt - e2)
+        else
+            nv = norm(cross(pt-e1,pt-e2))/norm(e2-e1)
+        end
+        val = min(nv, val)
+    end
+    val - p.radius
+end

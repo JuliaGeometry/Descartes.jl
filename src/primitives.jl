@@ -59,3 +59,14 @@ function PrismaticCylinder{T}(sides, height::T, radius::T)
     PrismaticCylinder(sides, height, radius, eye(4), eye(4))
 end
 
+type Pipe{T} <: AbstractPrimitive{3, T}
+    radius::T
+    points::Vector{Vector{T}}
+    transform::Matrix{Float64}
+    inv_transform::Matrix{Float64}
+end
+
+function Pipe(r, pts)
+    Pipe(r, pts, eye(4), eye(4))
+end
+
