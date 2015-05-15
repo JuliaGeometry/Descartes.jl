@@ -16,7 +16,7 @@ include("meshes.jl")
 export Cuboid, Cylinder, Sphere, PrismaticCylinder
 
 # transforms
-export Translation, translate
+export Translation, translate, rotate
 
 # operations
 export Shell
