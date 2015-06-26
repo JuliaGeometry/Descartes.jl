@@ -21,5 +21,5 @@ function Mesh{T}(primitive::AbstractPrimitive{3, T}, resolution=0.1)
         z = z_min + resolution*k
         @inbounds vol[i+1,j+1,k+1] = FRep(primitive,x,y,z)
     end
-    Meshes.isosurface(vol, 0.0)
+    Meshes.Mesh(vol, 0.0)
 end
