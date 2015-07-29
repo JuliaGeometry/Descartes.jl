@@ -2,11 +2,10 @@ import HyperRectangles: HyperRectangle
 
 function HyperRectangle{T}(cube::Cuboid{T})
     orig = HyperRectangle{T,3}(fill(zero(T), 3), cube.dimensions[1:3])
-    pts = copy(points(orig))
+    pts = points(orig)
     hrect_new = HyperRectangle{T,3}()
     for pt in pts
-        _pt = transform(cube.transform, pt...)
-        update!(hrect_new, pt)
+        update!(hrect_new, transform(cube.transform, pt))
     end
     hrect_new
 end
@@ -16,9 +15,7 @@ function HyperRectangle{T}(sphere::Sphere{T})
     pts = points(orig)
     hrect_new = HyperRectangle{T,3}()
     for pt in pts
-        push!(pt, one(T))
-        pt = sphere.transform*pt
-        update!(hrect_new, pt)
+        update!(hrect_new, transform(sphere.transform, pt))
     end
     hrect_new
 end
@@ -28,9 +25,7 @@ function HyperRectangle{T}(p::PrismaticCylinder{T})
     pts = points(orig)
     hrect_new = HyperRectangle{T,3}()
     for pt in pts
-        push!(pt, one(T))
-        pt = p.transform*pt
-        update!(hrect_new, pt)
+        update!(hrect_new, transform(p.transform, pt))
     end
     hrect_new
 end
@@ -40,9 +35,7 @@ function HyperRectangle{T}(p::Cylinder{T})
     pts = points(orig)
     hrect_new = HyperRectangle{T,3}()
     for pt in pts
-        push!(pt, one(T))
-        pt = p.transform*pt
-        update!(hrect_new, pt)
+        update!(hrect_new, transform(p.transform, pt))
     end
     hrect_new
 end
@@ -50,9 +43,7 @@ end
 function HyperRectangle{T}(p::Pipe{T})
     hrect_new = HyperRectangle{T,3}()
     for pt in p.points
-        push!(pt, one(T))
-        update!(hrect_new, p.transform*pt)
-        pop!(pt) # this is the worst, but im too tired to give a shit
+        update!(hrect_new, transform(p.transform, pt))
     end
     hrect_new.min -= p.radius
     hrect_new.max += p.radius
