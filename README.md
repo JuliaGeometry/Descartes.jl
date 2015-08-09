@@ -8,7 +8,7 @@ create a platform which unifies otherwise disparate geometric representations.
 The long term goal is to deliver a geometry kernel suited for the growing
 capabilities of digital manufacturing.
 
-Initially the focus will be on the following representations:
+We aim to support the following representations cohesively:
 
 - [BRep](http://en.wikipedia.org/wiki/Boundary_representation)
 - [Functional](http://en.wikipedia.org/wiki/Function_representation)

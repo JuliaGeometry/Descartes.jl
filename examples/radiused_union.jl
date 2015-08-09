@@ -2,8 +2,8 @@ using Descartes
 using Meshes
 
 #c1 = translate([-1,-1,-4])Cuboid([4,4,4])
-c2 = Cuboid([4,4,4])
-cyl1 = translate([2,2,0])Cylinder(1,10)
+c2 = Cuboid([4,4.0,4])
+cyl1 = rotate(pi/6, [1,0,0])translate([2,2,0])Cylinder(1.0,10.0)
 p1 = PrismaticCylinder(6, 10, 5)
 p2 = PrismaticCylinder(8, 5, 20)
 
@@ -16,10 +16,10 @@ u2 = CSGDiff(u, Cuboid([2,2,2]))
 
 Profile.clear()
 
-@time @profile m = Mesh(u2, (200,200,200))
+@time @profile m = Mesh(u2)
 
-using ProfileView
+#using ProfileView
 
-ProfileView.view()
+#ProfileView.view()
 
 exportAsciiPly(m, "test3.ply")

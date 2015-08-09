@@ -1,4 +1,4 @@
-import HyperRectangles: HyperRectangle
+import GeometryTypes.HyperRectangles: HyperRectangle
 
 function HyperRectangle{T}(cube::Cuboid{T})
     orig = HyperRectangle{T,3}(fill(zero(T), 3), cube.dimensions[1:3])

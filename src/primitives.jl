@@ -23,7 +23,6 @@ function Cylinder{T}(r::T, h)
     Cylinder(r, h, eye(4), eye(4))
 end
 
-
 type Sphere{T} <: AbstractPrimitive{3, T}
     radius::T
     transform::Matrix{Float64}
@@ -70,3 +69,8 @@ function Pipe(r, pts)
     Pipe(r, pts, eye(4), eye(4))
 end
 
+type Polygon{T} <: AbstractPrimitive{2, T}
+    points::Vector{Vector{T}}
+    transform::Matrix{Float64}
+    inv_transform::Matrix{Float64}
+end

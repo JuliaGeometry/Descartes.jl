@@ -39,7 +39,7 @@ function translate(vect::Vector)
     Transform{n, Float64}(transform)
 end
 
-function (*){N,T}(transform::Transform{N,Float64}, obj::AbstractPrimitive{N,T})
+function *{N,T}(transform::Transform{N,Float64}, obj::AbstractPrimitive{N,T})
     obj.transform = obj.transform*transform.transform
     obj.inv_transform = inv(obj.transform)
     obj
