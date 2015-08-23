@@ -10,6 +10,16 @@ function HyperRectangle{T}(cube::Cuboid{T})
     hrect_new
 end
 
+function HyperRectangle{T}(cube::RoundedCuboid{T})
+    orig = HyperRectangle{T,3}(fill(zero(T), 3), cube.dimensions[1:3])
+    pts = points(orig)
+    hrect_new = HyperRectangle{T,3}()
+    for pt in pts
+        update!(hrect_new, transform(cube.transform, pt))
+    end
+    hrect_new
+end
+
 function HyperRectangle{T}(sphere::Sphere{T})
     orig = HyperRectangle{T,3}(fill(-sphere.radius,3), fill(sphere.radius,3))
     pts = points(orig)

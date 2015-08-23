@@ -17,7 +17,7 @@ include("distancefield.jl")
 include("meshes.jl")
 
 # primitives
-export Cuboid, Cylinder, Sphere, PrismaticCylinder, Pipe
+export Cuboid, Cylinder, Sphere, PrismaticCylinder, Pipe, RoundedCuboid
 
 # transforms
 export Translation, translate, rotate

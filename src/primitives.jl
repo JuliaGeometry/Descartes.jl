@@ -12,6 +12,19 @@ function Cuboid{T}(dims::Vector{T})
     Cuboid(dims, eye(4), eye(4))
 end
 
+type RoundedCuboid{T} <: AbstractPrimitive{3, T}
+    dimensions::Vector{T}
+    axes::Vector{Bool}
+    radius::T
+    transform::Matrix{Float64}
+    inv_transform::Matrix{Float64}
+end
+
+function RoundedCuboid{T}(dims::Vector{T},axes::Vector{Bool},r)
+    @assert length(dims) == 3
+    RoundedCuboid(dims, axes, convert(T,r), eye(4), eye(4))
+end
+
 type Cylinder{T} <: AbstractPrimitive{3, T}
     radius::T
     height::T

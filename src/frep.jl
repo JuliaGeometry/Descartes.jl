@@ -1,5 +1,13 @@
 # http://en.wikipedia.org/wiki/Function_representation
 
+function _radius(a,b,r)
+    if abs(a-b) >= r
+        return min(a,b)
+    else
+        return b+r*sin(pi/4+asin((a-b)/(r*sqrt(2))))-r
+    end
+end
+
 function FRep(p::Sphere, _x, _y, _z)
     it = p.inv_transform
     @inbounds x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
@@ -24,6 +32,22 @@ function FRep(p::Cuboid, _x, _y, _z)
     max(max(-x, x-p.dimensions[1]),
         max(-y, y-p.dimensions[2]),
         max(-z, z-p.dimensions[3]))
+end
+
+function FRep(p::RoundedCuboid, _x, _y, _z)
+    it = p.inv_transform
+    @inbounds x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
+    @inbounds y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
+    @inbounds z = _x*it[3,1]+_y*it[3,2]+_z*it[3,3]+it[3,4]
+    xp = x-p.dimensions[1]
+    yp = y-p.dimensions[2]
+    zp = z-p.dimensions[3]
+    xd = max(-x, xp)
+    yd = max(-y, yp)
+    zd = max(-z, zp)
+    max(p.axes[1] ? _radius(yd,zd,p.radius) : xd,
+        p.axes[2] ? _radius(zd,xd,p.radius) : yd,
+        p.axes[3] ? _radius(xd,yd,p.radius) : zd)
 end
 
 function FRep(p::PrismaticCylinder, _x, _y, _z)
@@ -60,11 +84,7 @@ function FRep(u::RadiusedCSGUnion, x, y, z)
     a = FRep(u.left, x,y,z)
     b = FRep(u.right, x,y,z)
     r = u.radius
-    if abs(a-b) >= r
-        return min(a,b)
-    else
-        return b+r*sin(pi/4+asin((a-b)/(r*sqrt(2))))-r
-    end
+    _radius(a,b,r)
 end
 
 function FRep{T}(p::Pipe{T}, x, y, z)
