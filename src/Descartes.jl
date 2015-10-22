@@ -1,11 +1,19 @@
 module Descartes
 
 import Base: *
+import GeometryTypes: HyperRectangle,
+                      HomogenousMesh,
+                      SignedDistanceField
 
-using Meshes
-using GeometryTypes
-using GeometryTypes.HyperRectangles
-using GeometryTypes.HyperRectangles.Operations # lol
+using GeometryTypes,
+      GLAbstraction,
+      GLVisualize,
+      ColorTypes,
+      Reactive,
+      FileIO,
+      Meshing,
+      MeshIO,
+      ModernGL
 
 include("primitives.jl")
 include("transforms.jl")
@@ -31,7 +39,10 @@ export CSGUnion, RadiusedCSGUnion, CSGDiff, CSGIntersect
 # frep
 export FRep
 
-# distance fields
-export DistanceField
+# mesh
+export HomogenousMesh
+
+# FileIO
+export load, save
 
 end # module

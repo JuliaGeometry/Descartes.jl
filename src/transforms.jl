@@ -58,3 +58,24 @@ end
 function transform{T}(it::Array{T,2}, x::Vector)
     transform(it, x...)
 end
+
+function transform{T}(it::Array{T,2}, x::Point)
+    transform(it, x...)
+end
+
+function transform{T1,T2}(t::Array{T1,2},
+                            h::HyperRectangle{3,T2})
+    pts = Vector{Point{3,T2}}(h)
+    maxx, maxy, maxz = typemin(T1), typemin(T1), typemin(T1)
+    minx, miny, minz = typemax(T1), typemax(T1), typemax(T1)
+    for pt in pts
+        newx, newy, newz = transform(t, pt)
+        maxx = max(newx,maxx)
+        maxy = max(newy,maxy)
+        maxz = max(newz,maxz)
+        minx = min(newx,minx)
+        miny = min(newy,miny)
+        minz = min(newz,minz)
+    end
+    HyperRectangle(Vec(minx,miny,minz),Vec(maxx,maxy,maxz))
+end
