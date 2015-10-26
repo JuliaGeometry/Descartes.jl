@@ -23,6 +23,7 @@ include("frep.jl")
 include("hyperrectangles.jl")
 include("distancefield.jl")
 include("meshes.jl")
+include("visualize.jl")
 
 # GeometryTypes
 export Point
