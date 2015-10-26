@@ -74,7 +74,7 @@ end
 
 type Pipe{T} <: AbstractPrimitive{3, T}
     radius::T
-    points::Vector{Vector{T}}
+    points::Vector{Point{3,T}}
     transform::Matrix{Float64}
     inv_transform::Matrix{Float64}
 end

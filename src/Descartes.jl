@@ -24,6 +24,9 @@ include("hyperrectangles.jl")
 include("distancefield.jl")
 include("meshes.jl")
 
+# GeometryTypes
+export Point
+
 # primitives
 export Cuboid, Cylinder, Sphere, PrismaticCylinder, Pipe, RoundedCuboid
 
