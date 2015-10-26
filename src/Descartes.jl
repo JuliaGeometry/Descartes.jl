@@ -15,10 +15,9 @@ using GeometryTypes,
       MeshIO,
       ModernGL
 
-include("primitives.jl")
-include("transforms.jl")
+include("types.jl")
+include("constructors.jl")
 include("operations.jl")
-include("csg.jl")
 include("frep.jl")
 include("hyperrectangles.jl")
 include("distancefield.jl")
