@@ -23,7 +23,7 @@ function HyperRectangle{T}(p::Cylinder{T})
     transform(p.transform, orig)
 end
 
-function HyperRectangle{T}(p::Pipe{T})
+function HyperRectangle{T}(p::Piping{T})
     maxx, maxy, maxz = typemin(Float64), typemin(Float64), typemin(Float64)
     minx, miny, minz = typemax(Float64), typemax(Float64), typemax(Float64)
     for pt in p.points

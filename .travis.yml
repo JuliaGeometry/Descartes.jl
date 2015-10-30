@@ -1,3 +1,4 @@
+# http://lint.travis-ci.org/
 language: julia
 os:
   - linux
@@ -20,7 +21,4 @@ addons:
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start" # X virtual framebuffer
-
-    Status API Training Shop Blog About Pricing 
-
 

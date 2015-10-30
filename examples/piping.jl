@@ -1,12 +1,11 @@
 using Descartes
 
-p = Descartes.Pipe(1.0, Point{3,Float64}[[0,0,0],[10,0,0],[10,10,0],[10,10,10],[5,5,5]])
+pt3 = Point{3,Float64}
 
-@time m = HomogenousMesh(p)
-@profile @time m = HomogenousMesh(p)
+p = Piping(1.0, [pt3(0,0,0),
+                         pt3(10,0,0),
+                         pt3(10,10,0),
+                         pt3(10,10,10),
+                         pt3(5,5,5)])
 
-#using ProfileView
-#
-#ProfileView.view()
-
-save("piping.ply", m)
+save("piping.ply", HomogenousMesh(p))

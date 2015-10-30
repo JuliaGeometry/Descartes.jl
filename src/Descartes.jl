@@ -28,7 +28,7 @@ include("visualize.jl")
 export Point
 
 # primitives
-export Cuboid, Cylinder, Sphere, PrismaticCylinder, Pipe, RoundedCuboid
+export Cuboid, Cylinder, Sphere, PrismaticCylinder, Piping, RoundedCuboid
 
 # transforms
 export Translation, translate, rotate

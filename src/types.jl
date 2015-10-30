@@ -53,7 +53,7 @@ type PrismaticCylinder{T} <: AbstractPrimitive{3, T}
     inv_transform::Matrix{Float64}
 end
 
-type Pipe{T} <: AbstractPrimitive{3, T}
+type Piping{T} <: AbstractPrimitive{3, T}
     radius::T
     points::Vector{Point{3,T}}
     transform::Matrix{Float64}
