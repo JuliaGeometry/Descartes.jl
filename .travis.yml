@@ -2,12 +2,25 @@ language: julia
 os:
   - linux
   - osx
+matrix:
+  allow_failures:
+    - os: osx
 julia:
-  - 0.4
+  - release
   - nightly
 notifications:
   email: false
-# uncomment the following lines to override the default test script
-#script:
-#  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-#  - julia --check-bounds=yes -e 'Pkg.clone(pwd()); Pkg.build("Descartes"); Pkg.test("Descartes"; coverage=true)'
+addons:
+  apt:
+    packages:
+    - cmake
+    - libxxf86vm-dev
+    sources:
+    - kubuntu-backports
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start" # X virtual framebuffer
+
+    Status API Training Shop Blog About Pricing 
+
+
