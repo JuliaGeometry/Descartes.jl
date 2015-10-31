@@ -8,7 +8,7 @@ function shader_visualize(shaderpath,
     data = merge(Dict(
         :iResolution => lift(Vec2f0, screen.inputs[:framebuffer_size]),
         :iMouse => dropwhen(lift(isempty, screen.inputs[:mousebuttonspressed]), Vec2f0(0), lift(Vec2f0, screen.inputs[:mouseposition])),
-        :iGlobalTime => bounce(0f0:0.016f0:2000f0),
+        :iGlobalTime => 0f0,
         :preferred_camera => :nothing
     ), collect_for_gl(GLMesh2D(Rectangle{Float32}(-1f0,-1f0,2f0,2f0))), additional_uniforms)
     templates = merge(templates, Dict("SHADERTOY_INPUTS" => """
