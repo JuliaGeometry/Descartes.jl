@@ -5,6 +5,7 @@ GLVisualize
 ColorTypes
 Reactive
 FileIO
+FixedSizeArrays
 Meshing
 MeshIO
 ModernGL
