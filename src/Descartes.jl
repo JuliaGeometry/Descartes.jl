@@ -11,6 +11,7 @@ using GeometryTypes,
       ColorTypes,
       Reactive,
       FileIO,
+      FixedSizeArrays,
       Meshing,
       MeshIO,
       ModernGL

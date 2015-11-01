@@ -37,6 +37,16 @@ function translate(vect::Vector)
     Transform{n, Float64}(transform)
 end
 
+function translate(vect::FixedVector)
+    n = length(vect)
+    N = n + 1
+    transform = eye(N)
+    for i = 1:n
+        transform[i, N] = vect[i]
+    end
+    Transform{n, Float64}(transform)
+end
+
 function *{N,T}(transform::Transform{N,Float64}, obj::AbstractPrimitive{N,T})
     obj.transform = obj.transform*transform.transform
     obj.inv_transform = inv(obj.transform)
