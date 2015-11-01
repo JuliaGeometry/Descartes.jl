@@ -39,6 +39,8 @@ function CSGUnion{N1, N2, T1, T2}(l::AbstractPrimitive{N1,T1}, r::AbstractPrimit
 end
 
 CSGUnion(x::AbstractPrimitive) = x
+CSGUnion(::Void, x::AbstractPrimitive) = x
+CSGUnion(x::AbstractPrimitive, ::Void) = x
 
 
 # Radiused Union
@@ -59,12 +61,18 @@ function CSGDiff{N1, N2, T1, T2}(l::AbstractPrimitive{N1,T1}, r::AbstractPrimiti
 end
 
 CSGDiff(x::AbstractPrimitive) = x
+CSGDiff(::Void, x::AbstractPrimitive) = x
+CSGDiff(x::AbstractPrimitive, ::Void) = x
 
 
 function CSGIntersect{N1, N2, T1, T2}(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2})
     N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
     return CSGIntersect{N1,T1, typeof(l), typeof(r)}(l,r)
 end
+
+CSGIntersect(x::AbstractPrimitive) = x
+CSGIntersect(::Void, x::AbstractPrimitive) = x
+CSGIntersect(x::AbstractPrimitive, ::Void) = x
 
 # Shell
 
