@@ -1,10 +1,11 @@
 using Descartes
-using Meshes
-using Meshes.Files
 
-p = Pipe(1, Vector{Int}[[0,0,0],[10,0,0],[10,10,0],[10,10,10],[5,5,5]])
+pt3 = Point{3,Float64}
 
-@time m = Mesh(p)
-@time m = Mesh(p)
+p = Piping(1.0, [pt3(0,0,0),
+                         pt3(10,0,0),
+                         pt3(10,10,0),
+                         pt3(10,10,10),
+                         pt3(5,5,5)])
 
-exportAsciiPly(m, "piping.ply")
+save("piping.ply", HomogenousMesh(p))

@@ -1,7 +1,6 @@
-using Descartes
-using GeometryTypes
-using GeometryTypes.HyperRectangles
-using Meshes
+using Descartes,
+      GeometryTypes,
+      FixedSizeArrays
 using Base.Test
 
 include("test_primitives.jl")

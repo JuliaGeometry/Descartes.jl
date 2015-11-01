@@ -87,9 +87,9 @@ function FRep(u::RadiusedCSGUnion, x, y, z)
     _radius(a,b,r)
 end
 
-function FRep{T}(p::Pipe{T}, x, y, z)
+function FRep{T}(p::Piping{T}, x, y, z)
     num_pts = length(p.points)
-    pt = [x,y,z]
+    pt = Point(x,y,z)
 
     val = typemax(T)
 
