@@ -6,15 +6,10 @@ import GeometryTypes: HyperRectangle,
                       SignedDistanceField
 
 using GeometryTypes,
-      GLAbstraction,
-      GLVisualize,
-      ColorTypes,
-      Reactive,
       FileIO,
       FixedSizeArrays,
       Meshing,
-      MeshIO,
-      ModernGL
+      MeshIO
 
 include("types.jl")
 include("constructors.jl")
@@ -23,7 +18,6 @@ include("frep.jl")
 include("hyperrectangles.jl")
 include("distancefield.jl")
 include("meshes.jl")
-include("visualize.jl")
 
 # GeometryTypes
 export Point

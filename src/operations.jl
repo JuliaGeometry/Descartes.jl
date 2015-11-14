@@ -73,7 +73,7 @@ end
 
 function transform{T1,T2}(t::Array{T1,2},
                             h::HyperRectangle{3,T2})
-    pts = Vector{Point{3,T2}}(h)
+    pts = decompose(Point{3,T2}, (h))
     maxx, maxy, maxz = typemin(T1), typemin(T1), typemin(T1)
     minx, miny, minz = typemax(T1), typemax(T1), typemax(T1)
     for pt in pts
