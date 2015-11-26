@@ -5,7 +5,7 @@ function Base.hash(a::AbstractPrimitive)
     flds = fieldnames(a)
     h = hash(a.(1))
     for i = 2:length(flds)-1
-        hash(a.(i), h)
+        h = hash(a.(i), h)
     end
     h
 end
