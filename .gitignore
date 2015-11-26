@@ -4,3 +4,4 @@
 *.stl
 *.off
 *.obj
+.cache/*

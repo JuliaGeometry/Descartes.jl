@@ -1,11 +1,7 @@
 julia 0.4
 GeometryTypes
-GLAbstraction
-GLVisualize
-ColorTypes
-Reactive
 FileIO
 FixedSizeArrays
+JLD
 Meshing
 MeshIO
-ModernGL
