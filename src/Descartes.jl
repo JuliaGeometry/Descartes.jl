@@ -18,6 +18,7 @@ include("frep.jl")
 include("hyperrectangles.jl")
 include("distancefield.jl")
 include("meshes.jl")
+include("hashing.jl")
 
 # GeometryTypes
 export Point
