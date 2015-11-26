@@ -8,6 +8,7 @@ import GeometryTypes: HyperRectangle,
 using GeometryTypes,
       FileIO,
       FixedSizeArrays,
+      JLD,
       Meshing,
       MeshIO
 
@@ -19,6 +20,7 @@ include("hyperrectangles.jl")
 include("distancefield.jl")
 include("meshes.jl")
 include("hashing.jl")
+include("cache.jl")
 
 # GeometryTypes
 export Point
@@ -43,5 +45,11 @@ export HomogenousMesh
 
 # FileIO
 export load, save
+
+
+# Init
+function __init__()
+    cache_init()
+end
 
 end # module
