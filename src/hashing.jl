@@ -1,11 +1,12 @@
 
 
 function Base.hash(a::AbstractPrimitive)
-    # hash(a.(2), hash(a.(1)) )
+    # need special hash since primitives might not be immutable
     flds = fieldnames(a)
-    h = hash(a.(1))
-    for i = 2:length(flds)-1
-        h = hash(a.(i), h)
+    h = hash(flds) # field symbols
+    hash(typeof(a), h) # typename
+    for i = 1:length(flds)
+        h = hash(a.(i), h) # values
     end
     h
 end
