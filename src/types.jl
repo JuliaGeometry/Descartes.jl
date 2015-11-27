@@ -11,14 +11,6 @@ type Cuboid{T} <: AbstractPrimitive{3, T}
     inv_transform::Matrix{Float64}
 end
 
-type RoundedCuboid{T} <: AbstractPrimitive{3, T}
-    dimensions::Vector{T}
-    axes::Vector{Bool}
-    radius::T
-    transform::Matrix{Float64}
-    inv_transform::Matrix{Float64}
-end
-
 type Cylinder{T} <: AbstractPrimitive{3, T}
     radius::T
     height::T
@@ -32,36 +24,9 @@ type Sphere{T} <: AbstractPrimitive{3, T}
     inv_transform::Matrix{Float64}
 end
 
-type Ellipsoid{T} <: AbstractPrimitive{3, T}
-    dimensions::Vector{T}
-    transform::Matrix{Float64}
-    inv_transform::Matrix{Float64}
-end
-
-type EllipticCylinder{T} <: AbstractPrimitive{3, T}
-    dimensions::Vector{T}
-    height::T
-    transform::Matrix{Float64}
-    inv_transform::Matrix{Float64}
-end
-
-type PrismaticCylinder{T} <: AbstractPrimitive{3, T}
-    sides::Int
-    height::T
-    radius::T
-    transform::Matrix{Float64}
-    inv_transform::Matrix{Float64}
-end
-
 type Piping{T} <: AbstractPrimitive{3, T}
     radius::T
     points::Vector{Point{3,T}}
-    transform::Matrix{Float64}
-    inv_transform::Matrix{Float64}
-end
-
-type Polygon{T} <: AbstractPrimitive{2, T}
-    points::Vector{Vector{T}}
     transform::Matrix{Float64}
     inv_transform::Matrix{Float64}
 end

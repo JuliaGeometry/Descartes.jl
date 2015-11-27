@@ -3,19 +3,9 @@ function HyperRectangle{T}(cube::Cuboid{T})
     transform(cube.transform, orig)
 end
 
-function HyperRectangle{T}(cube::RoundedCuboid{T})
-    orig = HyperRectangle{3,T}(fill(zero(T), 3), cube.dimensions[1:3])
-    transform(cube.transform, orig)
-end
-
 function HyperRectangle{T}(sphere::Sphere{T})
     orig = HyperRectangle{3,T}(fill(-sphere.radius,3), fill(sphere.radius,3))
     transform(sphere.transform, orig)
-end
-
-function HyperRectangle{T}(p::PrismaticCylinder{T})
-    orig = HyperRectangle{3,T}([-p.radius,-p.radius,0], [p.radius,p.radius,p.height])
-    transform(p.transform, orig)
 end
 
 function HyperRectangle{T}(p::Cylinder{T})

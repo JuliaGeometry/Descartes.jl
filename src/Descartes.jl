@@ -26,7 +26,7 @@ include("cache.jl")
 export Point
 
 # primitives
-export Cuboid, Cylinder, Sphere, PrismaticCylinder, Piping, RoundedCuboid
+export Cuboid, Cylinder, Sphere, Piping
 
 # transforms
 export Translation, translate, rotate
