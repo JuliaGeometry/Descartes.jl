@@ -29,9 +29,10 @@ function FRep(p::Cuboid, _x, _y, _z)
     @inbounds x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
     @inbounds y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
     @inbounds z = _x*it[3,1]+_y*it[3,2]+_z*it[3,3]+it[3,4]
-    max(max(-x, x-p.dimensions[1]),
-        max(-y, y-p.dimensions[2]),
-        max(-z, z-p.dimensions[3]))
+    @inbounds dx, dy, dz = p.dimensions
+    max(max(-x, x-dx),
+        max(-y, y-dy),
+        max(-z, z-dz))
 end
 
 @inline function FRep(u::CSGUnion, x, y, z)
