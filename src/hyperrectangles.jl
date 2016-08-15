@@ -27,7 +27,7 @@ function HyperRectangle{T}(p::Piping{T})
     end
     minv = Vec(minx,miny,minz) .- p.radius
     maxv = Vec(maxx,maxy,maxz) .+ p.radius
-    HyperRectangle(minv, maxv)
+    HyperRectangle(minv, maxv-minv)
 end
 
 function HyperRectangle{N, T, L, R}(csg::CSGUnion{N, T, L, R})
