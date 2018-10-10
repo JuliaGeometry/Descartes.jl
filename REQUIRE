@@ -1,7 +1,7 @@
 julia 0.4
 GeometryTypes
 FileIO
-FixedSizeArrays
-JLD
+StaticArrays
+HDF5
 Meshing
 MeshIO
