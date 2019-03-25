@@ -7,10 +7,11 @@ import GeometryTypes: HyperRectangle,
 
 using GeometryTypes,
       FileIO,
-      FixedSizeArrays,
-      JLD,
+      StaticArrays,
+     # JLD,
       Meshing,
-      MeshIO
+      MeshIO,
+      LinearAlgebra
 
 include("types.jl")
 include("constructors.jl")

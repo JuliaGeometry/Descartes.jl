@@ -1,5 +1,5 @@
-function SignedDistanceField{T}(primitive::AbstractPrimitive{3,T},
-                                resolution=0.1)
+function SignedDistanceField(primitive::AbstractPrimitive{3,T},
+                                resolution=0.1) where {T}
     bounds = HyperRectangle(primitive)
     x_min, y_min, z_min = minimum(bounds)
     x_max, y_max, z_max = maximum(bounds)

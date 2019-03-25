@@ -1,30 +1,30 @@
-abstract AbstractPrimitive{N, T} # dimensionality, numeric type
-abstract AbstractCSGTree{N,T} <: AbstractPrimitive{N, T}
-abstract AbstractOperation{N,T} <: AbstractPrimitive{N,T}
-abstract AbstractTransform{N,T}
+abstract type AbstractPrimitive{N, T} end # dimensionality, numeric type
+abstract type AbstractCSGTree{N,T} <: AbstractPrimitive{N, T} end
+abstract type AbstractOperation{N,T} <: AbstractPrimitive{N,T} end
+abstract type AbstractTransform{N,T} end
 
 # Geometric Primitives
 
-type Cuboid{T} <: AbstractPrimitive{3, T}
+mutable struct Cuboid{T} <: AbstractPrimitive{3, T}
     dimensions::Vector{T}
     transform::Matrix{Float64}
     inv_transform::Matrix{Float64}
 end
 
-type Cylinder{T} <: AbstractPrimitive{3, T}
+mutable struct Cylinder{T} <: AbstractPrimitive{3, T}
     radius::T
     height::T
     transform::Matrix{Float64}
     inv_transform::Matrix{Float64}
 end
 
-type Sphere{T} <: AbstractPrimitive{3, T}
+mutable struct Sphere{T} <: AbstractPrimitive{3, T}
     radius::T
     transform::Matrix{Float64}
     inv_transform::Matrix{Float64}
 end
 
-type Piping{T} <: AbstractPrimitive{3, T}
+mutable struct Piping{T} <: AbstractPrimitive{3, T}
     radius::T
     points::Vector{Point{3,T}}
     transform::Matrix{Float64}
@@ -33,7 +33,7 @@ end
 
 # transforms
 
-type Transform{N,T} <: AbstractTransform{N,T}
+mutable struct Transform{N,T} <: AbstractTransform{N,T}
     transform::Matrix{T}
 end
 
@@ -41,30 +41,30 @@ end
 # CSG
 # http://en.wikipedia.org/wiki/Constructive_solid_geometry
 
-immutable CSGUnion{N, T, L, R} <: AbstractCSGTree{N, T}
+struct CSGUnion{N, T, L, R} <: AbstractCSGTree{N, T}
     left::L
     right::R
 end
 
-immutable RadiusedCSGUnion{N, T, L, R} <: AbstractCSGTree{N, T}
+struct RadiusedCSGUnion{N, T, L, R} <: AbstractCSGTree{N, T}
     radius::T
     left::L
     right::R
 end
 
-immutable CSGDiff{N, T, L, R} <: AbstractCSGTree{N, T}
+struct CSGDiff{N, T, L, R} <: AbstractCSGTree{N, T}
     left::L
     right::R
 end
 
-immutable CSGIntersect{N, T, L, R} <: AbstractCSGTree{N, T}
+struct CSGIntersect{N, T, L, R} <: AbstractCSGTree{N, T}
     left::L
     right::R
 end
 
 # Operations
 
-type Shell{T} <: AbstractPrimitive{3,T}
+mutable struct Shell{T} <: AbstractPrimitive{3,T}
     primitive::T
     distance
 end

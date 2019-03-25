@@ -1,6 +1,6 @@
-function GeometryTypes.HomogenousMesh{T}(primitive::AbstractPrimitive{3, T},
+function GeometryTypes.HomogenousMesh(primitive::AbstractPrimitive{3, T},
                                          resolution=0.1,
-                                         algorithm=:marching_cubes)
+                                         algorithm=:marching_cubes) where {T}
     # key based on resolution
     k = "HomogenousMesh:res:$resolution"
     # grab from cache if available
@@ -16,7 +16,7 @@ function GeometryTypes.HomogenousMesh{T}(primitive::AbstractPrimitive{3, T},
     h
 end
 
-function piped_mesh{VT,N,T,O}(m::AbstractMesh{VT, Face{N,T,O}},r)
+function piped_mesh(m::AbstractMesh,r)
     c = nothing
     for f in m.faces
         v1 = m.vertices[f[1]-O]

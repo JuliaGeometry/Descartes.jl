@@ -59,7 +59,7 @@ function FRep(u::RadiusedCSGUnion, x, y, z)
     _radius(a,b,r)
 end
 
-function FRep{T}(p::Piping{T}, x, y, z)
+function FRep(p::Piping{T}, x, y, z) where {T}
     num_pts = length(p.points)
     pt = Point(x,y,z)
 

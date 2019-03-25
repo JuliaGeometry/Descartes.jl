@@ -1,19 +1,19 @@
-function HyperRectangle{T}(cube::Cuboid{T})
+function HyperRectangle(cube::Cuboid{T}) where {T}
     orig = HyperRectangle{3,T}(Vec(0,0,0), Vec(cube.dimensions))
     transform(cube.transform, orig)
 end
 
-function HyperRectangle{T}(sphere::Sphere{T})
+function HyperRectangle(sphere::Sphere{T}) where {T}
     orig = HyperRectangle{3,T}(fill(-sphere.radius,3), fill(sphere.radius*2,3))
     transform(sphere.transform, orig)
 end
 
-function HyperRectangle{T}(p::Cylinder{T})
+function HyperRectangle(p::Cylinder{T}) where {T}
     orig = HyperRectangle{3,T}(Vec(-p.radius,-p.radius,0), Vec(p.radius*2,p.radius*2,p.height))
     transform(p.transform, orig)
 end
 
-function HyperRectangle{T}(p::Piping{T})
+function HyperRectangle(p::Piping{T}) where {T}
     maxx, maxy, maxz = typemin(Float64), typemin(Float64), typemin(Float64)
     minx, miny, minz = typemax(Float64), typemax(Float64), typemax(Float64)
     for pt in p.points
@@ -30,19 +30,19 @@ function HyperRectangle{T}(p::Piping{T})
     HyperRectangle(minv, maxv-minv)
 end
 
-function HyperRectangle{N, T, L, R}(csg::CSGUnion{N, T, L, R})
+function HyperRectangle(csg::CSGUnion{N, T, L, R}) where {N, T, L, R}
     union(HyperRectangle(csg.left), HyperRectangle(csg.right))
 end
 
-function HyperRectangle{N, T, L, R}(csg::RadiusedCSGUnion{N, T, L, R})
+function HyperRectangle(csg::RadiusedCSGUnion{N, T, L, R}) where {N, T, L, R}
     union(HyperRectangle(csg.left), HyperRectangle(csg.right))
 end
 
-function HyperRectangle{N, T, L, R}(csg::CSGIntersect{N, T, L, R})
+function HyperRectangle(csg::CSGIntersect{N, T, L, R}) where {N, T, L, R}
     intersect(HyperRectangle(csg.left), HyperRectangle(csg.right))
 end
 
-function HyperRectangle{N, T, L, R}(csg::CSGDiff{N, T, L, R})
+function HyperRectangle(csg::CSGDiff{N, T, L, R}) where {N, T, L, R}
     diff(HyperRectangle(csg.left), HyperRectangle(csg.right))
 end
 

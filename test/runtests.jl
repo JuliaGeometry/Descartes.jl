@@ -1,7 +1,7 @@
 using Descartes,
       GeometryTypes,
-      FixedSizeArrays
-using Base.Test
+      StaticArrays,
+      Test
 
 include("primitives.jl")
 include("hyperrectangles.jl")
