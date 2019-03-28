@@ -1,6 +1,6 @@
 function Cuboid(dims)
     @assert length(dims) == 3
-    Cuboid(dims, Matrix(1.0*I,4,4), Matrix(1.0*I,4,4))
+    Cuboid(dims, SMatrix{4,4}(one(dims[1])*I), SMatrix{4,4}(one(dims[1])*I))
 end
 
 #= function RoundedCuboid{T}(dims::Vector{T},axes::Vector{Bool},r)
@@ -10,19 +10,19 @@ end =#
 
 function Cylinder(r, h)
     rn, hn = promote(r,h)
-    Cylinder(rn, hn, Matrix(1.0*I,4,4), Matrix(1.0*I,4,4))
+    Cylinder(rn, hn, SMatrix{4,4}(one(rn)*I), SMatrix{4,4}(one(rn)*I))
 end
 
 function Sphere(r::T) where {T}
-    Sphere(r, Matrix(1.0*I,4,4), Matrix(1.0*I,4,4))
+    Sphere(r, SMatrix{4,4}(one(r)*I), SMatrix{4,4}(one(r)*I))
 end
 
-function PrismaticCylinder(sides, height::T, radius::T) where {T}
-    PrismaticCylinder(sides, height, radius, Matrix(1.0*I,4,4), Matrix(1.0*I,4,4))
-end
+#function PrismaticCylinder(sides, height::T, radius::T) where {T}
+#    PrismaticCylinder(sides, height, radius, Matrix(1.0*I,4,4), Matrix(1.0*I,4,4))
+#end
 
 function Piping(r, pts)
-    Piping(r, pts, Matrix(1.0*I,4,4), Matrix(1.0*I,4,4))
+    Piping(r, pts, SMatrix{4,4}(one(r)*I), SMatrix{4,4}(one(r)*I))
 end
 
 # CSG
