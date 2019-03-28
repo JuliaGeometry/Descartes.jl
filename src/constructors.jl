@@ -1,6 +1,6 @@
 function Cuboid(dims)
     @assert length(dims) == 3
-    Cuboid(dims, SMatrix{4,4}(one(dims[1])*I), SMatrix{4,4}(one(dims[1])*I))
+    Cuboid(SVector{3}(dims), SMatrix{4,4}(one(dims[1])*I), SMatrix{4,4}(one(dims[1])*I))
 end
 
 #= function RoundedCuboid{T}(dims::Vector{T},axes::Vector{Bool},r)

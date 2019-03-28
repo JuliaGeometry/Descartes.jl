@@ -36,22 +36,22 @@ end
 function translate(vect::Vector)
     n = length(vect)
     N = n + 1
-    transform = Matrix(1.0*I,N,N)
+    transform = MMatrix{N,N}(1.0*I)
     transform[1:n, N] = vect
-    Transform{n, Float64}(transform)
+    Transform{N, Float64}(SMatrix{N,N}(transform))
 end
 
 function translate(vect::SVector)
     n = length(vect)
     N = n + 1
-    transform = Matrix(1.0*I,N,N)
+    transform = MMatrix{N,N}(1.0*I)
     for i = 1:n
         transform[i, N] = vect[i]
     end
-    Transform{n, Float64}(transform)
+    Transform{N, Float64}(SMatrix{N,N}(transform))
 end
 
-function *(transform::Transform{N,Float64}, obj::AbstractPrimitive{N,T}) where {N,T}
+function *(transform::Transform{N1,Float64}, obj::AbstractPrimitive{N2,T}) where {N1,N2,T}
     obj.transform = obj.transform*transform.transform
     obj.inv_transform = inv(obj.transform)
     obj
@@ -75,9 +75,10 @@ function transform(it::Array{T,2}, x::Point) where {T}
     transform(it, x...)
 end
 
-function transform(t::Array{T1,2},
-                            h::HyperRectangle{3,T2}) where {T1,T2}
-    Mat(t)*h
+function transform(t::SMatrix, h::HyperRectangle)
+    new_origin = t*SVector(h.origin... , 1)
+    new_widths = t*SVector(h.widths... , 1)
+    HyperRectangle(SVector(new_origin[1:3]...),SVector(new_widths[1:3]...))
 end
 
 

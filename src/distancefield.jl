@@ -18,7 +18,7 @@ function SignedDistanceField(primitive::AbstractPrimitive{3,T},
     o = origin(bounds)
     bounds = HyperRectangle{3,Float64}(o, b_max-o)
 
-    @fastmath for i = 0:nx, j = 0:ny, k = 0:nz
+    for i = 0:nx, j = 0:ny, k = 0:nz
         x = x_min + resolution*i
         y = y_min + resolution*j
         z = z_min + resolution*k

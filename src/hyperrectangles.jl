@@ -30,15 +30,15 @@ function HyperRectangle(p::Piping{T}) where {T}
     HyperRectangle(minv, maxv-minv)
 end
 
-function HyperRectangle(csg::CSGUnion{N, T, L, R}) where {N, T, L, R}
+function HyperRectangle(csg::CSGUnion)
     union(HyperRectangle(csg.left), HyperRectangle(csg.right))
 end
 
-function HyperRectangle(csg::RadiusedCSGUnion{N, T, L, R}) where {N, T, L, R}
+function HyperRectangle(csg::RadiusedCSGUnion)
     union(HyperRectangle(csg.left), HyperRectangle(csg.right))
 end
 
-function HyperRectangle(csg::CSGIntersect{N, T, L, R}) where {N, T, L, R}
+function HyperRectangle(csg::CSGIntersect)
     intersect(HyperRectangle(csg.left), HyperRectangle(csg.right))
 end
 

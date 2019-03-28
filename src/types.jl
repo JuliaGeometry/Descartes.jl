@@ -6,7 +6,7 @@ abstract type AbstractTransform{N,T} end
 # Geometric Primitives
 
 mutable struct Cuboid{T} <: AbstractPrimitive{3, T}
-    dimensions::SVector{T}
+    dimensions::SVector{3,T}
     transform::SMatrix{4,4,T,16}
     inv_transform::SMatrix{4,4,T,16}
 end
