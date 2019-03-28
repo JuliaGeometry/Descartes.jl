@@ -2,6 +2,10 @@ function *(s::Shell{Nothing}, obj::AbstractPrimitive{N,T}) where {N,T}
     Shell(obj, s.distance)
 end
 
+function *(a::Transform{N,T}, b::Transform{N,T}) where {N,T}
+    Transform{N,T}(a.transform*b.transform)
+end
+
 function rotate(ang, vect::Vector)
     n = length(vect)
     N = n + 1
