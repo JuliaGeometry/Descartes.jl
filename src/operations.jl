@@ -78,7 +78,7 @@ end
 function transform(t::SMatrix, h::HyperRectangle)
     new_origin = t*SVector(h.origin... , 1)
     new_widths = t*SVector(h.widths... , 1)
-    HyperRectangle(SVector(new_origin[1:3]...),SVector(new_widths[1:3]...))
+    HyperRectangle(new_origin[1:3]...,new_widths[1:3]...)
 end
 
 
