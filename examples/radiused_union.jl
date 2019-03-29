@@ -1,6 +1,6 @@
 using Descartes
 
-Descartes.cache_enabled(false)
+#Descartes.cache_enabled(false)
 
 #c1 = translate([-1,-1,-4])Cuboid([4,4,4])
 c2 = Cuboid([4,4.0,4])
@@ -13,12 +13,12 @@ u2 = CSGDiff(u, Cuboid([2,2,2]))
 
 @time m = HomogenousMesh(u2)
 
-Profile.clear()
+#Profile.clear()
 
-@time @profile m = HomogenousMesh(u2)
+@time m = HomogenousMesh(u2)
 
-using ProfileView
+#using ProfileView
 
-ProfileView.view()
+#ProfileView.view()
 
 save("test3.ply",m)
