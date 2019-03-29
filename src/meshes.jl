@@ -1,6 +1,6 @@
 function GeometryTypes.HomogenousMesh(primitive::AbstractPrimitive{3, T},
                                          resolution=0.1,
-                                         algorithm=:marching_cubes) where {T}
+                                         algorithm=MarchingTetrahedra()) where {T}
     # key based on resolution
     k = "HomogenousMesh:res:$resolution"
     # grab from cache if available
@@ -8,11 +8,11 @@ function GeometryTypes.HomogenousMesh(primitive::AbstractPrimitive{3, T},
         return cache_load(primitive, k)
     end
     distancefield = SignedDistanceField(primitive, resolution)
-    h = HomogenousMesh(distancefield, 0.0, algorithm)
+    h = HomogenousMesh(distancefield, algorithm)
     # we got this far, might as well save it
-    if use_cache
-        cache_add(primitive, k, h)
-    end
+    #if use_cache
+    #    cache_add(primitive, k, h)
+    #end
     h
 end
 

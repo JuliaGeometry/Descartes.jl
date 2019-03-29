@@ -1,7 +1,8 @@
 using Descartes,
       GeometryTypes,
       StaticArrays,
-      Test
+      Test,
+      Debugger
 
 include("primitives.jl")
 include("hyperrectangles.jl")

@@ -76,9 +76,21 @@ function transform(it::Array{T,2}, x::Point) where {T}
 end
 
 function transform(t::SMatrix, h::HyperRectangle)
-    new_origin = t*SVector(h.origin... , 1)
-    new_widths = t*SVector(h.widths... , 1)
-    HyperRectangle(new_origin[1:3]...,new_widths[1:3]...)
+    p_1 = t*SVector(h.origin... , 1)
+    p_2 = t*SVector(h.widths... , 1)
+    p_3 = t*SVector(h.origin[1]+h.widths[1],h.origin[2],h.origin[3], 1)
+    p_4 = t*SVector(h.origin[1],h.origin[2]+h.widths[2],h.origin[3], 1)
+    p_5 = t*SVector(h.origin[1],h.origin[2],h.origin[3]+h.widths[3], 1)
+    p_6 = t*SVector(h.origin[1]+h.widths[1],h.origin[2],h.origin[3]+h.widths[3], 1)
+    p_7 = t*SVector(h.origin[1],h.origin[2]+h.widths[2],h.origin[3]+h.widths[3], 1)
+    p_8 = t*SVector(h.origin[1]+h.widths[1],h.origin[2]+h.widths[2],h.origin[3], 1)
+    x_o = min(p_1[1],p_2[1],p_3[1],p_4[1],p_5[1],p_6[1],p_7[1],p_8[1])
+    y_o = min(p_1[2],p_2[2],p_3[2],p_4[2],p_5[2],p_6[2],p_7[2],p_8[2])
+    z_o = min(p_1[3],p_2[3],p_3[3],p_4[3],p_5[3],p_6[3],p_7[3],p_8[3])
+    x_w = max(p_1[1],p_2[1],p_3[1],p_4[1],p_5[1],p_6[1],p_7[1],p_8[1])
+    y_w = max(p_1[2],p_2[2],p_3[2],p_4[2],p_5[2],p_6[2],p_7[2],p_8[2])
+    z_w = max(p_1[3],p_2[3],p_3[3],p_4[3],p_5[3],p_6[3],p_7[3],p_8[3])
+    HyperRectangle(x_o, y_o, z_o, x_w-x_o, y_w-y_o, z_w-z_o)
 end
 
 

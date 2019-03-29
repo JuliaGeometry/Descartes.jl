@@ -20,7 +20,7 @@ include("frep.jl")
 include("hyperrectangles.jl")
 include("distancefield.jl")
 include("meshes.jl")
-include("hashing.jl")
+#include("hashing.jl")
 include("cache.jl")
 
 # GeometryTypes

@@ -3,13 +3,13 @@ function SignedDistanceField(primitive::AbstractPrimitive{3,T},
     bounds = HyperRectangle(primitive)
     x_min, y_min, z_min = minimum(bounds)
     x_max, y_max, z_max = maximum(bounds)
-
+    @show bounds
     x_rng, y_rng, z_rng = maximum(bounds) - minimum(bounds)
-
+    @show x_rng, y_rng, z_rng
     nx = ceil(Int, x_rng/resolution)
     ny = ceil(Int, y_rng/resolution)
     nz = ceil(Int, z_rng/resolution)
-
+    @show nx,ny,nz
     vol = Array{Float64}(undef,nx+1, ny+1, nz+1)
 
     b_max = SVector(x_min + resolution*nx, y_min + resolution*ny, z_min + resolution*nz)
