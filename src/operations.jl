@@ -30,7 +30,7 @@ function rotate(ang, vect::Vector)
         throw(ArgumentError("rotation underspecified!"))
     end
 
-    Transform{n, Float64}(transform)
+    Transform{N, Float64}(transform)
 end
 
 function translate(vect::Vector)
