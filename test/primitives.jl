@@ -1,6 +1,6 @@
 
 # test cube
-let
+@testset "Primites" begin
     c1 = Cuboid([1,1,1])
     c2 = Cuboid([1,1,1])
     c3 = Cuboid([0,1,1])

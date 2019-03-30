@@ -1,4 +1,4 @@
-let
+@testset "Distance Fields" begin
 
     c = SignedDistanceField(translate([4,5,6])Cuboid([1,2,3]))
 
