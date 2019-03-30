@@ -17,6 +17,7 @@ u2 = CSGDiff(u, Cuboid([2,2,2]))
 
 @time m = HomogenousMesh(u2)
 
+Descartes.visualize(u2)
 #using ProfileView
 
 #ProfileView.view()

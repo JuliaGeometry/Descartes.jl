@@ -11,7 +11,8 @@ using GeometryTypes,
      # JLD,
       Meshing,
       MeshIO,
-      LinearAlgebra
+      LinearAlgebra,
+      MeshCat
 
 include("types.jl")
 include("constructors.jl")
@@ -22,6 +23,7 @@ include("distancefield.jl")
 include("meshes.jl")
 #include("hashing.jl")
 include("cache.jl")
+include("visualize.jl")
 
 # GeometryTypes
 export Point
