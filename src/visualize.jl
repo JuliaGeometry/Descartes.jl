@@ -1,9 +1,10 @@
 
-function visualize(p::AbstractPrimitive, res_start=1, res_scale=0.5, res_iterations=5)
+function visualize(p::AbstractPrimitive, algorithm=NaiveSurfaceNets(),
+                   res_start=1, res_scale=0.5, res_iterations=5)
 
     # first visual
     vis = Visualizer()
-    m = HomogenousMesh(p, res_start)
+    m = HomogenousMesh(p, res_start, algorithm)
     open(vis)
     delete!(vis) # clear visualizer
     setobject!(vis, m)
