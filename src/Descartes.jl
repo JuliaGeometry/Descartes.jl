@@ -12,7 +12,8 @@ using GeometryTypes,
       Meshing,
       MeshIO,
       LinearAlgebra,
-      MeshCat
+      MeshCat,
+      OpenCL
 
 include("types.jl")
 include("constructors.jl")
@@ -24,6 +25,8 @@ include("meshes.jl")
 #include("hashing.jl")
 include("cache.jl")
 include("visualize.jl")
+include("opencl_kernels.jl")
+include("opencl.jl")
 
 # GeometryTypes
 export Point
