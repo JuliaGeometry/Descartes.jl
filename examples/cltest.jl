@@ -1,7 +1,6 @@
 using Descartes
 using GeometryTypes
 using Meshing
-using MeshIO
 using StaticArrays
 using OpenCL
 # Test if we can sample an SDF of a sphere
@@ -17,17 +16,16 @@ __kernel void sphere_test(__global double *output,
     int gid = get_global_id(0);
     float nreal, real = 0;
     float imag = 0;
-    output[gid] = 0;
+    output[gid] = gid;
 
-    float x_v = mins.x + resolution*gid;
-    float y_v = mins.y + resolution*(size.x%gid);
-    float z_v = mins.z + resolution*((size.x*size.y)%gid);
-
-    output[gid] = pow(x_v,2) + pow(y_v,2) + pow(z_v,2) -1;
+    float x_v = mins.x + resolution*(gid%size.x);
+    float y_v = mins.y + resolution*(convert_int_rtz(gid/size.x)%size.y);
+    float z_v = mins.z + resolution*convert_int_rtz(gid/(size.x*size.y));
+    output[gid] = sqrt(pow(x_v,2) + pow(y_v,2) + pow(z_v,2)) -1;
 }";
 
 
-function descartes_opencl(resolution=0.1)
+function descartes_opencl(resolution=0.01)
 
     bounds = HyperRectangle(-1.,-1.,-1.,2.,2.,2.)
     x_min, y_min, z_min = minimum(bounds)
@@ -72,10 +70,10 @@ function descartes_opencl(resolution=0.1)
             (nx,ny,nz), (Float32(x_min), Float32(y_min), Float32(z_min)), Float32(resolution)))
     cl.wait(cl.copy!(queue, out, o_buff))
 
-    @show out
+    #@show out
     SignedDistanceField{3,Float64,Float64}(bounds, reshape(out, (nx,ny,nz)))
 end
 
 m = HomogenousMesh(descartes_opencl(),NaiveSurfaceNets())
-@show m
-save("sphere.ply",m)
+#@show m
+Descartes.save("sphere.ply",m)
