@@ -1,10 +1,16 @@
+using Descartes
+using GeometryTypes
+using Meshing
+using MeshIO
+using StaticArrays
+using OpenCL
 # Test if we can sample an SDF of a sphere
 # take this output and mesh it
 
 sphere_source = "
 #pragma OPENCL EXTENSION cl_khr_byte_addressable_store : enable
-__kernel void sphere_test(__global ushort *output,
-                         float3 const size,
+__kernel void sphere_test(__global double *output,
+                         long3 const size,
                          float3 const mins,
                          float const resolution)
 {
@@ -13,17 +19,17 @@ __kernel void sphere_test(__global ushort *output,
     float imag = 0;
     output[gid] = 0;
 
-    x_v = mins.x + resolution*gid
-    y_v = mins.y + resolution*(size.x%gid)
-    z_v = mins.z + resolution*((size.x*size.y)%gid)
+    float x_v = mins.x + resolution*gid;
+    float y_v = mins.y + resolution*(size.x%gid);
+    float z_v = mins.z + resolution*((size.x*size.y)%gid);
 
-    output[gid] = pow(x_v,2) + pow(y_v,2) + pow(z_v,2) -1
+    output[gid] = pow(x_v,2) + pow(y_v,2) + pow(z_v,2) -1;
 }";
 
 
 function descartes_opencl(resolution=0.1)
 
-    bounds = HyperRectangle([-1,-1,-1],[2,2,2])
+    bounds = HyperRectangle(-1.,-1.,-1.,2.,2.,2.)
     x_min, y_min, z_min = minimum(bounds)
     x_max, y_max, z_max = maximum(bounds)
 
@@ -45,9 +51,9 @@ function descartes_opencl(resolution=0.1)
     # Setup OpenCL
     device, ctx, queue = cl.create_compute_context()
 
-    out = Array(Float32, size(q))
+    out = Array{Float64}(undef, nx*ny*nz)
 
-    o_buff = cl.Buffer(Float32, ctx, :w, length(out))
+    o_buff = cl.Buffer(Float64, ctx, :w, length(out))
 
     # TODO
     prg = cl.Program(ctx, source=sphere_source) |> cl.build!
@@ -62,9 +68,14 @@ function descartes_opencl(resolution=0.1)
     # end
 
     k = cl.Kernel(prg, "sphere_test")
-    cl.call(queue, k, length(out), nothing, q_buff,
-            (nx,ny,nz), (x_min, y_min, z_min), resolution)
-    cl.copy!(queue, out, o_buff)
+    cl.wait(queue(k, length(out), nothing, o_buff,
+            (nx,ny,nz), (Float32(x_min), Float32(y_min), Float32(z_min)), Float32(resolution)))
+    cl.wait(cl.copy!(queue, out, o_buff))
 
-    SignedDistanceField{3,Float32,Float32}(bounds, out)
+    @show out
+    SignedDistanceField{3,Float64,Float64}(bounds, reshape(out, (nx,ny,nz)))
 end
+
+m = HomogenousMesh(descartes_opencl(),NaiveSurfaceNets())
+@show m
+save("sphere.ply",m)
