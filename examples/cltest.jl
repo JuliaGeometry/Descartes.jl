@@ -3,6 +3,7 @@ using GeometryTypes
 using Meshing
 using StaticArrays
 using OpenCL
+using BenchmarkTools
 # Test if we can sample an SDF of a sphere
 # take this output and mesh it
 
@@ -73,5 +74,7 @@ function descartes_opencl(resolution=0.01)
 end
 
 m = HomogenousMesh(descartes_opencl(),NaiveSurfaceNets())
+
+
 #@show m
 Descartes.save("sphere.ply",m)

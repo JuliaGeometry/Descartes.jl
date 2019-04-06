@@ -1,3 +1,5 @@
 @testset "OpenCL" begin
-    Descartes.descartes_opencl()
+    s = Descartes.Sphere(2)
+    Descartes.opencl_sdf(s)
+
 end

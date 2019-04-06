@@ -1,39 +1,19 @@
 # Test if we can sample an SDF of a sphere
 # take this output and mesh it
 
-sphere_source = "
-#pragma OPENCL EXTENSION cl_khr_byte_addressable_store : enable
-__kernel void sphere_test(__global ushort *output,
-                         float3 const size,
-                         float3 const mins,
-                         float const resolution)
-{
-    int gid = get_global_id(0);
-    float nreal, real = 0;
-    float imag = 0;
-    output[gid] = 0;
 
-    x_v = mins.x + resolution*gid
-    y_v = mins.y + resolution*(size.x%gid)
-    z_v = mins.z + resolution*((size.x*size.y)%gid)
+function opencl_sdf(p::AbstractPrimitive, resolution=0.01)
 
-    output[gid] = pow(x_v,2) + pow(y_v,2) + pow(z_v,2) -1
-}";
-
-
-function descartes_opencl(resolution=0.1)
-
-    bounds = HyperRectangle([-1,-1,-1],[2,2,2])
+    # setup bounding boxes
+    bounds = HyperRectangle(p)
     x_min, y_min, z_min = minimum(bounds)
     x_max, y_max, z_max = maximum(bounds)
 
     x_rng, y_rng, z_rng = maximum(bounds) - minimum(bounds)
 
-    nx = ceil(Int, x_rng/resolution)
-    ny = ceil(Int, y_rng/resolution)
-    nz = ceil(Int, z_rng/resolution)
-
-    vol = Array{Float32}(undef,nx+1, ny+1, nz+1)
+    nx = ceil(Int, x_rng/resolution) + 1
+    ny = ceil(Int, y_rng/resolution) + 1
+    nz = ceil(Int, z_rng/resolution) + 1
 
     b_max = SVector(x_min + resolution*nx, y_min + resolution*ny, z_min + resolution*nz)
 
@@ -45,26 +25,39 @@ function descartes_opencl(resolution=0.1)
     # Setup OpenCL
     device, ctx, queue = cl.create_compute_context()
 
-    out = Array(Float32, size(q))
+    # setup output and output buffers
+    out = Array{Float64}(undef, nx*ny*nz)
+    o_buff = cl.Buffer(Float64, ctx, :w, length(out))
 
-    o_buff = cl.Buffer(Float32, ctx, :w, length(out))
+    ## basic kernel template we will fill in with primitive sdf computations
+    cl_source = "
+    #pragma OPENCL EXTENSION cl_khr_byte_addressable_store : enable
+    __kernel void descartes_kernel(__global double *output,
+                             long3 const size,
+                             float3 const mins,
+                             float const resolution)
+    {
+        int gid = get_global_id(0);
 
-    # TODO
-    prg = cl.Program(ctx, source=sphere_source) |> cl.build!
+        float x_v = mins.x + resolution*(gid%size.x);
+        float y_v = mins.y + resolution*(convert_int_rtz(gid/size.x)%size.y);
+        float z_v = mins.z + resolution*convert_int_rtz(gid/(size.x*size.y));
+        ";
 
-    # # TODO this seem like the dimensions will be off a little since
-    # # e resize the bounds and do not update the resolution
-    # for i = 0:nx, j = 0:ny, k = 0:nz
-    #     x = x_min + resolution*i
-    #     y = y_min + resolution*j
-    #     z = z_min + resolution*k
-    #     @inbounds vol[i+1,j+1,k+1] = FRep(primitive,x,y,z)
-    # end
+    # construct new kernel based on primitve data
+    inner_src, ret_sig = cl_kernel_inner(p)
+    cl_source = cl_source * inner_src * "output[gid]=$ret_sig;}"
 
-    k = cl.Kernel(prg, "sphere_test")
-    cl.call(queue, k, length(out), nothing, q_buff,
-            (nx,ny,nz), (x_min, y_min, z_min), resolution)
-    cl.copy!(queue, out, o_buff)
+    @show cl_source
+    prg = cl.Program(ctx, source=cl_source) |> cl.build!
 
-    SignedDistanceField{3,Float32,Float32}(bounds, out)
+    k = cl.Kernel(prg, "descartes_kernel")
+    cl.wait(queue(k, length(out), nothing, o_buff,
+            (nx,ny,nz), (Float32(x_min), Float32(y_min), Float32(z_min)), Float32(resolution)))
+    cl.wait(cl.copy!(queue, out, o_buff))
+
+    #@show out
+    # TODO change to float32
+    sdf = SignedDistanceField{3,Float64,Float64}(bounds, reshape(out, (nx,ny,nz)))
+    HomogenousMesh(sdf, NaiveSurfaceNets())
 end
