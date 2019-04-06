@@ -5,5 +5,4 @@ StaticArrays
 HDF5
 Meshing
 MeshIO
-LinearAlgebra
 MeshCat
