@@ -33,11 +33,9 @@ function descartes_opencl(resolution=0.01)
 
     x_rng, y_rng, z_rng = maximum(bounds) - minimum(bounds)
 
-    nx = ceil(Int, x_rng/resolution)
-    ny = ceil(Int, y_rng/resolution)
-    nz = ceil(Int, z_rng/resolution)
-
-    vol = Array{Float32}(undef,nx+1, ny+1, nz+1)
+    nx = ceil(Int, x_rng/resolution) + 1
+    ny = ceil(Int, y_rng/resolution) + 1
+    nz = ceil(Int, z_rng/resolution) + 1
 
     b_max = SVector(x_min + resolution*nx, y_min + resolution*ny, z_min + resolution*nz)
 
