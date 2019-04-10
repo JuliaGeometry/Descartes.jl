@@ -15,7 +15,7 @@ function opencl_sdf(p::AbstractPrimitive, resolution=0.01)
     ny = ceil(Int, y_rng/resolution) + 1
     nz = ceil(Int, z_rng/resolution) + 1
 
-    b_max = SVector(x_min + resolution*nx, y_min + resolution*ny, z_min + resolution*nz)
+    b_max = SVector{3,Float32}(x_min + resolution*nx, y_min + resolution*ny, z_min + resolution*nz)
 
     # re-adjust bounding box
     o = SVector{3,Float32}(origin(bounds)...)
@@ -26,13 +26,13 @@ function opencl_sdf(p::AbstractPrimitive, resolution=0.01)
     device, ctx, queue = cl.create_compute_context()
 
     # setup output and output buffers
-    out = Array{Float64}(undef, nx*ny*nz)
-    o_buff = cl.Buffer(Float64, ctx, :w, length(out))
+    out = Array{Float32}(undef, nx*ny*nz)
+    o_buff = cl.Buffer(Float32, ctx, :w, length(out))
 
     ## basic kernel template we will fill in with primitive sdf computations
     cl_source = "
     #pragma OPENCL EXTENSION cl_khr_byte_addressable_store : enable
-    __kernel void descartes_kernel(__global double *output,
+    __kernel void descartes_kernel(__global float *output,
                              long3 const size,
                              float3 const mins,
                              float const resolution)
@@ -58,6 +58,6 @@ function opencl_sdf(p::AbstractPrimitive, resolution=0.01)
 
     #@show out
     # TODO change to float32
-    sdf = SignedDistanceField{3,Float64,Float64}(bounds, reshape(out, (nx,ny,nz)))
+    sdf = SignedDistanceField{3,Float32,Float32}(bounds, reshape(out, (nx,ny,nz)))
     HomogenousMesh(sdf, NaiveSurfaceNets())
 end
