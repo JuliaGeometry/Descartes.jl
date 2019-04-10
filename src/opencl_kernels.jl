@@ -15,6 +15,11 @@
 # Return String(<inner cl kernel>), String(<SDF return sig>)
 #
 
+#
+# At present this is very hacky and should either be a macro or use other
+# direct compilation methods
+#
+
 function _inv_transform(it, sig)
     return """
     float x_$sig = x_v*$(it[1,1])+y_v*$(it[1,2])+z_v*$(it[1,3])+$(it[1,4]);
@@ -25,7 +30,7 @@ end
 
 function cl_kernel_inner(p::Sphere)
     it = p.inv_transform
-    sig = rand(UInt8)
+    sig = string(rand(UInt8),"s")
 
     return """
     $(_inv_transform(it,sig))
@@ -36,7 +41,7 @@ end
 
 function cl_kernel_inner(p::Cylinder)
     it = p.inv_transform
-    sig = rand(UInt8)
+    sig = string(rand(UInt8),"c")
 
     return """
     $(_inv_transform(it,sig))
@@ -47,8 +52,7 @@ end
 
 function cl_kernel_inner(p::Cuboid)
     it = p.inv_transform
-    sig = rand(UInt8)
-    ret_sig = rand(UInt8)
+    sig = string(rand(UInt8),"cube")
     dx, dy, dz = p.dimensions
 
     return """
@@ -57,16 +61,16 @@ function cl_kernel_inner(p::Cuboid)
     float ys_$sig = max((float)(-y_$sig), (float)(y_$sig-$dy));
     float zs_$sig = max((float)(-z_$sig), (float)(z_$sig-$dz));
 
-    float cuboid_$ret_sig = max(max(xs_$sig,ys_$sig),zs_$sig);
+    float cuboid_$sig = max(max(xs_$sig,ys_$sig),zs_$sig);
     """,
-    "cuboid_$ret_sig"
+    "cuboid_$sig"
 
 end
 
 function cl_kernel_inner(u::CSGUnion)
     r_body, r_ret = cl_kernel_inner(u.right)
     l_body, l_ret = cl_kernel_inner(u.left)
-    sig = rand(UInt8)
+    sig = string(rand(UInt8),"union")
     return """
     $(r_body)
 
@@ -80,7 +84,7 @@ end
 function cl_kernel_inner(u::CSGDiff)
     r_body, r_ret = cl_kernel_inner(u.right)
     l_body, l_ret = cl_kernel_inner(u.left)
-    sig = rand(UInt8)
+    sig = string(rand(UInt8),"diff")
     return """
     $(r_body)
 
@@ -94,7 +98,7 @@ end
 function cl_kernel_inner(u::CSGIntersect)
     r_body, r_ret = cl_kernel_inner(u.right)
     l_body, l_ret = cl_kernel_inner(u.left)
-    sig = rand(UInt8)
+    sig = string(rand(UInt8),"intersect")
     return """
     $(r_body)
 
@@ -107,7 +111,7 @@ end
 
 function cl_kernel_inner(s::Shell)
     body, ret = cl_kernel_inner(s.primitive)
-    sig = rand(UInt8)
+    sig = string(rand(UInt8),"shell")
     return """
     $(body)
 
