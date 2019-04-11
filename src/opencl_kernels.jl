@@ -134,7 +134,8 @@ function cl_kernel_inner(u::RadiusedCSGUnion)
     if (fabs((float)($(l_ret)-$(r_ret))) >= $r) {
         radunion_$sig = min($l_ret,$r_ret);
     } else {
-        radunion_$sig = $(r_ret)+$r * sin(M_PI_4 + asin(($l_ret-$r_ret)/($r*sqrt(2.0))))-$r;
+        float diff = ($l_ret-$r_ret);
+        radunion_$sig = $(r_ret)+$r * sin((float)(M_PI_4 + asin((float)(diff/($r*SQRT2)))))-$r;
         }
     """,
     "radunion_$sig"
