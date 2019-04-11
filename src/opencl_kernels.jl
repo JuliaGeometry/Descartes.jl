@@ -120,16 +120,25 @@ function cl_kernel_inner(s::Shell)
     "shell_$sig"
 end
 
-# function cl_kernel_inner(u::RadiusedCSGUnion, x, y, z)
-#     a = FRep(u.left, x,y,z)
-#     b = FRep(u.right, x,y,z)
-#     r = u.radius
-#     if abs(a-b) >= r
-#         return min(a,b)
-#     else
-#         return b+r*sin(pi/4+asin((a-b)/(r*sqrt(2))))-r
-#     end
-# end
+function cl_kernel_inner(u::RadiusedCSGUnion)
+    r_body, r_ret = cl_kernel_inner(u.right)
+    l_body, l_ret = cl_kernel_inner(u.left)
+    r = u.radius
+    sig = string(rand(UInt8),"radunion")
+    return """
+    $(r_body)
+
+    $(l_body)
+
+    float radunion_$sig;
+    if (fabs((float)($(l_ret)-$(r_ret))) >= $r) {
+        radunion_$sig = min($l_ret,$r_ret);
+    } else {
+        radunion_$sig = $(r_ret)+$r * sin(M_PI_4 + asin(($l_ret-$r_ret)/($r*sqrt(2.0))))-$r;
+        }
+    """,
+    "radunion_$sig"
+end
 
 
 # function cl_kernel_inner(p::Piping{T}, x, y, z) where {T}
