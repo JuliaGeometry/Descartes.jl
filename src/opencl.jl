@@ -2,7 +2,7 @@
 # take this output and mesh it
 
 
-function opencl_sdf(p::AbstractPrimitive, resolution=0.01)
+function opencl_sdf(p::AbstractPrimitive, resolution=0.1)
 
     # setup bounding boxes
     bounds = HyperRectangle(p)
@@ -58,6 +58,5 @@ function opencl_sdf(p::AbstractPrimitive, resolution=0.01)
 
     #@show out
     # TODO change to float32
-    sdf = SignedDistanceField{3,Float32,Float32}(bounds, reshape(out, (nx,ny,nz)))
-    HomogenousMesh(sdf, NaiveSurfaceNets())
+    SignedDistanceField{3,Float32,Float32}(bounds, reshape(out, (nx,ny,nz)))
 end
