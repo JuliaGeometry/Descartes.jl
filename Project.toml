@@ -1,3 +1,6 @@
+name = "Descartes"
+authors = ["Steve Kelly <kd2cca@gmail.com>"]
+
 [deps]
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 GeometryTypes = "4d00f742-c7ba-57c2-abde-4428a4b178cb"
