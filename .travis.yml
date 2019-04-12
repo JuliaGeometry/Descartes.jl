@@ -1,24 +1,18 @@
-# http://lint.travis-ci.org/
+# Documentation: http://docs.travis-ci.com/user/languages/julia/
 language: julia
 os:
-  - linux
+  # - linux # Linux does not easily support OpenCL on Travis
+  - osx
 julia:
-  - 0.4
+  - 1.0
   - nightly
 notifications:
   email: false
-addons:
-  apt:
-    packages:
-    - cmake
-    - libxxf86vm-dev
-    sources:
-    - kubuntu-backports
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start" # X virtual framebuffer
-script:
-    - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-    - julia -e 'Pkg.clone(pwd()); Pkg.build("Descartes"); Pkg.test("Descartes"; coverage=true)'
+branches:
+  only: # Only kick off CI for master and potential merges to master from within PRs
+    - master
+matrix:
+  allow_failures:
+    - julia: nightly
 after_success:
-  - julia -e 'cd(Pkg.dir("Descartes")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder()); Codecov.submit(process_folder())'
+  - julia -e 'using Pkg; import Descartes; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'

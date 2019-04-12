@@ -16,7 +16,7 @@ function SignedDistanceField(primitive::AbstractPrimitive{3,T},
 
     # re-adjust bounding box
     o = SVector{3,Float32}(origin(bounds)...)
-    w = b_max-o
+    w = SVector{3,Float32}(b_max-o)
     bounds = HyperRectangle(o..., w...)
 
     # TODO this seem like the dimensions will be off a little since

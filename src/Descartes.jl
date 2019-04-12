@@ -49,6 +49,9 @@ export FRep
 # mesh
 export HomogenousMesh
 
+# GeometryTypes
+export HyperRectangle, Vec, SignedDistanceField
+
 # FileIO
 export load, save
 

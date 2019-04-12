@@ -32,6 +32,10 @@ function opencl_sdf(p::AbstractPrimitive, resolution=0.1)
     ## basic kernel template we will fill in with primitive sdf computations
     cl_source = "
     #pragma OPENCL EXTENSION cl_khr_byte_addressable_store : enable
+    #ifndef M_PI_4
+    #define M_PI_4 0.7853981633974483
+    #endif
+    #define SQRT2 1.4142135623730951
     __kernel void descartes_kernel(__global float *output,
                              long3 const size,
                              float3 const mins,
