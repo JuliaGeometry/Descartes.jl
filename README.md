@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/sjkelly/Descartes.jl.svg?branch=master)](https://travis-ci.org/sjkelly/Descartes.jl)
 [![Coverage Status](https://coveralls.io/repos/github/sjkelly/Descartes.jl/badge.svg?branch=master)](https://coveralls.io/github/sjkelly/Descartes.jl?branch=master)
+[![codecov](https://codecov.io/gh/sjkelly/Descartes.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/sjkelly/Descartes.jl)
 
 Descartes is a research project into the representation of solid geometry. It
 is designed to leverage Julia's multiple dispatch and JIT compilation to
