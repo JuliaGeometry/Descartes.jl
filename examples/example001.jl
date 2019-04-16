@@ -42,7 +42,9 @@ function example001()
     cy_h = r_from_dia(size * 2.5)
 
     function rotcy(rot, r, h)
-        rotate(90, rot)cylinder(r, h)
+        r = rotate(pi/2, rot)Cylinder(r, h)
+        @show r
+        r
     end
 
     CSGDiff(
@@ -52,7 +54,5 @@ function example001()
                      rotcy([0, 1, 0], cy_r, cy_h))))
 end
 
-m = Mesh(example001())
-exportAsciiPly(m, "example001.ply")
-
-
+m = HomogenousMesh(example001())
+save("example001.ply", m)
