@@ -4,6 +4,7 @@ using Descartes,
 import GeometryTypes
 
 @testset "Descartes Core" begin
+      include("tranforms.jl")
       include("opencl.jl")
       include("primitives.jl")
       include("hyperrectangles.jl")

@@ -35,7 +35,7 @@ export Point
 export Cuboid, Cylinder, Sphere, Piping
 
 # transforms
-export Translation, translate, rotate
+export Transform, Translation, translate, rotate
 
 # operations
 export Shell
@@ -55,6 +55,8 @@ export HyperRectangle, Vec, SignedDistanceField
 # FileIO
 export load, save
 
+# Base
+export *
 
 # Init
 function __init__()

@@ -6,31 +6,30 @@ function *(a::Transform{N,T}, b::Transform{N,T}) where {N,T}
     Transform{N,T}(a.transform*b.transform)
 end
 
-function rotate(ang, vect::Vector)
-    n = length(vect)
-    N = n + 1
-    transform = Matrix(1.0*I,4,4)
-    sin_ang = sin(ang)
-    cos_ang = cos(ang)
+"""
+rotate around the given axis, by angle
+"""
+function rotate(ang, axis::Vector)
+    n = length(axis)
+    N = n+1 # homogenous coords
 
-    # axis rotations
-    if vect[1] != 0
-        transform[2,2] = transform[3,3] = cos_ang
-        transform[2,3] = -sin_ang
-        transform[3,2] = sin_ang
-    elseif vect[2] != 0
-        transform[1,1] = transform[3,3] = cos_ang
-        transform[1,3] = sin_ang
-        transform[3,1] = -sin_ang
-    elseif vect[3] != 0
-        transform[1,1] = transform[2,2] = cos_ang
-        transform[1,2] = -sin_ang
-        transform[2,1] = sin_ang
-    else
-        throw(ArgumentError("rotation underspecified!"))
+    # handle undefined axis e.g. zero array
+    if norm(axis) == 0
+        return Transform{N,Float64}(SMatrix{N,N}(1.0*I))
     end
 
-    Transform{N, Float64}(transform)
+    u = normalize(axis) # normalize the specified axis
+
+    # TODO handle 2D case
+    if n == 3
+        R = [cos(ang)+u[1]^2*(1-cos(ang)) u[1]*u[2]*(1-cos(ang))-u[3]*sin(ang) u[1]*u[3]*(1-cos(ang))+u[2]*sin(ang) 0
+            u[2]*u[1]*(1-cos(ang))+u[3]*sin(ang) cos(ang)+u[2]^2*(1-cos(ang)) u[2]*u[3]*(1-cos(ang))-u[1]*sin(ang) 0
+            u[3]*u[1]*(1-cos(ang))-u[2]*sin(ang) u[3]*u[2]*(1-cos(ang))+u[1]*sin(ang) cos(ang)+u[3]^2*(1-cos(ang)) 0
+            0 0 0 1]
+            return Transform{4, Float64}(R)
+    else
+        error("Axis rotation or order $n, is not implemented yet")
+    end
 end
 
 function translate(vect::Vector)
