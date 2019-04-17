@@ -42,9 +42,7 @@ function example001()
     cy_h = r_from_dia(size * 2.5)
 
     function rotcy(rot, r, h)
-        r = rotate(pi/2, rot)Cylinder(r, h)
-        @show r
-        r
+        rotate(pi/2, rot)Cylinder(r, h, center=true)
     end
 
     CSGDiff(
@@ -54,5 +52,5 @@ function example001()
                      rotcy([0, 1, 0], cy_r, cy_h))))
 end
 
-m = HomogenousMesh(example001())
+m = HomogenousMesh(example001(),resolution=0.5)
 save("example001.ply", m)

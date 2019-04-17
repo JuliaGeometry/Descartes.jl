@@ -45,7 +45,7 @@ function cl_kernel_inner(p::Cylinder)
 
     return """
     $(_inv_transform(it,sig))
-    float cylinder_$sig = max((float)(max((float)(-z_$sig),(float)(z_$sig-$(p.height)))), (float)(sqrt(x_$sig*x_$sig + y_$sig*y_$sig) - $(p.radius)));
+    float cylinder_$sig = max((float)(max((float)(-z_$sig+$(p.bottom)),(float)(z_$sig-$(p.height)-($(p.bottom))))), (float)(sqrt(x_$sig*x_$sig + y_$sig*y_$sig) - $(p.radius)));
     """,
     "cylinder_$sig"
 end

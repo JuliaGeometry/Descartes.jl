@@ -21,7 +21,7 @@ function FRep(p::Cylinder, _x, _y, _z)
     x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
     y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
     z = _x*it[3,1]+_y*it[3,2]+_z*it[3,3]+it[3,4]
-    max(max(-z,z-p.height), sqrt(x*x + y*y) - p.radius)
+    max(max(-z+p.bottom,z-p.height-p.bottom), sqrt(x*x + y*y) - p.radius)
 end
 
 function FRep(p::Cuboid, _x, _y, _z)

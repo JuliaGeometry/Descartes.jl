@@ -14,6 +14,7 @@ end
 mutable struct Cylinder{T} <: AbstractPrimitive{3, T}
     radius::T
     height::T
+    bottom::T
     transform::SMatrix{4,4,T,16}
     inv_transform::SMatrix{4,4,T,16}
 end

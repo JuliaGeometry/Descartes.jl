@@ -8,9 +8,11 @@ end
     RoundedCuboid(dims, axes, convert(T,r), eye(4), eye(4))
 end =#
 
-function Cylinder(r, h)
+function Cylinder(r, h; center=false)
     rn, hn = promote(r,h)
-    Cylinder(rn, hn, SMatrix{4,4}(one(rn)*I), SMatrix{4,4}(one(rn)*I))
+    b = 0
+    center && (b = -h/2)
+    Cylinder(rn, hn, b, SMatrix{4,4}(one(rn)*I), SMatrix{4,4}(one(rn)*I))
 end
 
 function Sphere(r::T) where {T}
