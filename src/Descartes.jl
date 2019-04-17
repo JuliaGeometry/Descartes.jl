@@ -25,7 +25,7 @@ include("meshes.jl")
 #include("hashing.jl")
 include("cache.jl")
 include("visualize.jl")
-include("opencl_kernels.jl")
+include("frep_opencl.jl")
 include("opencl.jl")
 
 # GeometryTypes
