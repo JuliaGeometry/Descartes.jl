@@ -47,10 +47,11 @@ function example001()
 
     CSGDiff(
         Sphere(r_from_dia(size)),
-        CSGUnion(rotcy([0, 0, 0], cy_r, cy_h),
-            CSGUnion(rotcy([1, 0, 0], cy_r, cy_h),
-                     rotcy([0, 1, 0], cy_r, cy_h))))
+        rotcy([0, 0, 0], cy_r, cy_h),
+        rotcy([1, 0, 0], cy_r, cy_h),
+        rotcy([0, 1, 0], cy_r, cy_h))
 end
 
-m = HomogenousMesh(example001(),resolution=0.5)
+m = HomogenousMesh(example001(),resolution=1)
 save("example001.ply", m)
+Descartes.visualize(m)
