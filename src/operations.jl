@@ -51,8 +51,15 @@ function translate(vect::SVector)
 end
 
 function *(transform::Transform{N1,Float64}, obj::AbstractPrimitive{N2,T}) where {N1,N2,T}
-    obj.transform = obj.transform*transform.transform
+    obj.transform = transform.transform*obj.transform
     obj.inv_transform = inv(obj.transform)
+    obj
+end
+
+# commute the transform over each leaf in the CSG Tree
+function *(transform::Transform{N1,Float64}, obj::AbstractCSGTree{N2,T}) where {N1,N2,T}
+    transform*obj.left
+    transform*obj.right
     obj
 end
 
