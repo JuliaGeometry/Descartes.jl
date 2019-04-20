@@ -1,33 +1,36 @@
-function GeometryTypes.HomogenousMesh(primitive::AbstractPrimitive{3, T};
+function (::Type{MT})(primitives::AbstractPrimitive{3, T}...;
                                          cl=true,
                                          resolution=0.1,
-                                         algorithm=MarchingTetrahedra()) where {T}
+                                         algorithm=MarchingTetrahedra()) where {T, MT <: AbstractMesh}
     # key based on resolution
-    k = "HomogenousMesh:res:$resolution"
+    #k = "HomogenousMesh:res:$resolution"
     # grab from cache if available
-    if use_cache && cache_contains(primitive,k)
-        return cache_load(primitive, k)
-    end
+    #if use_cache && cache_contains(primitive,k)
+    #    return cache_load(primitive, k)
+    #end
     if cl
-        return opencl_mesh(primitive, resolution, algorithm)
+        d = opencl_sdf(primitives[1], resolution)
+        mesh = MT(d,algorithm)
     else
-        return cpu_mesh(primitive, resolution, algorithm)
+        d = SignedDistanceField(primitives[1], resolution)
+        mesh = MT(d,algorithm)
     end
+    for i = 2:length(primitives)
+        primitive = primitives[i]
+        if cl
+            d = opencl_sdf(primitive, resolution)
+            mesh = merge(mesh, MT(d,algorithm))
+        else
+            d = SignedDistanceField(primitive, resolution)
+            mesh = merge(mesh, MT(d,algorithm))
+        end
+    end
+    return mesh
     # we got this far, might as well save it
     #if use_cache
     #    cache_add(primitive, k, h)
     #end
 
-end
-
-function opencl_mesh(p::AbstractPrimitive, res, algo)
-    distancefield = opencl_sdf(p, res)
-    HomogenousMesh(distancefield, algo)
-end
-
-function cpu_mesh(p::AbstractPrimitive, res, algo)
-    distancefield = SignedDistanceField(p, res)
-    HomogenousMesh(distancefield, algo)
 end
 
 function piped_mesh(m::AbstractMesh,r)

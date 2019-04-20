@@ -10,11 +10,14 @@ function init_vis()
 end
 
 
-function visualize(m::AbstractMesh, algorithm=MarchingCubes(),
-                   resolution=1)
+function visualize(m::AbstractMesh...)
 
     # first visual
     vis = init_vis()
     delete!(vis) # clear visualizer
-    setobject!(vis, m)
+    for mesh in m
+        setobject!(vis, mesh)
+    end
 end
+
+visualize(m::AbstractVector) = visualize(m...)
