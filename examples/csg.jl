@@ -36,4 +36,4 @@ c = translate([24,0,0])CSGDiff(
 
 m = HomogenousMesh(a,b,c, resolution=0.1)
 
-Descartes.visualize(m)
+#Descartes.visualize(m)

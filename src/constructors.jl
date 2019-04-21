@@ -26,7 +26,8 @@ end
 #end
 
 function Piping(r, pts)
-    Piping(r, pts, SMatrix{4,4}(one(r)*I), SMatrix{4,4}(one(r)*I))
+    ptsc = [SVector{3,Float64}(pt...) for pt in pts]
+    Piping(Float64(r), ptsc, SMatrix{4,4}(1.0*I), SMatrix{4,4}(1.0*I))
 end
 
 # CSG

@@ -53,5 +53,5 @@ function example001()
 end
 
 m = HomogenousMesh(example001(),resolution=1)
-save("example001.ply", m)
-Descartes.visualize(m)
+#save("example001.ply", m)
+#Descartes.visualize(m)

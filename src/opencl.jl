@@ -52,7 +52,6 @@ function opencl_sdf(p::AbstractPrimitive, resolution=0.1)
     inner_src, ret_sig = cl_kernel_inner(p)
     cl_source = cl_source * inner_src * "output[gid]=$ret_sig;}"
 
-    @show cl_source
     prg = cl.Program(ctx, source=cl_source) |> cl.build!
 
     k = cl.Kernel(prg, "descartes_kernel")
