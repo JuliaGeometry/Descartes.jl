@@ -54,12 +54,12 @@ function cl_kernel_inner(p::Cuboid)
     it = p.inv_transform
     sig = string(rand(UInt8),"cube")
     dx, dy, dz = p.dimensions
-
+    lbx, lby, lbz = p.lowercorner
     return """
     $(_inv_transform(it,sig))
-    float xs_$sig = max((float)(-x_$sig), (float)(x_$sig-$dx));
-    float ys_$sig = max((float)(-y_$sig), (float)(y_$sig-$dy));
-    float zs_$sig = max((float)(-z_$sig), (float)(z_$sig-$dz));
+    float xs_$sig = max((float)(-x_$sig+$lbx), (float)(x_$sig-$dx-($lbx)));
+    float ys_$sig = max((float)(-y_$sig+$lby), (float)(y_$sig-$dy-($lby)));
+    float zs_$sig = max((float)(-z_$sig+$lbz), (float)(z_$sig-$dz-($lbz)));
 
     float cuboid_$sig = max(max(xs_$sig,ys_$sig),zs_$sig);
     """,

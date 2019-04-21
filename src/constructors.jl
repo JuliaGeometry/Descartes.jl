@@ -1,6 +1,8 @@
-function Cuboid(dims)
+function Cuboid(dims;center=false)
     @assert length(dims) == 3
-    Cuboid(SVector{3}(dims), SMatrix{4,4}(one(dims[1])*I), SMatrix{4,4}(one(dims[1])*I))
+    lb = SVector(0.,0.,0.)
+    center && (lb = -SVector{3,Float64}(dims)/2)
+    Cuboid(SVector{3,Float64}(dims), lb, SMatrix{4,4}(1.0*I), SMatrix{4,4}(1.0*I))
 end
 
 #= function RoundedCuboid{T}(dims::Vector{T},axes::Vector{Bool},r)
@@ -9,14 +11,14 @@ end
 end =#
 
 function Cylinder(r, h; center=false)
-    rn, hn = promote(r,h)
+    rn, hn = Float64(r), Float64(h)
     b = 0
     center && (b = -h/2)
     Cylinder(rn, hn, b, SMatrix{4,4}(one(rn)*I), SMatrix{4,4}(one(rn)*I))
 end
 
-function Sphere(r::T) where {T}
-    Sphere(r, SMatrix{4,4}(one(r)*I), SMatrix{4,4}(one(r)*I))
+function Sphere(r)
+    Sphere(Float64(r), SMatrix{4,4}(1.0*I), SMatrix{4,4}(1.0*I))
 end
 
 #function PrismaticCylinder(sides, height::T, radius::T) where {T}

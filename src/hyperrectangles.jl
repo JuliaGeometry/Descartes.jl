@@ -1,5 +1,5 @@
 function HyperRectangle(cube::Cuboid{T}) where {T}
-    orig = HyperRectangle{3,T}(SVector{3}(0,0,0), SVector{3}(cube.dimensions))
+    orig = HyperRectangle{3,T}(cube.lowercorner, cube.dimensions)
     transform(cube.transform, orig)
 end
 

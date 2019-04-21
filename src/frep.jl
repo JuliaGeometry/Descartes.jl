@@ -30,9 +30,10 @@ function FRep(p::Cuboid, _x, _y, _z)
     y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
     z = _x*it[3,1]+_y*it[3,2]+_z*it[3,3]+it[3,4]
     dx, dy, dz = p.dimensions
-    max(max(-x, x-dx),
-        max(-y, y-dy),
-        max(-z, z-dz))
+    lbx, lby,lbz = p.lowercorner
+    max(max(-x+lbx, x-dx-lbx),
+        max(-y+lby, y-dy-lby),
+        max(-z+lbz, z-dz-lbz))
 end
 
 function FRep(u::CSGUnion, x, y, z)
