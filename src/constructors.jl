@@ -12,7 +12,7 @@ end =#
 
 function Cylinder(r, h; center=false)
     rn, hn = Float64(r), Float64(h)
-    b = 0
+    b = 0.0
     center && (b = -h/2)
     Cylinder(rn, hn, b, SMatrix{4,4}(one(rn)*I), SMatrix{4,4}(one(rn)*I))
 end
