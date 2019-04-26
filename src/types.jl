@@ -5,14 +5,14 @@ abstract type AbstractTransform{N,T} end
 
 # Geometric Primitives
 
-mutable struct Cuboid{T} <: AbstractPrimitive{3, T}
+struct Cuboid{T} <: AbstractPrimitive{3, T}
     dimensions::SVector{3,T}
     lowercorner::SVector{3,T}
     transform::SMatrix{4,4,T,16}
     inv_transform::SMatrix{4,4,T,16}
 end
 
-mutable struct Cylinder{T} <: AbstractPrimitive{3, T}
+struct Cylinder{T} <: AbstractPrimitive{3, T}
     radius::T
     height::T
     bottom::T
@@ -20,13 +20,13 @@ mutable struct Cylinder{T} <: AbstractPrimitive{3, T}
     inv_transform::SMatrix{4,4,T,16}
 end
 
-mutable struct Sphere{T} <: AbstractPrimitive{3, T}
+struct Sphere{T} <: AbstractPrimitive{3, T}
     radius::T
     transform::SMatrix{4,4,T,16}
     inv_transform::SMatrix{4,4,T,16}
 end
 
-mutable struct Piping{T} <: AbstractPrimitive{3, T}
+struct Piping{T} <: AbstractPrimitive{3, T}
     radius::T
     points::Vector{SVector{3,T}}
     transform::SMatrix{4,4,T,16}
@@ -35,7 +35,7 @@ end
 
 # transforms
 
-mutable struct Transform{N,T} <: AbstractTransform{N,T}
+struct Transform{N,T} <: AbstractTransform{N,T}
     transform::SMatrix{N,N,T} #TODO: where L?
 end
 
@@ -66,7 +66,7 @@ end
 
 # Operations
 
-mutable struct Shell{T} <: AbstractPrimitive{3,T}
+struct Shell{T} <: AbstractPrimitive{3,T}
     primitive::T
     distance
 end
