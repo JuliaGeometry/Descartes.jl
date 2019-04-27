@@ -52,8 +52,8 @@ end
 
 function *(transform::Transform, obj::PT) where {PT<:AbstractPrimitive}
     nt= transform.transform*obj.transform
-    nit = inv(obj.transform)
-    PT((obj.(i) for i in fieldnames(PT)[1:end-2])..., nt, nit)
+    nit = inv(nt)
+    PT((getfield(obj,i) for i in fieldnames(PT)[1:end-2])..., nt, nit)
 end
 
 # commute the transform over each leaf in the CSG Tree
@@ -61,6 +61,12 @@ function *(transform::Transform, obj::CSGTy) where {CSGTy <: AbstractCSGTree}
     l = transform*obj.left
     r = transform*obj.right
     CSGTy(l, r)
+end
+
+function *(transform::Transform, obj::RadiusedCSGUnion)
+    l = transform*obj.left
+    r = transform*obj.right
+    RadiusedCSGUnion(obj.r, l, r)
 end
 
 """
