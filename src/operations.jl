@@ -50,17 +50,23 @@ function translate(vect::SVector)
     Transform{N, Float64}(SMatrix{N,N}(transform))
 end
 
-function *(transform::Transform{N1,Float64}, obj::AbstractPrimitive{N2,T}) where {N1,N2,T}
-    obj.transform = transform.transform*obj.transform
-    obj.inv_transform = inv(obj.transform)
-    obj
+function *(transform::Transform, obj::PT) where {PT<:AbstractPrimitive}
+    nt= transform.transform*obj.transform
+    nit = inv(nt)
+    PT((getfield(obj,i) for i in fieldnames(PT)[1:end-2])..., nt, nit)
 end
 
 # commute the transform over each leaf in the CSG Tree
-function *(transform::Transform{N1,Float64}, obj::AbstractCSGTree{N2,T}) where {N1,N2,T}
-    transform*obj.left
-    transform*obj.right
-    obj
+function *(transform::Transform, obj::CSGTy) where {CSGTy <: AbstractCSGTree}
+    l = transform*obj.left
+    r = transform*obj.right
+    CSGTy(l, r)
+end
+
+function *(transform::Transform, obj::RadiusedCSGUnion)
+    l = transform*obj.left
+    r = transform*obj.right
+    RadiusedCSGUnion(obj.r, l, r)
 end
 
 """
