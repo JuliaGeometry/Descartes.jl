@@ -3,7 +3,22 @@ abstract type AbstractCSGTree{N,T} <: AbstractPrimitive{N, T} end
 abstract type AbstractOperation{N,T} <: AbstractPrimitive{N,T} end
 abstract type AbstractTransform{N,T} end
 
-# Geometric Primitives
+# 2D Geometric Primitives
+
+struct Square{T} <: AbstractPrimitive{2, T}
+    dimensions::SVector{2,T}
+    lowercorner::SVector{2,T}
+    transform::SMatrix{3,3,T,9}
+    inv_transform::SMatrix{3,3,T,9}
+end
+
+struct Circle{T} <: AbstractPrimitive{2, T}
+    radius::T
+    transform::SMatrix{3,3,T,9}
+    inv_transform::SMatrix{3,3,T,9}
+end
+
+# 3D Geometric Primitives
 
 struct Cuboid{T} <: AbstractPrimitive{3, T}
     dimensions::SVector{3,T}
@@ -67,6 +82,11 @@ end
 # Operations
 
 struct Shell{T} <: AbstractPrimitive{3,T}
+    primitive::T
+    distance
+end
+
+struct LinearExtrude{T} <: AbstractPrimitive{3,T}
     primitive::T
     distance
 end

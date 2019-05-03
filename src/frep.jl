@@ -82,3 +82,8 @@ function FRep(p::Piping{T}, x, y, z) where {T}
     end
     val - p.radius
 end
+
+function FRep(p::LinearExtrude, _x, _y, _z)
+    r = FRep(s.primitive, x, y, z)
+    max(max(-z,z-p.height), r)
+end
