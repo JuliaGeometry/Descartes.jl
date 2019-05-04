@@ -1,3 +1,11 @@
+function Square(dims;center=false)
+    @assert length(dims) == 2
+    lb = SVector(0.,0.)
+    center && (lb = -SVector{2,Float64}(dims)/2)
+    Square(SVector{2,Float64}(dims), lb, SMatrix{3,3}(1.0*I), SMatrix{3,3}(1.0*I))
+end
+
+
 function Cuboid(dims;center=false)
     @assert length(dims) == 3
     lb = SVector(0.,0.,0.)

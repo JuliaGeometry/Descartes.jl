@@ -1,3 +1,8 @@
+function HyperRectangle(square::Square{T}) where {T}
+    orig = HyperRectangle{2,T}(square.lowercorner, square.dimensions)
+    transform(square.transform, orig)
+end
+
 function HyperRectangle(cube::Cuboid{T}) where {T}
     orig = HyperRectangle{3,T}(cube.lowercorner, cube.dimensions)
     transform(cube.transform, orig)
