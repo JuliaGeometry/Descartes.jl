@@ -83,7 +83,7 @@ function transform(it::SMatrix, x::AbstractVector) where {T}
     transform(it, x...)
 end
 
-function transform(t::SMatrix, h::HyperRectangle)
+function transform(t::SMatrix, h::HyperRectangle{3,T}) where {T}
     p_1 = t*SVector(h.origin... , 1)
     p_2 = t*SVector(h.widths... , 1)
     p_3 = t*SVector(h.origin[1]+h.widths[1],h.origin[2],h.origin[3], 1)
@@ -101,6 +101,17 @@ function transform(t::SMatrix, h::HyperRectangle)
     HyperRectangle(x_o, y_o, z_o, x_w-x_o, y_w-y_o, z_w-z_o)
 end
 
+function transform(t::SMatrix, h::HyperRectangle{2,T}) where {T}
+    p_1 = t*SVector(h.origin... , 1)
+    p_2 = t*SVector(h.widths... , 1)
+    p_3 = t*SVector(h.origin[1]+h.widths[1],h.origin[2], 1)
+    p_4 = t*SVector(h.origin[1],h.origin[2]+h.widths[2], 1)
+    x_o = min(p_1[1],p_2[1],p_3[1],p_4[1])
+    y_o = min(p_1[2],p_2[2],p_3[2],p_4[2])
+    x_w = max(p_1[1],p_2[1],p_3[1],p_4[1])
+    y_w = max(p_1[2],p_2[2],p_3[2],p_4[2])
+    HyperRectangle(x_o, y_o, x_w-x_o, y_w-y_o)
+end
 
 #function clarkcatmull!(n::Integer, pipe::Pipe{Float64})
 #    length(pipe.points) < 3 && return

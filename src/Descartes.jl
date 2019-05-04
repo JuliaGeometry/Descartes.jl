@@ -31,8 +31,12 @@ include("opencl.jl")
 # GeometryTypes
 export Point
 
-# primitives
+# 3d primitives
 export Cuboid, Cylinder, Sphere, Piping
+
+# 2d primitives
+
+export Square, Circle
 
 # transforms
 export Transform, Translation, translate, rotate
