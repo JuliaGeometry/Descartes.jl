@@ -18,7 +18,7 @@ Progress has been good, and the first iteration has been very insightful
 and lead to more directed developments in our larger ecosystem. The primary
 goal of this first iteration was to generate Meshes from CSG descriptions.
 
-The next step is to begin development so Descartes can be competative with
+The next step is to begin development so Descartes can be competitive with
 OpenSCAD in both features and performance. Below will outline the general
 steps and insights gained towards this direction.
 
@@ -30,7 +30,7 @@ The current design was developed around distance fields. A glaring issue
 is the trees are mutable. For example applying a `Transform` to a
 `CSGUnion` will immediately modify the homogenous frame transforms (forward
 and inverse) in the children objects. While this is great for computational
-efficiency it makes introsepction difficult.
+efficiency it makes introspection difficult.
 
 ### Hashing
 
@@ -46,7 +46,7 @@ the tree structure.
 
 ### Level1 - Structure
 
-Strucutre is considered, and code is generates for specific configurations.
+Structure is considered, and code is generates for specific configurations.
 
 ### Level2 - Values
 
@@ -57,5 +57,4 @@ Values are considered, and we can avoid re-computing things (such as a Mesh).
 
 The rough TODO:
     * Make all primitives and operations immutable.
-    * Enable hashing with above and implement model caching
-    * 
+    * Enable hashing with above and implement model caching.
