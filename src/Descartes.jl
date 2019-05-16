@@ -26,7 +26,7 @@ include("meshes.jl")
 include("cache.jl")
 include("visualize.jl")
 include("frep_opencl.jl")
-include("opencl.jl")
+include("distancefield_opencl.jl")
 
 # GeometryTypes
 export Point
