@@ -8,27 +8,27 @@ function _radius(a,b,r)
     end
 end
 
-function FRep(p::Sphere, _x, _y, _z)
+function FRep(p::Sphere, v)
     it = p.inv_transform
-    x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
-    y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
-    z = _x*it[3,1]+_y*it[3,2]+_z*it[3,3]+it[3,4]
+    x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
+    y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
+    z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
     sqrt(x*x + y*y + z*z) - p.radius
 end
 
-function FRep(p::Cylinder, _x, _y, _z)
+function FRep(p::Cylinder, v)
     it = p.inv_transform
-    x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
-    y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
-    z = _x*it[3,1]+_y*it[3,2]+_z*it[3,3]+it[3,4]
+    x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
+    y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
+    z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
     max(max(-z+p.bottom,z-p.height-p.bottom), sqrt(x*x + y*y) - p.radius)
 end
 
-function FRep(p::Cuboid, _x, _y, _z)
+function FRep(p::Cuboid, v)
     it = p.inv_transform
-    x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
-    y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
-    z = _x*it[3,1]+_y*it[3,2]+_z*it[3,3]+it[3,4]
+    x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
+    y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
+    z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
     dx, dy, dz = p.dimensions
     lbx, lby,lbz = p.lowercorner
     max(max(-x+lbx, x-dx-lbx),
@@ -36,33 +36,33 @@ function FRep(p::Cuboid, _x, _y, _z)
         max(-z+lbz, z-dz-lbz))
 end
 
-function FRep(u::CSGUnion, x, y, z)
-    min(FRep(u.left, x,y,z),FRep(u.right, x,y,z))
+function FRep(u::CSGUnion, v)
+    min(FRep(u.left, v),FRep(u.right, v))
 end
 
-function FRep(u::CSGDiff, x, y, z)
-    max(FRep(u.left, x,y,z), -FRep(u.right, x,y,z))
+function FRep(u::CSGDiff, v)
+    max(FRep(u.left, v), -FRep(u.right, v))
 end
 
-function FRep(u::CSGIntersect, x, y, z)
-    max(FRep(u.left, x,y,z), FRep(u.right, x,y,z))
+function FRep(u::CSGIntersect, v)
+    max(FRep(u.left, v), FRep(u.right, v))
 end
 
-function FRep(s::Shell, x, y, z)
-    r = FRep(s.primitive, x, y, z)
+function FRep(s::Shell, v)
+    r = FRep(s.primitive, v)
     max(r, -r-s.distance)
 end
 
-function FRep(u::RadiusedCSGUnion, x, y, z)
-    a = FRep(u.left, x,y,z)
-    b = FRep(u.right, x,y,z)
+function FRep(u::RadiusedCSGUnion, v)
+    a = FRep(u.left, v)
+    b = FRep(u.right, v)
     r = u.radius
     _radius(a,b,r)
 end
 
-function FRep(p::Piping{T}, x, y, z) where {T}
+function FRep(p::Piping{T}, v) where {T}
     num_pts = length(p.points)
-    pt = Point(x,y,z)
+    pt = Point(v[1],v[2],v[3])
 
     val = typemax(T)
 
@@ -83,7 +83,7 @@ function FRep(p::Piping{T}, x, y, z) where {T}
     val - p.radius
 end
 
-function FRep(p::LinearExtrude, _x, _y, _z)
-    r = FRep(s.primitive, x, y, z)
+function FRep(p::LinearExtrude, v)
+    r = FRep(s.primitive, v)
     max(max(-z,z-p.height), r)
 end
