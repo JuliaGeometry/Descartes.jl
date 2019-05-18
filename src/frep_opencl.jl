@@ -18,7 +18,14 @@
 #
 # At present this is very hacky and should either be a macro or use other
 # direct compilation methods
-#
+
+# TODO: Kernel Implementation notes
+# Transformations:
+#       in the second go-around lets try vectors and 4x4 matrices
+# Obejcts
+#       To avoid making structs for each obejct and keeping these in sync
+#           every object and operations becomes a kernel
+#       Transforms are passed to kernels similar to the CPU implementation
 
 function _inv_transform(it, sig)
     return """
