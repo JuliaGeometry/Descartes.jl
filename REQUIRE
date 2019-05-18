@@ -8,3 +8,4 @@ MeshIO
 MeshCat
 OpenCL
 LinearAlgebra
+AdaptiveDistanceFields

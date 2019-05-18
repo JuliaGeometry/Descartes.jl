@@ -13,7 +13,8 @@ using GeometryTypes,
       MeshIO,
       LinearAlgebra,
       MeshCat,
-      OpenCL
+      OpenCL,
+      AdaptiveDistanceFields
 
 include("types.jl")
 include("constructors.jl")
