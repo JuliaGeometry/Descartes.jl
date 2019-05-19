@@ -1,12 +1,10 @@
 function SignedDistanceField(primitive::AbstractPrimitive{3,T},
                                 resolution=0.1) where {T}
     bounds = HyperRectangle(primitive)
-    min_b = minimum(bounds)
-    max_b = maximum(bounds)
-    x_min, y_min, z_min = SVector{3,Float32}(min_b)
-    x_max, y_max, z_max = SVector{3,Float32}(max_b)
+    x_min, y_min, z_min = minimum(bounds)
+    x_max, y_max, z_max = maximum(bounds)
 
-    x_rng, y_rng, z_rng = max_b - min_b
+    x_rng, y_rng, z_rng = maximum(bounds) - minimum(bounds)
 
     nx = ceil(Int, x_rng/resolution)
     ny = ceil(Int, y_rng/resolution)
@@ -22,10 +20,9 @@ function SignedDistanceField(primitive::AbstractPrimitive{3,T},
     bounds = HyperRectangle(o..., w...)
 
     for i = 0:nx, j = 0:ny, k = 0:nz
-        vec = SVector{4,Float32}(x_min + resolution*i,
+        vec = SVector(x_min + resolution*i,
                       y_min + resolution*j,
-                      z_min + resolution*k,
-                      1)
+                      z_min + resolution*k)
         @inbounds vol[i+1,j+1,k+1] = FRep(primitive,vec)
     end
 
