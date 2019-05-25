@@ -12,7 +12,6 @@ using GeometryTypes,
       Meshing,
       MeshIO,
       LinearAlgebra,
-      MeshCat,
       OpenCL,
       AdaptiveDistanceFields
 
@@ -60,12 +59,9 @@ export HyperRectangle, Vec, SignedDistanceField
 # FileIO
 export load, save
 
-# Base
-export *
-
 # Init
 function __init__()
-    cache_init()
+    #cache_init()
 end
 
 end # module
