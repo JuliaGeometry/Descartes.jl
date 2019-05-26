@@ -56,22 +56,16 @@ function dual_contour(f, df, nc)
         #Solve qef to get vertex
         A = Array{Float64,2}(undef,length(h_data),3)
         for i in eachindex(h_data)
-            @show h_data[i][2]
-            @show A
             A[i,:] = h_data[i][2]
         end
-        @show A
         b = [ dot(d[1],d[2]) for d in h_data ]
-    #    @show b
         v = A\b
 
-        #@show  v
         #Throw out failed solutions
-    #    @show norm(v-o)
         if norm(v-o) > 2
             continue
         end
-    #    @show vindex
+
         #Emit one vertex per every cube that crosses
         push!(vindex, o => length(dc_verts))
         push!(dc_verts, v)
@@ -83,15 +77,14 @@ function dual_contour(f, df, nc)
         if !haskey(vindex,[x,y,z])
             continue
         end
-        @show "hello"
 
         #Emit one face per each edge that crosses
         o = [x,y,z]
-        for i in (0,1,2)
-            for j in 0:i
-                if haskey(vindex,o + dirs[i+1]) && haskey(vindex,o + dirs[j+1]) && haskey(vindex,o + dirs[i+1] + dirs[j+1])
-                    push!(dc_faces, [vindex[o], vindex[o+dirs[i+1]], vindex[o+dirs[j+1]]] )
-                    push!(dc_faces, [vindex[o+dirs[i+1]+dirs[j+1]], vindex[o+dirs[j+1]], vindex[o+dirs[i+1]]] )
+        for i in (1,2,3)
+            for j in 1:i
+                if haskey(vindex,o + dirs[i]) && haskey(vindex,o + dirs[j]) && haskey(vindex,o + dirs[i] + dirs[j])
+                    push!(dc_faces, [vindex[o], vindex[o+dirs[i]], vindex[o+dirs[j]]] )
+                    push!(dc_faces, [vindex[o+dirs[i]+dirs[j]], vindex[o+dirs[j]], vindex[o+dirs[i]]] )
                 end
             end
         end
@@ -115,8 +108,6 @@ function test_df(x)
 end
 
 verts, tris = dual_contour(test_f, test_df, 36)
-
-@show tris
 
 m = HomogenousMesh([Point(v...) for v in verts], [Face(t[1]+1,t[2]+1,t[3]+1) for t in tris])
 
