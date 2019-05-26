@@ -53,19 +53,25 @@ function dual_contour(f, df, nc)
         h_data = [ estimate_hermite(f, df, o+cube_verts[e[1]+1], o+cube_verts[e[2]+1])
             for e in cube_edges if cube_signs[e[1]+1] != cube_signs[e[2]+1] ]
 
-        @show h_data
         #Solve qef to get vertex
-        A = reshape(vcat([ d[2] for d in h_data ]...),length(h_data),:)
+        A = Array{Float64,2}(undef,length(h_data),3)
+        for i in eachindex(h_data)
+            @show h_data[i][2]
+            @show A
+            A[i,:] = h_data[i][2]
+        end
         @show A
         b = [ dot(d[1],d[2]) for d in h_data ]
-        @show b
+    #    @show b
         v = A\b
 
+        #@show  v
         #Throw out failed solutions
+    #    @show norm(v-o)
         if norm(v-o) > 2
             continue
         end
-
+    #    @show vindex
         #Emit one vertex per every cube that crosses
         push!(vindex, o => length(dc_verts))
         push!(dc_verts, v)
@@ -77,6 +83,7 @@ function dual_contour(f, df, nc)
         if !haskey(vindex,[x,y,z])
             continue
         end
+        @show "hello"
 
         #Emit one face per each edge that crosses
         o = [x,y,z]
@@ -111,6 +118,6 @@ verts, tris = dual_contour(test_f, test_df, 36)
 
 @show tris
 
-m = HomogenousMesh([Point(v...) for v in verts], [SVector(t...) for t in tris])
+m = HomogenousMesh([Point(v...) for v in verts], [Face(t[1]+1,t[2]+1,t[3]+1) for t in tris])
 
 save("test.ply",m)
