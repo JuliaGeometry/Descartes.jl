@@ -1,100 +1,104 @@
-import numpy as np
-import numpy.linalg as la
-import scipy.optimize as opt
-import itertools as it
+#import numpy as np
+#import numpy.linalg as la
+#import scipy.optimize as opt
+#import itertools as it
+using LinearAlgebra
 
 #Cardinal directions
 dirs = [ [1,0,0], [0,1,0], [0,0,1] ]
 
 #Vertices of cube
-cube_verts = [ np.array([x, y, z])
-    for x in range(2)
-    for y in range(2)
-    for z in range(2) ]
+cube_verts = [[0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1],
+              [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]]
+
 
 #Edges of cube
-cube_edges = [
-    [ k for (k,v) in enumerate(cube_verts) if v[i] == a and v[j] == b ]
-    for a in range(2)
-    for b in range(2)
-    for i in range(3)
-    for j in range(3) if i != j ]
+cube_edges = [(0, 1), (0, 2), (0, 1), (0, 4), (0, 2), (0, 4), (2, 3), (1, 3),
+              (4, 5), (1, 5), (4, 6), (2, 6), (4, 5), (4, 6), (2, 3), (2, 6),
+              (1, 3), (1, 5), (6, 7), (5, 7), (6, 7), (3, 7), (5, 7), (3, 7)]
+
 
 #Use non-linear root finding to compute intersection point
-def estimate_hermite(f, df, v0, v1):
-    t0 = opt.brentq(lambda t : f((1.-t)*v0 + t*v1), 0, 1)
-    x0 = (1.-t0)*v0 + t0*v1
+function estimate_hermite(f, df, v0, v1)
+    t0 = opt.brentq(t -> f((1.0-t)*v0 + t*v1), 0, 1)
+    x0 = (1.0-t0)*v0 + t0*v1
     return (x0, df(x0))
+end
 
 #Input:
 # f = implicit function
 # df = gradient of f
 # nc = resolution
-function dual_contour(f, df, nc):
+function dual_contour(f, df, nc)
 
     #Compute vertices
     dc_verts = []
-    vindex   = {}
-    for x,y,z in it.product(range(nc), range(nc), range(nc)):
-        o = np.array([x,y,z])
+    vindex   = Dict()
+    for x in 0:nc, y in 0:nc, z in 0:nc
+        o = [x,y,z]
 
         #Get signs for cube
         cube_signs = [ f(o+v)>0 for v in cube_verts ]
 
-        if all(cube_signs) or not any(cube_signs):
+        if all(cube_signs) || !any(cube_signs)
             continue
+        end
 
         #Estimate hermite data
-        h_data = [ estimate_hermite(f, df, o+cube_verts[e[0]], o+cube_verts[e[1]])
-            for e in cube_edges if cube_signs[e[0]] != cube_signs[e[1]] ]
+        h_data = [ estimate_hermite(f, df, o+cube_verts[e[1]+1], o+cube_verts[e[2]+1])
+            for e in cube_edges if cube_signs[e[1]+1] != cube_signs[e[2]+1] ]
 
         #Solve qef to get vertex
-        A = [ n for p,n in h_data ]
-        b = [ np.dot(p,n) for p,n in h_data ]
-        v, residue, rank, s = la.lstsq(A, b)
+        A = [ d[1] for d in h_data ]
+        b = [ dot(d[1],d[2]) for d in h_data ]
+        v = A\b
 
         #Throw out failed solutions
-        if la.norm(v-o) > 2:
+        if norm(v-o) > 2
             continue
+        end
 
         #Emit one vertex per every cube that crosses
-        vindex[ tuple(o) ] = len(dc_verts)
-        dc_verts.append(v)
+        vindex[ o ] = length(dc_verts)
+        append(dc_verts, v)
+    end
 
     #Construct faces
     dc_faces = []
-    for x,y,z in it.product(range(nc), range(nc), range(nc)):
-        if not (x,y,z) in vindex:
+    for x in 0:nc, y in 0:nc, z in 0:nc
+        if !in((x,y,z),vindex)
             continue
+        end
 
         #Emit one face per each edge that crosses
-        o = np.array([x,y,z])
-        for i in range(3):
-            for j in range(i):
-                if tuple(o + dirs[i]) in vindex and tuple(o + dirs[j]) in vindex and tuple(o + dirs[i] + dirs[j]) in vindex:
-                    dc_faces.append( [vindex[tuple(o)], vindex[tuple(o+dirs[i])], vindex[tuple(o+dirs[j])]] )
-                    dc_faces.append( [vindex[tuple(o+dirs[i]+dirs[j])], vindex[tuple(o+dirs[j])], vindex[tuple(o+dirs[i])]] )
+        o = [x,y,z]
+        for i in (0,1,2)
+            for j in 0:i
+                if o + dirs[i] in vindex && o + dirs[j] in vindex && o + dirs[i] + dirs[j] in vindex
+                    append(dc_faces, [vindex[tuple(o)], vindex[tuple(o+dirs[i])], vindex[tuple(o+dirs[j])]] )
+                    append(dc_faces, [vindex[tuple(o+dirs[i]+dirs[j])], vindex[tuple(o+dirs[j])], vindex[tuple(o+dirs[i])]] )
+                end
+            end
+        end
 
+    end
     return dc_verts, dc_faces
 end
 
-import enthought.mayavi.mlab as mlab
 
-center = np.array([16,16,16])
+center = [16,16,16]
 radius = 10
 
-def test_f(x):
+function test_f(x)
     d = x-center
-    return np.dot(d,d) - radius**2
+    return dot(d,d) - radius^2
+end
 
-def test_df(x):
+function test_df(x)
     d = x-center
-    return d / sqrt(np.dot(d,d))
+    return d / sqrt(dot(d,d))
+end
 
-verts, tris = dual_contour(f, df, n)
+verts, tris = dual_contour(test_f, test_df, 36)
 
-mlab.triangular_mesh(
-            [ v[0] for v in verts ],
-            [ v[1] for v in verts ],
-            [ v[2] for v in verts ],
-            tris)
+m = HomogenousMesh(verts, tris)
