@@ -117,14 +117,22 @@ function test_f(x)
     return dot(d,d) - radius^2
 end
 
+function runion(x,y)
+    x + y - sqrt(x*x + y*y)
+end
+
+function softmax(x,y)
+    log(exp(5*x)+exp(5*y))/5
+end
+
 function test_sq(x)
     d = x-center
-    max(map(abs, d))
+    softmax(softmax(-d[3], d[3]-5), d[1]*d[1] + d[2]*d[2] - radius )
 end
 
 
-verts, tris = dual_contour(test_f, 36)
+verts, tris = dual_contour(test_sq, 36)
 
 m = HomogenousMesh([Point(v[1]...) for v in verts], [Face(t[1]+1,t[2]+1,t[3]+1) for t in tris])
 
-save("test.ply",m)
+save("test2.ply",m)
