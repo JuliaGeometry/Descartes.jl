@@ -7,6 +7,7 @@ using Roots
 using GeometryTypes
 using FileIO
 using StaticArrays
+using ForwardDiff
 
 #Cardinal directions
 dirs = [ [1,0,0], [0,1,0], [0,0,1] ]
@@ -23,18 +24,19 @@ cube_edges = [(0, 1), (0, 2), (0, 1), (0, 4), (0, 2), (0, 4), (2, 3), (1, 3),
 
 
 #Use non-linear root finding to compute intersection point
-function estimate_hermite(f, df, v0, v1)
-    t0 = find_zero(t -> f((1.0-t)*v0 + t*v1),
-                    (0, 1))
+function estimate_hermite(f, v0, v1)
+    l(t) = f((1.0-t)*v0 + t*v1)
+    dl(t) = ForwardDiff.derivative(l,t)
+    t0 = find_zero((l,dl),(0, 1))
     x0 = (1.0-t0)*v0 + t0*v1
-    return (x0, df(x0))
+    return (x0, ForwardDiff.gradient(f,x0))
 end
 
 #Input:
 # f = implicit function
 # df = gradient of f
 # nc = resolution
-function dual_contour(f, df, nc)
+function dual_contour(f, nc)
 
     #Compute vertices
     dc_verts = []
@@ -50,7 +52,7 @@ function dual_contour(f, df, nc)
         end
 
         #Estimate hermite data
-        h_data = [ estimate_hermite(f, df, o+cube_verts[e[1]+1], o+cube_verts[e[2]+1])
+        h_data = [ estimate_hermite(f, o+cube_verts[e[1]+1], o+cube_verts[e[2]+1])
             for e in cube_edges if cube_signs[e[1]+1] != cube_signs[e[2]+1] ]
 
         #Solve qef to get vertex
@@ -68,7 +70,7 @@ function dual_contour(f, df, nc)
 
         #Emit one vertex per every cube that crosses
         push!(vindex, o => length(dc_verts))
-        push!(dc_verts, (v, df(v)))
+        push!(dc_verts, (v, ForwardDiff.gradient(f,v)))
     end
 
     #Construct faces
@@ -115,12 +117,13 @@ function test_f(x)
     return dot(d,d) - radius^2
 end
 
-function test_df(x)
+function test_sq(x)
     d = x-center
-    return d / sqrt(dot(d,d))
+    max(map(abs, d))
 end
 
-verts, tris = dual_contour(test_f, test_df, 36)
+
+verts, tris = dual_contour(test_f, 36)
 
 m = HomogenousMesh([Point(v[1]...) for v in verts], [Face(t[1]+1,t[2]+1,t[3]+1) for t in tris])
 
