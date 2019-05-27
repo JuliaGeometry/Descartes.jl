@@ -68,7 +68,7 @@ function dual_contour(f, df, nc)
 
         #Emit one vertex per every cube that crosses
         push!(vindex, o => length(dc_verts))
-        push!(dc_verts, v)
+        push!(dc_verts, (v, df(v)))
     end
 
     #Construct faces
@@ -83,8 +83,21 @@ function dual_contour(f, df, nc)
         for i in (1,2,3)
             for j in 1:i
                 if haskey(vindex,o + dirs[i]) && haskey(vindex,o + dirs[j]) && haskey(vindex,o + dirs[i] + dirs[j])
-                    push!(dc_faces, [vindex[o], vindex[o+dirs[i]], vindex[o+dirs[j]]] )
-                    push!(dc_faces, [vindex[o+dirs[i]+dirs[j]], vindex[o+dirs[j]], vindex[o+dirs[i]]] )
+                    # determine orientation of the face from the true normal
+                    v1, tn1 = dc_verts[vindex[o]+1]
+                    v2, tn2 = dc_verts[vindex[o+dirs[i]]+1]
+                    v3, tn3 = dc_verts[vindex[o+dirs[j]]+1]
+                    @show v1,v2, v3
+                    e1 = v1-v2
+                    e2 = v1-v3
+                    c = cross(e1,e2)
+                    if dot(c, tn1) > 0
+                        push!(dc_faces, [vindex[o], vindex[o+dirs[i]], vindex[o+dirs[j]]] )
+                        push!(dc_faces, [vindex[o+dirs[i]+dirs[j]], vindex[o+dirs[j]], vindex[o+dirs[i]]] )
+                    else
+                        push!(dc_faces, [vindex[o], vindex[o+dirs[j]], vindex[o+dirs[i]]] )
+                        push!(dc_faces, [vindex[o+dirs[i]+dirs[j]], vindex[o+dirs[i]], vindex[o+dirs[j]]] )
+                    end
                 end
             end
         end
@@ -109,6 +122,6 @@ end
 
 verts, tris = dual_contour(test_f, test_df, 36)
 
-m = HomogenousMesh([Point(v...) for v in verts], [Face(t[1]+1,t[2]+1,t[3]+1) for t in tris])
+m = HomogenousMesh([Point(v[1]...) for v in verts], [Face(t[1]+1,t[2]+1,t[3]+1) for t in tris])
 
 save("test.ply",m)
