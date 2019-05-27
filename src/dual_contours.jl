@@ -122,7 +122,7 @@ function runion(x,y)
 end
 
 function softmax(x,y)
-    log(exp(5*x)+exp(5*y))/5
+    log(exp(3*x)+exp(3*y))/3
 end
 
 function test_sq(x)
