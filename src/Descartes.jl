@@ -13,7 +13,9 @@ using GeometryTypes,
       MeshIO,
       LinearAlgebra,
       OpenCL,
-      AdaptiveDistanceFields
+      AdaptiveDistanceFields,
+      GeometryBasics,
+      TetGen
 
 include("types.jl")
 include("constructors.jl")
