@@ -1,5 +1,6 @@
 function SignedDistanceField(primitive::AbstractPrimitive{3,T},
-                                resolution=0.1) where {T}
+                             resolution=0.1; adf=false) where {T}
+
     bounds = HyperRectangle(primitive)
     min_b = SVector{3,Float32}(minimum(bounds))
     max_b = SVector{3,Float32}(maximum(bounds))
@@ -21,11 +22,26 @@ function SignedDistanceField(primitive::AbstractPrimitive{3,T},
     w = SVector{3,Float32}(b_max-o)
     bounds = HyperRectangle(o..., w...)
 
-    for i = 0:nx, j = 0:ny, k = 0:nz
-        vec = SVector{3,Float32}(x_min + resolution*i,
-                      y_min + resolution*j,
-                      z_min + resolution*k)
-        @inbounds vol[i+1,j+1,k+1] = FRep(primitive,vec)
+    if adf
+        truedistance(v) = FRep(primitive,v)
+        # generate an adaptive interpolation function over the sampling area
+        adaptivedistance = AdaptiveDistanceField(truedistance, o, w)
+    end
+
+    if !adf
+        for i = 0:nx, j = 0:ny, k = 0:nz
+            vec = SVector{3,Float32}(x_min + resolution*i,
+                                     y_min + resolution*j,
+                                     z_min + resolution*k)
+            @inbounds vol[i+1,j+1,k+1] = FRep(primitive,vec)
+        end
+    else
+        for i = 0:nx, j = 0:ny, k = 0:nz
+            vec = SVector{3,Float32}(x_min + resolution*i,
+                                     y_min + resolution*j,
+                                     z_min + resolution*k)
+            @inbounds vol[i+1,j+1,k+1] = adaptivedistance(primitive,vec)
+        end
     end
 
     SignedDistanceField{3,Float32,Float32}(bounds, vol)

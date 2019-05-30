@@ -1,7 +1,8 @@
 function (::Type{MT})(primitives::AbstractPrimitive{3, T}...;
                                          cl=true,
                                          resolution=0.1,
-                                         algorithm=MarchingTetrahedra()) where {T, MT <: AbstractMesh}
+                                         algorithm=MarchingTetrahedra(),
+                                         adf=false) where {T, MT <: AbstractMesh}
     # key based on resolution
     #k = "HomogenousMesh:res:$resolution"
     # grab from cache if available
@@ -12,7 +13,7 @@ function (::Type{MT})(primitives::AbstractPrimitive{3, T}...;
         d = opencl_sdf(primitives[1], resolution)
         mesh = MT(d,algorithm)
     else
-        d = SignedDistanceField(primitives[1], resolution)
+        d = SignedDistanceField(primitives[1], resolution,adf=adf)
         mesh = MT(d,algorithm)
     end
     for i = 2:length(primitives)
@@ -21,7 +22,7 @@ function (::Type{MT})(primitives::AbstractPrimitive{3, T}...;
             d = opencl_sdf(primitive, resolution)
             mesh = merge(mesh, MT(d,algorithm))
         else
-            d = SignedDistanceField(primitive, resolution)
+            d = SignedDistanceField(primitive, resolution,adf=adf)
             mesh = merge(mesh, MT(d,algorithm))
         end
     end
