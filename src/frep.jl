@@ -21,7 +21,7 @@ function FRep(p::Cylinder, v)
     x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
     y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
     z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
-    max(max(-z+p.bottom,z-p.height-p.bottom), sqrt(x*x + y*y) - p.radius)
+    max(-z+p.bottom, z-p.height-p.bottom, sqrt(x*x + y*y) - p.radius)
 end
 
 function FRep(p::Cuboid, v)
@@ -31,9 +31,9 @@ function FRep(p::Cuboid, v)
     z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
     dx, dy, dz = p.dimensions
     lbx, lby,lbz = p.lowercorner
-    max(max(-x+lbx, x-dx-lbx),
-        max(-y+lby, y-dy-lby),
-        max(-z+lbz, z-dz-lbz))
+    max(-x+lbx, x-dx-lbx,
+        -y+lby, y-dy-lby,
+        -z+lbz, z-dz-lbz)
 end
 
 function FRep(u::CSGUnion, v)
