@@ -18,8 +18,8 @@ function SignedDistanceField(primitive::AbstractPrimitive{3,T},
     b_max = SVector(x_min + resolution*nx, y_min + resolution*ny, z_min + resolution*nz)
 
     # re-adjust bounding box
-    o = SVector{3,Float32}(origin(bounds)...)
-    w = SVector{3,Float32}(b_max-o)
+    o = SVector{3,Float64}(origin(bounds)...)
+    w = SVector{3,Float64}(b_max-o)
     bounds = HyperRectangle(o..., w...)
 
     if adf
@@ -40,9 +40,9 @@ function SignedDistanceField(primitive::AbstractPrimitive{3,T},
             vec = SVector{3,Float32}(x_min + resolution*i,
                                      y_min + resolution*j,
                                      z_min + resolution*k)
-            @inbounds vol[i+1,j+1,k+1] = adaptivedistance(primitive,vec)
+            @inbounds vol[i+1,j+1,k+1] = adaptivedistance(vec)
         end
     end
 
-    SignedDistanceField{3,Float32,Float32}(bounds, vol)
+    SignedDistanceField{3,Float64,Float32}(bounds, vol)
 end

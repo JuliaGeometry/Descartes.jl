@@ -9,6 +9,7 @@ function HyperRectangle(cube::Cuboid{T}) where {T}
 end
 
 function HyperRectangle(sphere::Sphere{T}) where {T}
+    #TODO?
     orig = HyperRectangle{3,T}(fill(-sphere.radius,3), fill(sphere.radius*2,3))
     transform(sphere.transform, orig)
 end
