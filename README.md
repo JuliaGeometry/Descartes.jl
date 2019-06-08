@@ -7,14 +7,20 @@ Descartes is a research project into the representation of solid geometry. It
 is designed to leverage Julia's multiple dispatch and JIT compilation to
 create a platform which unifies otherwise disparate geometric representations.
 The long term goal is to deliver a geometry kernel suited for the growing
-capabilities of digital manufacturing.
+capabilities of digital manufacturing. 
 
-We aim to support the following representations cohesively:
+The current focus is on the development of feature parity with OpenSCAD 
+and enhanced design with engineering analysis. 
+Under the hood Descartes uses a functional representation of geometry, 
+inspired by ImplicitCAD, HyperFun, libfive, and several others. 
+The syntax is idiomatic julia, but should be familiar to those used to OpenSCAD,
+That is to say just [o](https://xkcd.com/224/)bjects and operations, without any OOP. 
 
-- [BRep](http://en.wikipedia.org/wiki/Boundary_representation)
-- [Functional](http://en.wikipedia.org/wiki/Function_representation)
-- [CSG](http://en.wikipedia.org/wiki/Constructive_solid_geometry)
-- [Analytic CSG](http://en.wikipedia.org/wiki/Rvachev_function)
+[Examples](https://github.com/sjkelly/Descartes.jl/tree/master/examples)
+
+This is a Pre-Alpha project.
+
+There are occasional development updates posted [here](https://sjkellyorg.wordpress.com/category/solid-modeling/).
 
 ## License
 This package is available under the MIT "Expat" License. See [LICENSE.md](./LICENSE.md).
