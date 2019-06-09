@@ -11,8 +11,7 @@ cp = cos(pi/6)
 @test all(r1.transform .≈ [1.0 0.0 0.0 0.0; 0.0 cp -sp 0.0; 0.0 sp cp 0.0; 0.0 0.0 0.0 1.0])
 @test all(r2.transform .≈ [cp 0.0 sp 0.0; 0.0 1.0 0.0 0.0; -sp 0.0 cp 0.0; 0.0 0.0 0.0 1.0])
 @test all(r3.transform .≈ [cp -sp 0.0 0.0; 0.5 cp 0.0 0.0; 0.0 0.0 1.0 0.0; 0.0 0.0 0.0 1.0])
-
-
 end
+
 
 end
