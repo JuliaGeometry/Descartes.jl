@@ -13,6 +13,8 @@ function Cuboid(dims;center=false)
     Cuboid(SVector{3,Float64}(dims), lb, SMatrix{4,4}(1.0*I), SMatrix{4,4}(1.0*I))
 end
 
+Cuboid(x,y,z;center=false) = Cuboid([x,y,z],center=center)
+
 #= function RoundedCuboid{T}(dims::Vector{T},axes::Vector{Bool},r)
     @assert length(dims) == 3
     RoundedCuboid(dims, axes, convert(T,r), eye(4), eye(4))
