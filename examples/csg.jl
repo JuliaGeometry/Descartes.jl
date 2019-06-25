@@ -34,6 +34,6 @@ c = translate([24,0,0])CSGDiff(
     Cuboid([15,15,15], center=true),
     Sphere(10))
 
-m = HomogenousMesh(a,b,c, resolution=0.1)
+m = HomogenousMesh(a,b,c)
 
 #Descartes.visualize(m)

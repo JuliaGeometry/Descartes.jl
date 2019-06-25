@@ -52,6 +52,6 @@ function example001()
         rotcy([0, 1, 0], cy_r, cy_h))
 end
 
-m = HomogenousMesh(example001(),resolution=1)
+m = HomogenousMesh(example001())
 #save("example001.ply", m)
 #Descartes.visualize(m)

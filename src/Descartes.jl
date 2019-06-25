@@ -11,22 +11,17 @@ using GeometryTypes,
      # JLD,
       Meshing,
       MeshIO,
-      LinearAlgebra,
-      OpenCL,
-      AdaptiveDistanceFields
+      LinearAlgebra
 
 include("types.jl")
 include("constructors.jl")
 include("operations.jl")
 include("frep.jl")
 include("hyperrectangles.jl")
-include("distancefield.jl")
 include("meshes.jl")
 #include("hashing.jl")
 include("cache.jl")
 include("visualize.jl")
-include("frep_opencl.jl")
-include("distancefield_opencl.jl")
 
 # GeometryTypes
 export Point

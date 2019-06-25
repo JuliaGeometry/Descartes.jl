@@ -17,4 +17,4 @@ for i = 1:hole_ct
     global c = CSGDiff(c, h)
 end
 
-save("fea.ply",HomogenousMesh(c, cl=false, resolution=0.5))
+save("fea.ply",HomogenousMesh(c))

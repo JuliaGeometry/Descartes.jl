@@ -1,37 +1,16 @@
 function (::Type{MT})(primitives::AbstractPrimitive{3, T}...;
-                                         cl=true,
-                                         resolution=0.1,
-                                         algorithm=MarchingTetrahedra(),
+                                         samples=(128,128,128),
+                                         algorithm=MarchingCubes(),
                                          adf=false) where {T, MT <: AbstractMesh}
-    # key based on resolution
-    #k = "HomogenousMesh:res:$resolution"
-    # grab from cache if available
-    #if use_cache && cache_contains(primitive,k)
-    #    return cache_load(primitive, k)
-    #end
-    if cl
-        d = opencl_sdf(primitives[1], resolution)
-        mesh = MT(d,algorithm)
-    else
-        d = SignedDistanceField(primitives[1], resolution,adf=adf)
-        mesh = MT(d,algorithm)
-    end
+
+    f(x) = FRep(primitives[1], x)
+    mesh = MT(f, HyperRectangle(primitives[1]), samples, algorithm)
     for i = 2:length(primitives)
-        primitive = primitives[i]
-        if cl
-            d = opencl_sdf(primitive, resolution)
-            mesh = merge(mesh, MT(d,algorithm))
-        else
-            d = SignedDistanceField(primitive, resolution,adf=adf)
-            mesh = merge(mesh, MT(d,algorithm))
-        end
+        b = HyperRectangle(primitives[i])
+        lm = MT(x -> FRep(primitives[i], x), b, samples, algorithm)
+        mesh = merge(mesh, lm)
     end
     return mesh
-    # we got this far, might as well save it
-    #if use_cache
-    #    cache_add(primitive, k, h)
-    #end
-
 end
 
 function piped_mesh(m::AbstractMesh,r)
