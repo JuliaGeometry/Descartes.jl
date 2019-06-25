@@ -3,7 +3,8 @@
     files = ["csg.jl",
              "example001.jl",
              "piping.jl",
-             "radiused_union.jl"]
+             "radiused_union.jl",
+             "fea.jl"]
     for file in files
         @testset "$file" begin
                 include("$dir/$file")
