@@ -3,6 +3,7 @@ uuid = "ea4ead7c-22ac-5e77-afc5-cd927cdc0b20"
 authors = ["Steve Kelly <kd2cca@gmail.com>"]
 
 [deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 GeometryTypes = "4d00f742-c7ba-57c2-abde-4428a4b178cb"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
