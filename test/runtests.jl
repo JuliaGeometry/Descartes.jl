@@ -9,10 +9,8 @@ operations_array = [CSGUnion, CSGIntersect, CSGDiff]
 
 include("tranforms.jl")
 include("operations.jl")
-include("opencl.jl")
 include("primitives.jl")
 include("2d.jl")
 include("hyperrectangles.jl")
-include("distancefield.jl")
 include("meshes.jl")
 include("examples.jl")
