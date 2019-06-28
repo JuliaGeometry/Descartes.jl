@@ -5,4 +5,3 @@
 *.off
 *.obj
 .cache/*
-Manifest.toml
