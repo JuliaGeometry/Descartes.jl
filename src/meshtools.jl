@@ -1,4 +1,6 @@
 
+invsignbit(x) = !signbit(x)
+
 # merge vertices 
 function fix_connectivity!(m::AbstractMesh)
     vts = vertices(m)
@@ -6,19 +8,33 @@ function fix_connectivity!(m::AbstractMesh)
     d = Dict{Int,Int}()
     i = 1
     n = length(vts)
+    # store a deletion buffer
+    del_buf = Int[]
+    del_buf_len = 0
     while true
         j = i+1
         i >= n-1 && break
-        while true
-            j >= n && break
+        buf_ind = 1
+        # zero out the buffer
+        for i in eachindex(del_buf)
+            del_buf[i] = -1
+        end
+        for j = i+1:n
             if isapprox(vts[i],vts[j])
                 # store the index mapping
                 push!(d, j=>i)
-                deleteat!(vts,j)
-                n -= 1
+                # prepare deletion in buffer
+                if buf_ind > del_buf_len
+                    push!(del_buf,j)
+                    del_buf_len += 1
+                else
+                    del_buf[buf_ind] = j
+                end
+                buf_ind += 1
             end
-            j += 1
         end
+        deleteat!(vts, filter(invsignbit, del_buf))
+        n = length(vts)
         i += 1
     end
     for i = 1:length(fcs)
