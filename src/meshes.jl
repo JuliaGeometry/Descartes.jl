@@ -1,7 +1,6 @@
 function (::Type{MT})(primitives::AbstractPrimitive{3, T}...;
                                          samples=(128,128,128),
-                                         algorithm=MarchingCubes(),
-                                         adf=false) where {T, MT <: AbstractMesh}
+                                         algorithm=MarchingCubes()) where {T, MT <: AbstractMesh}
 
     f(x) = FRep(primitives[1], x)
     mesh = MT(f, HyperRectangle(primitives[1]), samples, algorithm)
