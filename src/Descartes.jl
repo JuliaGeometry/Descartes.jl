@@ -22,6 +22,7 @@ include("meshes.jl")
 #include("hashing.jl")
 include("cache.jl")
 include("visualize.jl")
+include("meshtools.jl")
 
 # GeometryTypes
 export Point
