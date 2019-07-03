@@ -1,6 +1,6 @@
 module Descartes
 
-import Base: *
+import Base: *, union, diff, intersect
 import GeometryTypes: HyperRectangle,
                       HomogenousMesh,
                       SignedDistanceField
@@ -8,7 +8,6 @@ import GeometryTypes: HyperRectangle,
 using GeometryTypes,
       FileIO,
       StaticArrays,
-     # JLD,
       Meshing,
       MeshIO,
       LinearAlgebra
