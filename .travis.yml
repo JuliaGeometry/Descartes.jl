@@ -8,6 +8,17 @@ julia:
   - nightly
 notifications:
   email: false
+jobs:
+  include:
+    - stage: "Documentation"
+      julia: 1.0
+      os: linux
+      script:
+        - julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd()));
+                                               Pkg.instantiate()'
+        - julia --project=docs/ docs/make.jl
+      after_success: skip
+
 branches:
   only: # Only kick off CI for master and potential merges to master from within PRs
     - master
@@ -16,3 +27,4 @@ matrix:
     - julia: nightly
 after_success:
   - julia -e 'using Pkg; import Descartes; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
+  
