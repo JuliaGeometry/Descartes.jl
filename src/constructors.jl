@@ -40,7 +40,11 @@ function Piping(r, pts)
     Piping(Float64(r), ptsc, SMatrix{4,4}(1.0*I), SMatrix{4,4}(1.0*I))
 end
 
-# CSG
+#
+#
+# CSG Operations
+#
+#
 
 # Union
 function CSGUnion(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2}) where {N1, N2, T1, T2}
@@ -57,6 +61,11 @@ CSGUnion(x::AbstractPrimitive) = x
 CSGUnion(::Nothing, x::AbstractPrimitive) = x
 CSGUnion(x::AbstractPrimitive, ::Nothing) = x
 
+union(l::AbstractPrimitive, r::AbstractPrimitive...) = CSGUnion(l,r...)
+
+union(x::AbstractPrimitive) = x
+union(::Nothing, x::AbstractPrimitive) = x
+union(x::AbstractPrimitive, ::Nothing) = x
 
 # Radiused Union
 function RadiusedCSGUnion(radius::Real, l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2}) where {N1, N2, T1, T2}
@@ -79,15 +88,33 @@ CSGDiff(x::AbstractPrimitive) = x
 CSGDiff(::Nothing, x::AbstractPrimitive) = x
 CSGDiff(x::AbstractPrimitive, ::Nothing) = x
 
+diff(l::AbstractPrimitive, r::AbstractPrimitive...) = CSGDiff(l,r...)
+
+diff(x::AbstractPrimitive) = x
+diff(::Nothing, x::AbstractPrimitive) = x
+diff(x::AbstractPrimitive, ::Nothing) = x
+
+# Intersect
 
 function CSGIntersect(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2}) where {N1, N2, T1, T2}
     N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
     return CSGIntersect{N1,T1, typeof(l), typeof(r)}(l,r)
 end
 
+function CSGIntersect(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2}...) where {N1, N2, T1, T2}
+    N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
+    return CSGIntersect(l,CSGIntersect(r[1], r[2:end]...))
+end
+
 CSGIntersect(x::AbstractPrimitive) = x
 CSGIntersect(::Nothing, x::AbstractPrimitive) = x
 CSGIntersect(x::AbstractPrimitive, ::Nothing) = x
+
+intersect(l::AbstractPrimitive, r::AbstractPrimitive...) = CSGIntersect(l,r...)
+
+intersect(x::AbstractPrimitive) = x
+intersect(::Nothing, x::AbstractPrimitive) = x
+intersect(x::AbstractPrimitive, ::Nothing) = x
 
 # Shell
 

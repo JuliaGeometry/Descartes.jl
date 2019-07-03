@@ -45,7 +45,7 @@ function example001()
         rotate(pi/2, rot)Cylinder(r, h, center=true)
     end
 
-    CSGDiff(
+    diff(
         Sphere(r_from_dia(size)),
         rotcy([0, 0, 0], cy_r, cy_h),
         rotcy([1, 0, 0], cy_r, cy_h),
