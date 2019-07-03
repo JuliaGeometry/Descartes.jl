@@ -16,7 +16,6 @@ and enhanced design with engineering analysis.
 Under the hood Descartes uses a functional representation of geometry, 
 inspired by ImplicitCAD, HyperFun, libfive, and several others. 
 The syntax is idiomatic julia, but should be familiar to those used to OpenSCAD,
-That is to say just [o](https://xkcd.com/224/)bjects and operations, without any OOP. 
 
 [Examples](https://github.com/sjkelly/Descartes.jl/tree/master/examples)
 
