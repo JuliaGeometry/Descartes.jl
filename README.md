@@ -1,6 +1,5 @@
 # Descartes
 
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://sjkelly.github.io/Descartes.jl/stable)
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://sjkelly.github.io/Descartes.jl/dev)
 
 [![Build Status](https://travis-ci.org/sjkelly/Descartes.jl.svg?branch=master)](https://travis-ci.org/sjkelly/Descartes.jl)
