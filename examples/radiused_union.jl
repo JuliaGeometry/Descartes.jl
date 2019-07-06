@@ -11,4 +11,4 @@ m = Mesh(u2)
 
 #Descartes.visualize(u2)
 
-save("test3.ply",m)
+save("radiused_union.ply",m)
