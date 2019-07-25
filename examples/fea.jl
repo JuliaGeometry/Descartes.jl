@@ -1,4 +1,5 @@
 using Descartes
+using Meshing
 
 # params
 beam_size = [50,10,10]
@@ -17,4 +18,4 @@ for i = 1:hole_ct
     global c = diff(c, h)
 end
 
-save("fea.ply",HomogenousMesh(c))
+save("fea.ply",HomogenousMesh(c, samples=(50,50,50), algorithm=DualContours()))
