@@ -1,31 +1,50 @@
 
-# merge vertices 
-function fix_connectivity!(m::AbstractMesh)
-    vts = vertices(m)
+function correct_verts!(m, res=0.021)
+    vrts = vertices(m)
     fcs = faces(m)
-    d = Dict{Int,Int}()
-    n = length(vts)
-    # store a deletion buffer
-    del_buf = Int[]
-    for i = 1:n
-        for j = i+1:n
-            if isapprox(vts[i],vts[j])
-                push!(d,j => i)
-                push!(del_buf, j)
+    everts = sort(collect(enumerate(vrts)), by = x-> x[2][1])
+    #@show everts
+    #@show sort!(collect(enumerate(vrts)), by = x-> x[1])
+    d = Dict{Int,Int}() # map equal verts to one
+    sizehint!(d,length(vrts))
+    to_remove = Int[]
+    n = 2
+    for (idxl, eltl) in everts
+        for i = n:length(everts)
+            idxr, eltr = everts[i]
+            if eltr[1] - eltl[1] <= res
+                if isapprox(eltl, eltr)
+                    if !haskey(d, idxr)
+                        d[idxr] = idxl
+                        push!(to_remove, i)
+                    end
+                else
+                    continue
+                end
+            else
+                break
             end
         end
+        n += 1
     end
-    unique!(sort!(del_buf))
-    # for i = 1:length(fcs)
-    #     f = fcs[i]
-    #     v1, v2, v3 = f[1], f[2], f[3]
-    #     if haskey(d, v1)
-    #         findfirst(i->i >  )
-    #     v_1 = haskey(d, f[1]) ? d[f[1]] : f[1]
-    #     v_2 = haskey(d, f[2]) ? d[f[2]] : f[2]
-    #     v_3 = haskey(d, f[3]) ? d[f[3]] : f[3]
-    #     fcs[i] = Face(v_1,v_2,v_3)
-    # end
-    deleteat!(vts, del_buf)
-    nothing
+    deleteat!(everts, unique!(sort!(to_remove)))
+    svm = Dict{Int,Int}() # map old index to new
+    #@show sort(everts, by = x-> x[1])
+    for i in eachindex(everts)
+        svm[everts[i][1]] = i
+    end
+    # copy vertices
+    resize!(m.vertices, length(everts))
+    for i in eachindex(everts)
+        m.vertices[i] = everts[i][2]
+    end
+    # correct faces
+    for i = 1:length(fcs)
+        f = fcs[i]
+        xi = haskey(d, f[1]) ? svm[d[f[1]]] : svm[f[1]]
+        yi = haskey(d, f[2]) ? svm[d[f[2]]] : svm[f[2]]
+        zi = haskey(d, f[3]) ? svm[d[f[3]]] : svm[f[3]]
+        fcs[i] = Face{3,Int}(xi,yi,zi)
+    end
+    m
 end
