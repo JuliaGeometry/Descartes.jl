@@ -19,6 +19,11 @@ function HyperRectangle(p::Cylinder{T}) where {T}
     transform(p.transform, orig)
 end
 
+function HyperRectangle(p::Circle{T}) where {T}
+    orig = HyperRectangle{2,T}(Vec(-p.radius,-p.radius), Vec(p.radius*2,p.radius*2))
+    transform(p.transform, orig)
+end
+
 function HyperRectangle(p::Piping{T}) where {T}
     maxx, maxy, maxz = typemin(Float64), typemin(Float64), typemin(Float64)
     minx, miny, minz = typemax(Float64), typemax(Float64), typemax(Float64)
@@ -54,4 +59,9 @@ end
 
 function HyperRectangle(s::Shell)
     HyperRectangle(s.primitive)
+end
+
+function HyperRectangle(s::LinearExtrude)
+    h = HyperRectangle(s.primitive)
+    HyperRectangle(Vec(h.origin[1], h.origin[2], 0), Vec(h.widths[1], h.widths[2], s.distance))
 end

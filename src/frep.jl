@@ -24,6 +24,14 @@ function FRep(p::Cylinder, v)
     max(-z+p.bottom, z-p.height-p.bottom, sqrt(x*x + y*y) - p.radius)
 end
 
+function FRep(p::Circle, v)
+    it = p.inv_transform
+    x = v[1]*it[1,1]+v[2]*it[1,2]+it[1,3]
+    y = v[1]*it[2,1]+v[2]*it[2,2]+it[2,3]
+    sqrt(x*x + y*y) - p.radius
+end
+
+
 function FRep(p::Cuboid, v)
     it = p.inv_transform
     x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
@@ -34,6 +42,16 @@ function FRep(p::Cuboid, v)
     max(-x+lbx, x-dx-lbx,
         -y+lby, y-dy-lby,
         -z+lbz, z-dz-lbz)
+end
+
+function FRep(p::Square, v)
+    it = p.inv_transform
+    x = v[1]*it[1,1]+v[2]*it[1,2]+it[1,3]
+    y = v[1]*it[2,1]+v[2]*it[2,2]+it[2,3]
+    dx, dy = p.dimensions
+    lbx, lby = p.lowercorner
+    max(-x+lbx, x-dx-lbx,
+        -y+lby, y-dy-lby)
 end
 
 function FRep(u::CSGUnion, v)
@@ -84,6 +102,10 @@ function FRep(p::Piping{T}, v) where {T}
 end
 
 function FRep(p::LinearExtrude, v)
-    r = FRep(s.primitive, v)
-    max(max(-z,z-p.height), r)
+    it = p.inv_transform
+    x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
+    y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
+    z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
+    r = FRep(p.primitive, v)
+    max(max(-z,z-p.distance), r)
 end

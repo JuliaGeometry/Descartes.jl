@@ -1,10 +1,12 @@
 function Square(dims;center=false)
-    @assert length(dims) == 2
+    x = dims[1]
+    y = dims[2]
     lb = SVector(0.,0.)
-    center && (lb = -SVector{2,Float64}(dims)/2)
-    Square(SVector{2,Float64}(dims), lb, SMatrix{3,3}(1.0*I), SMatrix{3,3}(1.0*I))
+    center && (lb = -SVector{2,Float64}(x,y)/2)
+    Square(SVector{2,Float64}(x,y), lb, SMatrix{3,3}(1.0*I), SMatrix{3,3}(1.0*I))
 end
 
+Square(x,y,z;center=false) = Square([x,y],center=center)
 
 function Cuboid(dims;center=false)
     @assert length(dims) == 3
@@ -25,6 +27,11 @@ function Cylinder(r, h; center=false)
     b = 0.0
     center && (b = -h/2)
     Cylinder(rn, hn, b, SMatrix{4,4}(one(rn)*I), SMatrix{4,4}(one(rn)*I))
+end
+
+function Circle(r)
+    rn = Float64(r)
+    Circle(rn, SMatrix{3,3}(one(rn)*I), SMatrix{3,3}(one(rn)*I))
 end
 
 function Sphere(r)
@@ -120,4 +127,8 @@ intersect(x::AbstractPrimitive, ::Nothing) = x
 
 function Shell(r)
     Shell(nothing, r)
+end
+
+function LinearExtrude(p::AbstractPrimitive{2,T}, d) where {T}
+    LinearExtrude{3, T, typeof(p)}(p, convert(T, d), SMatrix{4,4}(1.0*I), SMatrix{4,4}(1.0*I))
 end

@@ -36,7 +36,7 @@ export Square, Circle
 export Transform, Translation, translate, rotate
 
 # operations
-export Shell
+export Shell, LinearExtrude
 
 # CSG
 export CSGUnion, RadiusedCSGUnion, CSGDiff, CSGIntersect

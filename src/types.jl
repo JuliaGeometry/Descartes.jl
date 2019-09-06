@@ -86,7 +86,9 @@ struct Shell{T} <: AbstractPrimitive{3,T}
     distance
 end
 
-struct LinearExtrude{T} <: AbstractPrimitive{3,T}
-    primitive::T
-    distance
+struct LinearExtrude{N, T, P} <: AbstractPrimitive{3,T}
+    primitive::P
+    distance::T
+    transform::SMatrix{4,4,T,16}
+    inv_transform::SMatrix{4,4,T,16}
 end
