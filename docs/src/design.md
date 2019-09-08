@@ -12,7 +12,7 @@ The UX (API) is designed to be familiar to those who use OpenSCAD. Let's start w
 
 This can all be executed in the Julia REPL, so follow along:
 
-```
+```julia
 using Descartes
 
 c = Cuboid([5,5,5])
@@ -28,37 +28,37 @@ save("cube_with_hole.stl", m)
 
 This first line:
 
-```
+```julia
 using Descartes
 ```
 
 This imports the Descartes library.
 
-```
+```julia
 c = Cuboid([5,5,5])
 ```
 
 Here we construct a cube of size 5x5x5.
 
-```
+```julia
 h = translate([2.5,2.5,0])Cylinder(1,5)
 ```
 
 This line shows the OpenSCADisms. This can be read right-to-left like a matrix operation. First we construct a cylinder of radius 1, and height 5. Next we translate the cylinder to the coordinates 2.5, 2.5, 0 to put it in the center of our cube.
 
-```
+```julia
 obj = diff(c,h)
 ```
 
 Here we difference the cylinder from the cube. The corresponding set operations are `union` and `intersect`.
 
-```
+```julia
 m = HomogenousMesh(obj)
 ```
 
 At this point we convert our object to a mesh. Prior to this point the model is simply a data structure. In the next section we will discuss the process of meshign more in-depth.
 
-```
+```julia
 save("cube_with_hole.stl", m)
 ```
 
@@ -74,7 +74,7 @@ The code to convert our data structure to a mesh is actually fairly short:
 [Current version](https://github.com/sjkelly/Descartes.jl/blob/master/src/meshes.jl)
 
 
-```
+```julia
 function (::Type{MT})(primitives::AbstractPrimitive{3, T}...;
                                          samples=(128,128,128),
                                          algorithm=MarchingCubes()
@@ -95,7 +95,7 @@ end
 
 The first two lines here are where the meshing happens:
 
-```
+```julia
     f(x) = FRep(primitives[1], x)
     mesh = MT(f, HyperRectangle(primitives[1]), samples, algorithm)
 ```
