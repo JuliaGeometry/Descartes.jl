@@ -1,5 +1,16 @@
 # http://en.wikipedia.org/wiki/Function_representation
 
+function fmax(x::T1,y::T2) where {T1, T2}
+    if x > zero(T1) && y > zero(T2)
+        return sqrt(x^2+y^2)
+    end
+    return max(x,y)
+end
+
+fmax(x,y,z) = fmax(fmax(x,y),z)
+fmax(a,b,c,d) = fmax(fmax(a,b),fmax(c,d))
+fmax(a,b,c,d,e,f) = fmax(fmax(a,b,c,d),fmax(e,f))
+
 function _radius(a,b,r)
     if abs(a-b) >= r
         return min(a,b)
@@ -21,7 +32,7 @@ function FRep(p::Cylinder, v)
     x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
     y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
     z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
-    max(-z+p.bottom, z-p.height-p.bottom, sqrt(x*x + y*y) - p.radius)
+    fmax(-z+p.bottom, z-p.height-p.bottom, sqrt(x*x + y*y) - p.radius)
 end
 
 function FRep(p::Circle, v)
@@ -39,7 +50,7 @@ function FRep(p::Cuboid, v)
     z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
     dx, dy, dz = p.dimensions
     lbx, lby,lbz = p.lowercorner
-    max(-x+lbx, x-dx-lbx,
+    fmax(-x+lbx, x-dx-lbx,
         -y+lby, y-dy-lby,
         -z+lbz, z-dz-lbz)
 end
@@ -50,7 +61,7 @@ function FRep(p::Square, v)
     y = v[1]*it[2,1]+v[2]*it[2,2]+it[2,3]
     dx, dy = p.dimensions
     lbx, lby = p.lowercorner
-    max(-x+lbx, x-dx-lbx,
+    fmax(-x+lbx, x-dx-lbx,
         -y+lby, y-dy-lby)
 end
 
@@ -59,11 +70,11 @@ function FRep(u::CSGUnion, v)
 end
 
 function FRep(u::CSGDiff, v)
-    max(FRep(u.left, v), -FRep(u.right, v))
+    fmax(FRep(u.left, v), -FRep(u.right, v))
 end
 
 function FRep(u::CSGIntersect, v)
-    max(FRep(u.left, v), FRep(u.right, v))
+    fmax(FRep(u.left, v), FRep(u.right, v))
 end
 
 function FRep(s::Shell, v)
@@ -107,5 +118,5 @@ function FRep(p::LinearExtrude, v)
     y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
     z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
     r = FRep(p.primitive, v)
-    max(max(-z,z-p.distance), r)
+    fmax(fmax(-z,z-p.distance), r)
 end

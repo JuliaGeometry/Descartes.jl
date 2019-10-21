@@ -54,6 +54,8 @@ end
 #
 
 # Union
+@nospecialize
+
 function CSGUnion(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2}) where {N1, N2, T1, T2}
     N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
     return CSGUnion{N1,T1, typeof(l), typeof(r)}(l,r)
@@ -132,3 +134,5 @@ end
 function LinearExtrude(p::AbstractPrimitive{2,T}, d) where {T}
     LinearExtrude{3, T, typeof(p)}(p, convert(T, d), SMatrix{4,4}(1.0*I), SMatrix{4,4}(1.0*I))
 end
+
+@specialize
