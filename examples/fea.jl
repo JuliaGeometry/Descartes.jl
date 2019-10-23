@@ -5,6 +5,8 @@ using StaticArrays
 using Makie
 #using Colors
 
+Cylinder=Descartes.Cylinder
+
 # params
 function beam(beam_size = [50,10,10],
                 hole_ct = 5,
@@ -41,7 +43,7 @@ display(scene)
 sleep(5)
 h = HyperRectangle(b)
 @show f(SVector(1,1,1))
-p, t = distmeshnd(f, huniform, 0.7, origin=h.origin, widths=h.widths, vis=false)
+@time p, t = distmeshnd(f, huniform, 0.5, origin=h.origin, widths=h.widths, vis=false, distribution=:packed)
 
 VertType = eltype(p)
 pair = Tuple{Int32,Int32}[] # edge indices (Int32 since we use Tetgen)
