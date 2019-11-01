@@ -82,16 +82,19 @@ qualities = DistMesh.triangle_qualities(p,t)
 statsdata
 using Plots
 
-plt = Plots.histogram(qualities, title = "Quality", legend=false)
-savefig(plt, "qual_hist.png")
-plt = Plots.plot(statsdata.average_qual, title = "Average Quality", legend=false)
-savefig(plt, "average_qual.png")
-plt = Plots.plot(statsdata.median_qual, title = "Median Quality", legend=false)
-savefig(plt, "median_qual.png")
-plt = Plots.plot(statsdata.maxdp, title = "Max Displacement", legend=false)
-savefig(plt, "max_displacement.png")
-plt = Plots.plot(statsdata.maxmove, title = "Max Move", legend=false)
-savefig(plt, "max_move.png")
+qual_hist = Plots.histogram(qualities, title = "Quality", legend=false)
+avg_plt = Plots.plot(statsdata.average_qual, title = "Average Quality", legend=false)
+vline!(statsdata.retriangulations, line=(0.2, :dot, [:red]))
+med_plt = Plots.plot(statsdata.median_qual, title = "Median Quality", legend=false)
+vline!(statsdata.retriangulations, line=(0.2, :dot, [:red]))
+maxdp_plt = Plots.plot(statsdata.maxdp, title = "Max Displacement", legend=false)
+vline!(statsdata.retriangulations, line=(0.2, :dot, [:red]))
+maxmove_plt = Plots.plot(statsdata.maxmove, title = "Max Move", legend=false)
+vline!(statsdata.retriangulations, line=(0.2, :dot, [:red]))
+plt = Plots.plot(avg_plt, med_plt,maxdp_plt,maxmove_plt,layout=(2,2))
+savefig(plt, "result_stat.svg")
+savefig(qual_hist, "result_qual.svg")
+
 
 
 #save("fea.ply",HomogenousMesh(c))
