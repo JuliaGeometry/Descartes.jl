@@ -35,7 +35,8 @@ function deadmau5()
         translate([-5,2,3])Descartes.Sphere(3))
 end
 
-b = beam([10,10,10],1, 3)
+#b = beam([10,10,10],1, 3)
+b = Descartes.Sphere(5)
 f(x) = FRep(b, x)
 m = GLNormalMesh(b)
 scene = mesh(m, color=:blue)
@@ -43,7 +44,8 @@ display(scene)
 sleep(5)
 h = HyperRectangle(b)
 @show f(SVector(1,1,1))
-@time p, t = distmeshnd(f, huniform, 0.5, origin=h.origin, widths=h.widths, vis=false, distribution=:packed)
+statsdata = DistMesh.DistMeshStatistics()
+@time p, t = distmesh(f, huniform, 1, origin=h.origin, widths=h.widths, stats=true, statsdata=statsdata, distribution=:regular)
 
 VertType = eltype(p)
 pair = Tuple{Int32,Int32}[] # edge indices (Int32 since we use Tetgen)
@@ -74,5 +76,22 @@ for i = 1:length(pair)
 end
 scene = Makie.linesegments(ls)
 display(scene)
+
+qualities = DistMesh.triangle_qualities(p,t)
+
+statsdata
+using Plots
+
+plt = Plots.histogram(qualities, title = "Quality", legend=false)
+savefig(plt, "qual_hist.png")
+plt = Plots.plot(statsdata.average_qual, title = "Average Quality", legend=false)
+savefig(plt, "average_qual.png")
+plt = Plots.plot(statsdata.median_qual, title = "Median Quality", legend=false)
+savefig(plt, "median_qual.png")
+plt = Plots.plot(statsdata.maxdp, title = "Max Displacement", legend=false)
+savefig(plt, "max_displacement.png")
+plt = Plots.plot(statsdata.maxmove, title = "Max Move", legend=false)
+savefig(plt, "max_move.png")
+
 
 #save("fea.ply",HomogenousMesh(c))
