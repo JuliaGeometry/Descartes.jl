@@ -6,6 +6,8 @@ using Makie
 #using Colors
 
 Cylinder=Descartes.Cylinder
+translate=Descartes.translate
+rotate=Descartes.rotate
 
 # params
 function beam(beam_size = [50,10,10],
@@ -35,8 +37,8 @@ function deadmau5()
         translate([-5,2,3])Descartes.Sphere(3))
 end
 
-#b = beam([10,10,10],1, 3)
-b = Descartes.Sphere(5)
+b = beam([10,10,10],1, 3)
+#b = Descartes.Sphere(5)
 f(x) = FRep(b, x)
 m = GLNormalMesh(b)
 scene = mesh(m, color=:blue)
@@ -44,9 +46,8 @@ display(scene)
 sleep(5)
 h = HyperRectangle(b)
 @show f(SVector(1,1,1))
-statsdata = DistMesh.DistMeshStatistics()
-@time p, t = distmesh(f, huniform, 1, origin=h.origin, widths=h.widths, stats=true, statsdata=statsdata, distribution=:regular)
-
+@time p, t, statsdata = distmesh(f, HUniform(), 0.9, DistMeshSetup(distribution=:packed,sort_interval=20,deltat=0.05,nonlinear=true,sort=true), origin=h.origin, widths=h.widths, stats=true)
+@show length(p), length(t)
 VertType = eltype(p)
 pair = Tuple{Int32,Int32}[] # edge indices (Int32 since we use Tetgen)
 
