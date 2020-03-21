@@ -8,19 +8,50 @@ function _radius(a,b,r)
     end
 end
 
+function fmax(x::T1,y::T2) where {T1, T2}
+    if x > zero(T1) && y > zero(T2)
+        return sqrt(x^2+y^2)
+    end
+    return max(x,y)
+end
+
+function fmax(x::T1,y::T2, z::T3) where {T1, T2, T3}
+    if x > zero(T1) && y > zero(T2) && z > zero(T3)
+        return sqrt(x^2+y^2+z^2)
+    elseif x > zero(T1) && y > zero(T2)
+        return sqrt(x^2+y^2)
+    elseif x > zero(T1) && z > zero(T2)
+        return sqrt(x^2+z^2)
+    elseif z > zero(T1) && y > zero(T2)
+        return sqrt(z^2+y^2)
+    else
+        return max(x,y,z)
+    end
+end
+
+fnorm(v) = sqrt(sum(v.*v))
+
+@inline function apply_transform(it, v::V) where V
+    @inbounds V(v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4],
+                v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4],
+                v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4])
+end
+
 function FRep(p::Sphere, v)
     it = p.inv_transform
-    x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
-    y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
-    z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
+    itv = apply_transform(it, v)
+    x = itv[1]
+    y = itv[2]
+    z = itv[3]
     sqrt(x*x + y*y + z*z) - p.radius
 end
 
 function FRep(p::Cylinder, v)
     it = p.inv_transform
-    x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
-    y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
-    z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
+    itv = apply_transform(it, v)
+    x = itv[1]
+    y = itv[2]
+    z = itv[3]
     max(-z+p.bottom, z-p.height-p.bottom, sqrt(x*x + y*y) - p.radius)
 end
 
@@ -32,16 +63,16 @@ function FRep(p::Circle, v)
 end
 
 
-function FRep(p::Cuboid, v)
+function FRep(p::Cuboid, v::VT) where VT
     it = p.inv_transform
     x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
     y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
     z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
     dx, dy, dz = p.dimensions
     lbx, lby,lbz = p.lowercorner
-    max(-x+lbx, x-dx-lbx,
-        -y+lby, y-dy-lby,
-        -z+lbz, z-dz-lbz)
+    fmax(max(-x+lbx, x-dx-lbx),
+         max(-y+lby, y-dy-lby),
+         max(-z+lbz, z-dz-lbz))
 end
 
 function FRep(p::Square, v)
@@ -50,8 +81,8 @@ function FRep(p::Square, v)
     y = v[1]*it[2,1]+v[2]*it[2,2]+it[2,3]
     dx, dy = p.dimensions
     lbx, lby = p.lowercorner
-    max(-x+lbx, x-dx-lbx,
-        -y+lby, y-dy-lby)
+    fmax(max(-x+lbx, x-dx-lbx),
+         max(-y+lby, y-dy-lby))
 end
 
 function FRep(u::CSGUnion, v)
@@ -103,9 +134,10 @@ end
 
 function FRep(p::LinearExtrude, v)
     it = p.inv_transform
-    x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
-    y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
-    z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
+    itv = apply_transform(it, v)
+    x = itv[1]
+    y = itv[2]
+    z = itv[3]
     r = FRep(p.primitive, v)
-    max(max(-z,z-p.distance), r)
+    fmax(max(-z,z-p.distance), r)
 end

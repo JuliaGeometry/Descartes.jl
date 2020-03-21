@@ -13,6 +13,22 @@ function (::Type{MT})(primitives::AbstractPrimitive{3, T}...;
     return mesh
 end
 
+function f(primitive)
+    x -> FRep(primitive, x)::eltype(x)
+end
+
+function (::Type{MT})(primitive::AbstractPrimitive{3, T},
+                      algorithm=Meshing.AdaptiveMarchingCubes(0.0,1e-3,0.05,0.05,true,false)
+                      ) where {T, MT <: AbstractMesh}
+
+    h = HyperRectangle(primitive)
+    m = ntuple(_->maximum(h.widths),3)
+    @show m
+    vts, fcs = isosurface(f(primitive), algorithm, origin=SVector{3,Float64}(h.origin...), widths=SVector{3,Float64}(m...))
+
+    return MT(Point.(vts), Face.(fcs))
+end
+
 function piped_mesh(m::AbstractMesh,r)
     c = nothing
     for f in m.faces
