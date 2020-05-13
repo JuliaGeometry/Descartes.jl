@@ -4,13 +4,12 @@ function (::Type{MT})(primitives::AbstractPrimitive{3, T}...;
                                          adf=false) where {T, MT <: AbstractMesh}
 
     f(x) = FRep(primitives[1], x)
-    mesh = MT(f, HyperRectangle(primitives[1]), samples, algorithm)
-    for i = 2:length(primitives)
+    meshes = Vector{MT}(undef, length(primitives))
+    for i = 1:length(primitives)
         b = HyperRectangle(primitives[i])
-        lm = MT(x -> FRep(primitives[i], x), b, samples, algorithm)
-        mesh = merge(mesh, lm)
+        meshes[i] = MT(x -> FRep(primitives[i], x), b, samples, algorithm)
     end
-    return mesh
+    return merge(meshes)
 end
 
 function piped_mesh(m::AbstractMesh,r)

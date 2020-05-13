@@ -65,3 +65,28 @@ function HyperRectangle(s::LinearExtrude)
     h = HyperRectangle(s.primitive)
     HyperRectangle(Vec(h.origin[1], h.origin[2], 0), Vec(h.widths[1], h.widths[2], s.distance))
 end
+
+"""
+Perform a union between two HyperRectangles.
+"""
+function union(h1::HyperRectangle, h2::HyperRectangle)
+    m = min.(minimum(h1), minimum(h2))
+    mm = max.(maximum(h1), maximum(h2))
+    HyperRectangle(m, mm - m)
+end
+
+
+"""
+Perform a difference between two HyperRectangles.
+"""
+diff(h1::HyperRectangle, h2::HyperRectangle) = h1
+
+
+"""
+Perform a intersection between two HyperRectangles.
+"""
+function intersect(h1::HyperRectangle, h2::HyperRectangle)
+    m = max.(minimum(h1), minimum(h2))
+    mm = min.(maximum(h1), maximum(h2))
+    HyperRectangle(m, mm - m)
+end

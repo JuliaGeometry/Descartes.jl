@@ -1,5 +1,5 @@
 using Descartes
-
+using GeometryBasics: Mesh
 
 function beam(beam_size = [50,10,10],
               hole_ct = 5,
@@ -17,6 +17,6 @@ function beam(beam_size = [50,10,10],
     LinearExtrude(c, beam_size[3])
 end
 
-m = HomogenousMesh(beam())
+m = Mesh(beam())
 
 #save("2d_beam.ply",m)

@@ -1,11 +1,10 @@
 module Descartes
 
 import Base: *, union, diff, intersect
-import GeometryTypes: HyperRectangle,
-                      HomogenousMesh,
-                      SignedDistanceField
+import GeometryBasics: HyperRectangle,
+                       Mesh
 
-using GeometryTypes,
+using GeometryBasics,
       FileIO,
       StaticArrays,
       Meshing,
@@ -44,18 +43,8 @@ export CSGUnion, RadiusedCSGUnion, CSGDiff, CSGIntersect
 # frep
 export FRep
 
-# mesh
-export HomogenousMesh
-
-# GeometryTypes
-export HyperRectangle, Vec, SignedDistanceField
-
 # FileIO
 export load, save
 
-# Init
-function __init__()
-    #cache_init()
-end
 
 end # module

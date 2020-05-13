@@ -29,7 +29,7 @@ example001();
 """
 
 using Descartes
-
+using GeometryBasics: Mesh
 
 function example001()
 
@@ -52,6 +52,6 @@ function example001()
         rotcy([0, 1, 0], cy_r, cy_h))
 end
 
-m = HomogenousMesh(example001())
+m = Mesh(example001())
 #save("example001.ply", m)
 #Descartes.visualize(m)
