@@ -2,96 +2,32 @@ function *(s::Shell{Nothing}, obj::AbstractPrimitive{N,T}) where {N,T}
     Shell(obj, s.distance)
 end
 
-function *(a::Transform{N,T}, b::Transform{N,T}) where {N,T}
-    Transform{N,T}(a.transform*b.transform)
+function translate(vect::AbstractVector)
+    Translation(vect...)
 end
 
-"""
-rotate around the given axis, by angle
-"""
-function rotate(ang, axis::Vector)
-    n = length(axis)
-    N = n+1 # homogenous coords
-
-    # handle undefined axis e.g. zero array
-    if norm(axis) == 0
-        return Transform{N,Float64}(SMatrix{N,N}(1.0*I))
-    end
-
-    u = normalize(axis) # normalize the specified axis
-
-    # TODO handle 2D case
-    if n == 3
-        R = [cos(ang)+u[1]^2*(1-cos(ang)) u[1]*u[2]*(1-cos(ang))-u[3]*sin(ang) u[1]*u[3]*(1-cos(ang))+u[2]*sin(ang) 0
-            u[2]*u[1]*(1-cos(ang))+u[3]*sin(ang) cos(ang)+u[2]^2*(1-cos(ang)) u[2]*u[3]*(1-cos(ang))-u[1]*sin(ang) 0
-            u[3]*u[1]*(1-cos(ang))-u[2]*sin(ang) u[3]*u[2]*(1-cos(ang))+u[1]*sin(ang) cos(ang)+u[3]^2*(1-cos(ang)) 0
-            0 0 0 1]
-            return Transform{4, Float64}(R)
-    else
-        error("Axis rotation or order $n, is not implemented yet")
-    end
+function *(transform::AbstractAffineMap, obj::PT) where {PT<:AbstractPrimitive}
+    MapContainer(transform, inv(transform), obj)
 end
 
-function translate(vect::Vector)
-    n = length(vect)
-    N = n + 1
-    transform = MMatrix{N,N}(1.0*I)
-    transform[1:n, N] = vect
-    Transform{N, Float64}(SMatrix{N,N}(transform))
+function *(t::AbstractAffineMap, obj::MapContainer)
+    c = compose(obj.map, t)
+    MapContainer(c, inv(c), obj.primitive)
 end
 
-function translate(vect::SVector)
-    n = length(vect)
-    N = n + 1
-    transform = MMatrix{N,N}(1.0*I)
-    for i = 1:n
-        transform[i, N] = vect[i]
-    end
-    Transform{N, Float64}(SMatrix{N,N}(transform))
+function *(a::AbstractAffineMap, b::AbstractAffineMap)
+    compose(a,b)
 end
 
-function *(transform::Transform, obj::PT) where {PT<:AbstractPrimitive}
-    nt= transform.transform*obj.transform
-    nit = inv(nt)
-    PT((getfield(obj,i) for i in fieldnames(PT)[1:end-2])..., nt, nit)
-end
-
-# commute the transform over each leaf in the CSG Tree
-function *(transform::Transform, obj::CSGTy) where {CSGTy <: AbstractCSGTree}
-    l = transform*obj.left
-    r = transform*obj.right
-    CSGTy(l, r)
-end
-
-function *(transform::Transform, obj::RadiusedCSGUnion)
-    l = transform*obj.left
-    r = transform*obj.right
-    RadiusedCSGUnion(obj.r, l, r)
-end
-
-"""
-Apply a homogenous tranform matrix to the points x, y, z
-"""
-function transform(it::SMatrix, _x, _y, _z) where {T}
-    @inbounds x = _x*it[1,1]+_y*it[1,2]+_z*it[1,3]+it[1,4]
-    @inbounds y = _x*it[2,1]+_y*it[2,2]+_z*it[2,3]+it[2,4]
-    @inbounds z = _x*it[3,1]+_y*it[3,2]+_z*it[3,3]+it[3,4]
-    x, y, z
-end
-
-function transform(it::SMatrix, x::AbstractVector) where {T}
-    transform(it, x...)
-end
-
-function transform(t::SMatrix, h::HyperRectangle{3,T}) where {T}
-    p_1 = t*SVector(h.origin... , 1)
-    p_2 = t*SVector(h.widths... , 1)
-    p_3 = t*SVector(h.origin[1]+h.widths[1],h.origin[2],h.origin[3], 1)
-    p_4 = t*SVector(h.origin[1],h.origin[2]+h.widths[2],h.origin[3], 1)
-    p_5 = t*SVector(h.origin[1],h.origin[2],h.origin[3]+h.widths[3], 1)
-    p_6 = t*SVector(h.origin[1]+h.widths[1],h.origin[2],h.origin[3]+h.widths[3], 1)
-    p_7 = t*SVector(h.origin[1],h.origin[2]+h.widths[2],h.origin[3]+h.widths[3], 1)
-    p_8 = t*SVector(h.origin[1]+h.widths[1],h.origin[2]+h.widths[2],h.origin[3], 1)
+function transform(t::AbstractAffineMap, h::HyperRectangle{3,T}) where {T}
+    p_1 = t(h.origin)
+    p_2 = t(h.widths)
+    p_3 = t(SVector(h.origin[1]+h.widths[1],h.origin[2],h.origin[3]))
+    p_4 = t(SVector(h.origin[1],h.origin[2]+h.widths[2],h.origin[3]))
+    p_5 = t(SVector(h.origin[1],h.origin[2],h.origin[3]+h.widths[3]))
+    p_6 = t(SVector(h.origin[1]+h.widths[1],h.origin[2],h.origin[3]+h.widths[3]))
+    p_7 = t(SVector(h.origin[1],h.origin[2]+h.widths[2],h.origin[3]+h.widths[3]))
+    p_8 = t(SVector(h.origin[1]+h.widths[1],h.origin[2]+h.widths[2],h.origin[3]))
     x_o = min(p_1[1],p_2[1],p_3[1],p_4[1],p_5[1],p_6[1],p_7[1],p_8[1])
     y_o = min(p_1[2],p_2[2],p_3[2],p_4[2],p_5[2],p_6[2],p_7[2],p_8[2])
     z_o = min(p_1[3],p_2[3],p_3[3],p_4[3],p_5[3],p_6[3],p_7[3],p_8[3])
@@ -101,11 +37,23 @@ function transform(t::SMatrix, h::HyperRectangle{3,T}) where {T}
     HyperRectangle(x_o, y_o, z_o, x_w-x_o, y_w-y_o, z_w-z_o)
 end
 
-function transform(t::SMatrix, h::HyperRectangle{2,T}) where {T}
-    p_1 = t*SVector(h.origin... , 1)
-    p_2 = t*SVector(h.widths... , 1)
-    p_3 = t*SVector(h.origin[1]+h.widths[1],h.origin[2], 1)
-    p_4 = t*SVector(h.origin[1],h.origin[2]+h.widths[2], 1)
+function rotate(ang, axis::Vector)
+    if !iszero(axis[1])
+        return LinearMap(RotX(ang))
+    elseif !iszero(axis[2])
+        return LinearMap(RotY(ang))
+    elseif !iszero(axis[3])
+        return LinearMap(RotZ(ang))
+    else
+        return LinearMap(RotX(ang)) # default to X? TODO: What does OpenSCAD use?
+    end
+end
+
+function transform(t::AbstractAffineMap, h::HyperRectangle{2,T}) where {T}
+    p_1 = t(h.origin)
+    p_2 = t(h.widths)
+    p_3 = t(SVector(h.origin[1]+h.widths[1],h.origin[2]))
+    p_4 = t(SVector(h.origin[1],h.origin[2]+h.widths[2]))
     x_o = min(p_1[1],p_2[1],p_3[1],p_4[1])
     y_o = min(p_1[2],p_2[2],p_3[2],p_4[2])
     x_w = max(p_1[1],p_2[1],p_3[1],p_4[1])

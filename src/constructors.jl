@@ -3,7 +3,7 @@ function Square(dims;center=false)
     y = dims[2]
     lb = SVector(0.,0.)
     center && (lb = -SVector{2,Float64}(x,y)/2)
-    Square(SVector{2,Float64}(x,y), lb, SMatrix{3,3}(1.0*I), SMatrix{3,3}(1.0*I))
+    Square(SVector{2,Float64}(x,y), lb)
 end
 
 Square(x,y,z;center=false) = Square([x,y],center=center)
@@ -11,8 +11,8 @@ Square(x,y,z;center=false) = Square([x,y],center=center)
 function Cuboid(dims;center=false)
     @assert length(dims) == 3
     lb = SVector(0.,0.,0.)
-    center && (lb = -SVector{3,Float64}(dims)/2)
-    Cuboid(SVector{3,Float64}(dims), lb, SMatrix{4,4}(1.0*I), SMatrix{4,4}(1.0*I))
+    center && (lb = -SVector{3,Float64}(dims...)/2)
+    Cuboid(SVector{3,Float64}(dims...), lb)
 end
 
 Cuboid(x,y,z;center=false) = Cuboid([x,y,z],center=center)
@@ -26,16 +26,7 @@ function Cylinder(r, h; center=false)
     rn, hn = Float64(r), Float64(h)
     b = 0.0
     center && (b = -h/2)
-    Cylinder(rn, hn, b, SMatrix{4,4}(one(rn)*I), SMatrix{4,4}(one(rn)*I))
-end
-
-function Circle(r)
-    rn = Float64(r)
-    Circle(rn, SMatrix{3,3}(one(rn)*I), SMatrix{3,3}(one(rn)*I))
-end
-
-function Sphere(r)
-    Sphere(Float64(r), SMatrix{4,4}(1.0*I), SMatrix{4,4}(1.0*I))
+    Cylinder(rn, hn, b)
 end
 
 #function PrismaticCylinder(sides, height::T, radius::T) where {T}
@@ -44,7 +35,7 @@ end
 
 function Piping(r, pts)
     ptsc = [SVector{3,Float64}(pt...) for pt in pts]
-    Piping(Float64(r), ptsc, SMatrix{4,4}(1.0*I), SMatrix{4,4}(1.0*I))
+    Piping(Float64(r), ptsc)
 end
 
 #
@@ -130,5 +121,6 @@ function Shell(r)
 end
 
 function LinearExtrude(p::AbstractPrimitive{2,T}, d) where {T}
-    LinearExtrude{3, T, typeof(p)}(p, convert(T, d), SMatrix{4,4}(1.0*I), SMatrix{4,4}(1.0*I))
+    #TODO promote type
+    LinearExtrude{3, T, typeof(p)}(p, convert(T, d))
 end

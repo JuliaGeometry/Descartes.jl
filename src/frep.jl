@@ -8,35 +8,37 @@ function _radius(a,b,r)
     end
 end
 
+function FRep(p::MapContainer{3,T,P}, v) where {T,P}
+    FRep(p.primitive, p.inv(v))
+end
+
+
+function FRep(p::MapContainer{2,T,P}, v) where {T,P}
+    FRep(p.primitive, p.inv(SVector(v[1],v[2])))
+end
+
 function FRep(p::Sphere, v)
-    it = p.inv_transform
-    x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
-    y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
-    z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
+    x = v[1]
+    y = v[2]
+    z = v[3]
     sqrt(x*x + y*y + z*z) - p.radius
 end
 
 function FRep(p::Cylinder, v)
-    it = p.inv_transform
-    x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
-    y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
-    z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
+    x = v[1]
+    y = v[2]
+    z = v[3]
     max(-z+p.bottom, z-p.height-p.bottom, sqrt(x*x + y*y) - p.radius)
 end
 
 function FRep(p::Circle, v)
-    it = p.inv_transform
-    x = v[1]*it[1,1]+v[2]*it[1,2]+it[1,3]
-    y = v[1]*it[2,1]+v[2]*it[2,2]+it[2,3]
-    sqrt(x*x + y*y) - p.radius
+    norm(v) - p.radius
 end
 
-
 function FRep(p::Cuboid, v)
-    it = p.inv_transform
-    x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
-    y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
-    z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
+    x = v[1]
+    y = v[2]
+    z = v[3]
     dx, dy, dz = p.dimensions
     lbx, lby,lbz = p.lowercorner
     max(-x+lbx, x-dx-lbx,
@@ -45,9 +47,8 @@ function FRep(p::Cuboid, v)
 end
 
 function FRep(p::Square, v)
-    it = p.inv_transform
-    x = v[1]*it[1,1]+v[2]*it[1,2]+it[1,3]
-    y = v[1]*it[2,1]+v[2]*it[2,2]+it[2,3]
+    x = v[1]
+    y = v[2]
     dx, dy = p.dimensions
     lbx, lby = p.lowercorner
     max(-x+lbx, x-dx-lbx,
@@ -80,7 +81,6 @@ end
 
 function FRep(p::Piping{T}, v) where {T}
     num_pts = length(p.points)
-    pt = Point(v[1],v[2],v[3])
 
     val = typemax(T)
 
@@ -88,13 +88,13 @@ function FRep(p::Piping{T}, v) where {T}
         e1 = p.points[i]
         e2 = p.points[i+1]
         v = e2 - e1
-        w = pt - e1
+        w = v - e1
         if dot(w,v) <= 0
-            nv = norm(pt - e1)
+            nv = norm(v - e1)
         elseif dot(v,v) <= dot(w,v)
-            nv = norm(pt - e2)
+            nv = norm(v - e2)
         else
-            nv = norm(cross(pt-e1,pt-e2))/norm(e2-e1)
+            nv = norm(cross(v-e1,v-e2))/norm(e2-e1)
         end
         val = min(nv, val)
     end
@@ -102,10 +102,9 @@ function FRep(p::Piping{T}, v) where {T}
 end
 
 function FRep(p::LinearExtrude, v)
-    it = p.inv_transform
-    x = v[1]*it[1,1]+v[2]*it[1,2]+v[3]*it[1,3]+it[1,4]
-    y = v[1]*it[2,1]+v[2]*it[2,2]+v[3]*it[2,3]+it[2,4]
-    z = v[1]*it[3,1]+v[2]*it[3,2]+v[3]*it[3,3]+it[3,4]
+    x = v[1]
+    y = v[2]
+    z = v[3]
     r = FRep(p.primitive, v)
     max(max(-z,z-p.distance), r)
 end

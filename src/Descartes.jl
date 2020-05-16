@@ -1,15 +1,18 @@
 module Descartes
 
 import Base: *, union, diff, intersect
-import GeometryBasics: HyperRectangle,
+import GeometryBasics: AbstractMesh,
+                       HyperRectangle,
+                       Vec,
                        Mesh
 
-using GeometryBasics,
-      FileIO,
+using FileIO,
       StaticArrays,
       Meshing,
       MeshIO,
-      LinearAlgebra
+      LinearAlgebra,
+      CoordinateTransformations,
+      Rotations
 
 include("types.jl")
 include("constructors.jl")
@@ -17,22 +20,15 @@ include("operations.jl")
 include("frep.jl")
 include("hyperrectangles.jl")
 include("meshes.jl")
-#include("hashing.jl")
-include("cache.jl")
-include("visualize.jl")
-
-# GeometryTypes
-export Point
 
 # 3d primitives
 export Cuboid, Cylinder, Sphere, Piping
 
 # 2d primitives
-
 export Square, Circle
 
 # transforms
-export Transform, Translation, translate, rotate
+export translate, rotate
 
 # operations
 export Shell, LinearExtrude
