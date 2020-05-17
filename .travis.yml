@@ -4,14 +4,14 @@ os:
   - linux
  # - osx
 julia:
-  - 1.0
+  - 1
   - nightly
 notifications:
   email: false
 jobs:
   include:
     - stage: "Documentation"
-      julia: 1.0
+      julia: 1
       os: linux
       script:
         - julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd()));
@@ -27,4 +27,3 @@ matrix:
     - julia: nightly
 after_success:
   - julia -e 'using Pkg; import Descartes; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
-  
