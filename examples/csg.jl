@@ -39,4 +39,4 @@ m = Mesh(a,b,c)
 @show typeof(m)
 using GLMakie
 
-scene = GLMakie.mesh(coordinates(m), faces(m))
+scene = GLMakie.mesh(coordinates(m), faces(m); shading=true, color=:yellow)
