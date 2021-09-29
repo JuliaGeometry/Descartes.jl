@@ -3,7 +3,7 @@ using Descartes
 
 makedocs(
     sitename = "Descartes",
-    format = :html,
+    format = Documenter.HTML(),
     modules = [Descartes],
     authors = "Steve Kelly",
     pages = ["Primitives" => "primitives.md",
