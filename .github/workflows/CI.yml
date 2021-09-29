@@ -58,9 +58,9 @@ jobs:
       - run: |
           julia --project=docs -e '
             using Documenter: DocMeta, doctest
-            using SoapySDR
-            DocMeta.setdocmeta!(SoapySDR, :DocTestSetup, :(using SoapySDR); recursive=true)
-            doctest(SoapySDR)'
+            using Descartes
+            DocMeta.setdocmeta!(Descartes, :DocTestSetup, :(using Descartes); recursive=true)
+            doctest(Descartes)'
       - run: julia --project=docs docs/make.jl
         env:
           JULIA_PKG_SERVER: ""
