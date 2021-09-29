@@ -6,10 +6,8 @@ import GeometryBasics: AbstractMesh,
                        Vec,
                        Mesh
 
-using FileIO,
-      StaticArrays,
+using StaticArrays,
       Meshing,
-      MeshIO,
       LinearAlgebra,
       CoordinateTransformations,
       Rotations
@@ -38,9 +36,5 @@ export CSGUnion, RadiusedCSGUnion, CSGDiff, CSGIntersect
 
 # frep
 export FRep
-
-# FileIO
-export load, save
-
 
 end # module

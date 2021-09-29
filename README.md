@@ -2,7 +2,6 @@
 
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://sjkelly.github.io/Descartes.jl/dev)
 
-[![Build Status](https://travis-ci.org/sjkelly/Descartes.jl.svg?branch=master)](https://travis-ci.org/sjkelly/Descartes.jl)
 [![codecov](https://codecov.io/gh/sjkelly/Descartes.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/sjkelly/Descartes.jl)
 
 Descartes is a research project into the representation of solid geometry. It
@@ -18,8 +17,6 @@ inspired by ImplicitCAD, HyperFun, libfive, and several others.
 The syntax is idiomatic julia, but should be familiar to those used to OpenSCAD,
 
 [Examples](https://github.com/sjkelly/Descartes.jl/tree/master/examples)
-
-This is a Pre-Alpha project.
 
 There are occasional development updates posted [here](https://sjkellyorg.wordpress.com/category/solid-modeling/).
 

@@ -5,3 +5,4 @@
 *.off
 *.obj
 .cache/*
+Manifest*

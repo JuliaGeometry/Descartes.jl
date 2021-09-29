@@ -8,7 +8,7 @@ end
 
 Square(x,y,z;center=false) = Square([x,y],center=center)
 
-function Cuboid(dims;center=false)
+function Cuboid(dims::Union{AbstractVector,Tuple};center=false)
     @assert length(dims) == 3
     lb = SVector(0.,0.,0.)
     center && (lb = -SVector{3,Float64}(dims...)/2)
@@ -17,12 +17,14 @@ end
 
 Cuboid(x,y,z;center=false) = Cuboid([x,y,z],center=center)
 
+Cuboid(d;kwargs) = Cuboid((d,d,d);kwargs...)
+
 #= function RoundedCuboid{T}(dims::Vector{T},axes::Vector{Bool},r)
     @assert length(dims) == 3
     RoundedCuboid(dims, axes, convert(T,r), eye(4), eye(4))
 end =#
 
-function Cylinder(r, h; center=false)
+function Cylinder(r=1, h=1; center=false)
     rn, hn = Float64(r), Float64(h)
     b = 0.0
     center && (b = -h/2)
