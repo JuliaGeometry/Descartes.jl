@@ -1,8 +1,8 @@
 # Descartes
 
-[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://sjkelly.github.io/Descartes.jl/dev)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://juliageometry.github.io/Descartes.jl/dev)
 
-[![codecov](https://codecov.io/gh/sjkelly/Descartes.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/sjkelly/Descartes.jl)
+[![codecov](https://codecov.io/gh/juliageometry/Descartes.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/juliageometry/Descartes.jl)
 
 Descartes is a research project into the representation of solid geometry. It
 is designed to leverage Julia's multiple dispatch and JIT compilation to
@@ -16,7 +16,7 @@ Under the hood Descartes uses a functional representation of geometry,
 inspired by ImplicitCAD, HyperFun, libfive, and several others. 
 The syntax is idiomatic julia, but should be familiar to those used to OpenSCAD,
 
-[Examples](https://github.com/sjkelly/Descartes.jl/tree/master/examples)
+[Examples](https://github.com/juliageometry/Descartes.jl/tree/master/examples)
 
 There are occasional development updates posted [here](https://sjkellyorg.wordpress.com/category/solid-modeling/).
 

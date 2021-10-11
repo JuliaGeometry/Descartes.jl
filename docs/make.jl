@@ -12,5 +12,5 @@ makedocs(
 
 
 deploydocs(
-    repo = "github.com/sjkelly/Descartes.jl.git"
+    repo = "github.com/juliageometry/Descartes.jl.git"
 )
