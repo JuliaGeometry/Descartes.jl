@@ -7,6 +7,7 @@ function _radius(a,b,r)
         return b+r*sin(pi/4+asin((a-b)/(r*sqrt(2))))-r
     end
 end
+#----------------------------------
 
 function FRep(p::MapContainer{3,T,P}, v) where {T,P}
     FRep(p.primitive, p.inv(v))
@@ -16,8 +17,12 @@ end
 function FRep(p::MapContainer{2,T,P}, v) where {T,P}
     FRep(p.primitive, p.inv(SVector(v[1],v[2])))
 end
-
 #----------------------------------
+
+function FRep(p::Sphere,v::AbstractVector)
+    norm(v) - p.radius
+end
+
 function FRep(p::Sphere,x::AbstractArray,y::AbstractArray,z::AbstractArray)
     @assert size(x) == size(y) == size(z)
     @. sqrt(x*x + y*y + z*z) - p.radius
@@ -29,6 +34,7 @@ function FRep(p::Sphere,xyz::AbstractArray)
     @. sqrt(r2) - p.radius
 end
 #----------------------------------
+
 function FRep(p::Cylinder,v::AbstractVector)
     x = v[1]
     y = v[2]
@@ -57,6 +63,7 @@ function FRep(p::Cylinder,xyz::AbstractArray)
     reshape(fr,1,sz[2:end]...)
 end
 #----------------------------------
+
 function FRep(p::Circle, v::AbstractVector)
     norm(v) - p.radius
 end
@@ -66,12 +73,13 @@ function FRep(p::Circle,x::AbstractArray,y::AbstractArray)
     @. sqrt(x*x + y*y) - p.radius
 end
 
-function FRep(p::Circle,xy::AbstractMatrix)
+function FRep(p::Circle,xy::AbstractArray)
     @assert size(xy)[1] == 2
     r2 = sum(xy .* xy,dims=1)
     @. sqrt(r2) - p.radius
 end
 #----------------------------------
+
 function FRep(p::Cuboid, v::AbstractVector)
     x = v[1]
     y = v[2]
@@ -109,6 +117,7 @@ function FRep(p::Cuboid,xyz::AbstractArray)
     reshape(fr,1,sz[2:end]...)
 end
 #----------------------------------
+
 function FRep(p::Square, v::AbstractVector)
     x = v[1]
     y = v[2]
@@ -166,6 +175,7 @@ function FRep(u::RadiusedCSGUnion, v)
     r = u.radius
     _radius(a,b,r)
 end
+#----------------------------------
 
 function FRep(p::Piping{T}, v) where {T}
     num_pts = length(p.points)
@@ -188,6 +198,7 @@ function FRep(p::Piping{T}, v) where {T}
     end
     val - p.radius
 end
+#----------------------------------
 
 function FRep(p::LinearExtrude, v)
     x = v[1]
