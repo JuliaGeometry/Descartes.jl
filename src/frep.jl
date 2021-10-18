@@ -144,20 +144,20 @@ end
 #----------------------------------
 
 function FRep(u::CSGUnion, v)
-    min(FRep(u.left, v),FRep(u.right, v))
+    min.(FRep(u.left, v),FRep(u.right, v))
 end
 
 function FRep(u::CSGDiff, v)
-    max(FRep(u.left, v), -FRep(u.right, v))
+    max.(FRep(u.left, v), -FRep(u.right, v))
 end
 
 function FRep(u::CSGIntersect, v)
-    max(FRep(u.left, v), FRep(u.right, v))
+    max.(FRep(u.left, v), FRep(u.right, v))
 end
 
 function FRep(s::Shell, v)
     r = FRep(s.primitive, v)
-    max(r, -r-s.distance)
+    max.(r, -r-s.distance)
 end
 
 function FRep(u::RadiusedCSGUnion, v)
@@ -194,5 +194,5 @@ function FRep(p::LinearExtrude, v)
     y = v[2]
     z = v[3]
     r = FRep(p.primitive, v)
-    max(max(-z,z-p.distance), r)
+    max.(max.(-z,z-p.distance), r)
 end
