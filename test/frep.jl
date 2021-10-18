@@ -1,6 +1,5 @@
 #
-using Revise
-using Descartes, LinearAlgebra
+using Descartes
 
 #----------------------------------
 p  = Circle(1.0)
