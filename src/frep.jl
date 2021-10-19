@@ -1,12 +1,5 @@
 # http://en.wikipedia.org/wiki/Function_representation
 
-function _radius(a,b,r)
-    if abs(a-b) >= r
-        return min(a,b)
-    else
-        return b+r*sin(pi/4+asin((a-b)/(r*sqrt(2))))-r
-    end
-end
 #----------------------------------
 
 function FRep(p::MapContainer{3,T,P}, v) where {T,P}
@@ -169,6 +162,23 @@ function FRep(s::Shell, v)
     max.(r, -r-s.distance)
 end
 
+#----------------------------------
+function _radius(a::Real,b::Real,r::Real)
+    if abs(a-b) >= r
+        return min(a,b)
+    else
+        return b+r*sin(pi/4+asin((a-b)/(r*sqrt(2))))-r
+    end
+end
+
+function _radius(a::AbstractVector,b::AbstractVector,c::AbstractVector)
+    cond = @. (abs(a-b) >= r) # bit-vector
+    ans1 = @. min(a,b)
+    ans2 = @. b+r*sin(pi/4+asin((a-b)/(r*sqrt(2))))-r
+
+    @. cond*ans1 + (1-cond)*ans2
+end
+
 function FRep(u::RadiusedCSGUnion, v)
     a = FRep(u.left, v)
     b = FRep(u.right, v)
@@ -177,7 +187,7 @@ function FRep(u::RadiusedCSGUnion, v)
 end
 #----------------------------------
 
-function FRep(p::Piping{T}, v) where {T}
+function FRep(p::Piping{T}, v::AbstractVector) where {T}
     num_pts = length(p.points)
 
     val = typemax(T)
@@ -204,6 +214,23 @@ function FRep(p::LinearExtrude, v)
     x = v[1]
     y = v[2]
     z = v[3]
-    r = FRep(p.primitive, v)
+    r = FRep(p.primitive, v) # input should be a 2D vector
     max.(max.(-z,z-p.distance), r)
 end
+
+function FRep(p::LinearExtrude,x::AbstractArray,y::AbstractArray,z::AbstractArray)
+    @assert size(x) == size(y) == size(z)
+
+    r = FRep(p.Primitive,x,y)
+    @. max(max(-z,z-p.distance), r)
+end
+
+function FRep(p::LinearExtrude,xyz::AbstractArray)
+    @assert size(xyz)[1] == 3
+
+    x = xyz[1,:]
+    y = xyz[2,:]
+    z = xyz[3,:]
+    FRep(p,x,y,z)
+end
+#----------------------------------
