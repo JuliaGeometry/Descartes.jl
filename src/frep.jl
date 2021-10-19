@@ -210,7 +210,7 @@ function FRep(p::Piping{T}, v::AbstractVector) where {T}
 end
 #----------------------------------
 
-function FRep(p::LinearExtrude, v)
+function FRep(p::LinearExtrude, v::AbstractVector)
     x = v[1]
     y = v[2]
     z = v[3]
