@@ -1,6 +1,10 @@
 # http://en.wikipedia.org/wiki/Function_representation
 #----------------------------------
 
+function (trans::Translation{V})(x::AbstractMatrix) where {V}
+    x .+ trans.translation
+end
+
 function FRep(p::MapContainer{N,T,P}, v) where {N,T,P}
     FRep(p.primitive, p.inv(v))
 end
