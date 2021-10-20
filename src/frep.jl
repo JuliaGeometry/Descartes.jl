@@ -1,24 +1,32 @@
 # http://en.wikipedia.org/wiki/Function_representation
 #----------------------------------
 
+"""
+ Overloading CoordinateTransformations.Translation for vectorized implementation.
+"""
 function (trans::Translation{V})(x::AbstractMatrix) where {V}
     x .+ trans.translation
 end
 
-function FRep(p::MapContainer{N,T,P}, v) where {N,T,P}
-    FRep(p.primitive, p.inv(v))
+#function FRep(p::MapContainer{N,T,P}, v) where {N,T,P}
+#    FRep(p.primitive, p.inv(v))
+#end
+
+function FRep(p::MapContainer{N,T,P}, v...) where {N,T,P}
+    FRep(p.primitive, p.inv(vcat(v...)))
+end
+#----------------------------------
+
+function FRep(u::CSGUnion, v...)
+    min.(FRep(u.left, v...),FRep(u.right, v...))
 end
 
-function FRep(u::CSGUnion, v)
-    min.(FRep(u.left, v),FRep(u.right, v))
+function FRep(u::CSGDiff, v...)
+    max.(FRep(u.left, v...), -FRep(u.right, v...))
 end
 
-function FRep(u::CSGDiff, v)
-    max.(FRep(u.left, v), -FRep(u.right, v))
-end
-
-function FRep(u::CSGIntersect, v)
-    max.(FRep(u.left, v), FRep(u.right, v))
+function FRep(u::CSGIntersect, v...)
+    max.(FRep(u.left, v...), FRep(u.right, v...))
 end
 #----------------------------------
 
@@ -195,27 +203,17 @@ function FRep(p::Piping{T}, v::AbstractVector) where {T}
     val - p.radius
 end
 
-#function FRep(p::Piping{T}, v::AbstractVector) where {T}
-#    num_pts = length(p.points)
-#
-#    val = typemax(T)
-#
-#    for i = 1:num_pts-1
-#        e1 = p.points[i]
-#        e2 = p.points[i+1]
-#        v = e2 - e1
-#        w = v - e1
-#        if dot(w,v) <= 0
-#            nv = norm(v - e1)
-#        elseif dot(v,v) <= dot(w,v)
-#            nv = norm(v - e2)
-#        else
-#            nv = norm(cross(v-e1,v-e2))/norm(e2-e1)
-#        end
-#        val = min(nv, val)
-#    end
-#    val - p.radius
-#end
+function FRep(p::Piping{T}, x::AbstractMatrix, y::AbstractMatrix, z::AbstractMatrix) where {T}
+
+    xyz = vcat(x,y,z)
+    collect(FRep(p,xyz[:,i]) for i in 1:size(xyz)[2])'
+end
+
+function FRep(p::Piping{T}, xyz::AbstractMatrix) where {T}
+    @warn "F-Reps for Piping is not vectorized. switching to non-vectorized implementation" 
+
+    collect(FRep(p,xyz[:,i]) for i in 1:size(xyz)[2])'
+end
 #----------------------------------
 
 function FRep(p::LinearExtrude, v::AbstractVector)

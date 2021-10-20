@@ -56,6 +56,12 @@
     
     @test FRep(p,xy[:,1]) |> size == ()
     @test FRep(p,xy)      |> size == (1,N)
-#   @test FRep(p,x,y)     |> size == (1,N)
+    @test FRep(p,x,y)     |> size == (1,N)
+    #----------------------------------
+    p = Piping(1.0, [[0,0,0],[10,0,0],[10,10,0],[10,10,10],[5,5,5]])
+    
+    @test FRep(p,xyz[:,1]) |> size == ()
+    @test FRep(p,xyz)      |> size == (1,N)
+    @test FRep(p,x,y,z)    |> size == (1,N)
     #----------------------------------
 end
