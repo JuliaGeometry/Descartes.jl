@@ -21,10 +21,10 @@ julia = "1.6"
 
 [extras]
 Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
+FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
+MeshIO = "7269a6da-0436-5bbc-96c2-40638cbb6118"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-MeshIO = "7269a6da-0436-5bbc-96c2-40638cbb6118"
-FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 
 [targets]
 test = ["Test", "Combinatorics", "StaticArrays", "MeshIO", "FileIO"]

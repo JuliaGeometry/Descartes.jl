@@ -6,3 +6,6 @@
 *.obj
 .cache/*
 Manifest*
+
+*.swp
+*.DS_Store
