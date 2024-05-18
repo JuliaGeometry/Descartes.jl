@@ -37,6 +37,6 @@ c = translate([24,0,0])diff(
 
 m = Mesh(a,b,c)
 @show typeof(m)
-using GLMakie
+using WGLMakie
 
-scene = GLMakie.mesh(coordinates(m), faces(m); shading=true, color=:yellow)
+scene = WGLMakie.mesh(coordinates(m), faces(m); shading=true, color=:yellow)

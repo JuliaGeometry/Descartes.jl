@@ -28,7 +28,7 @@ example001();
 
 """
 
-using Descartes
+using Descartes: Cylinder, Sphere
 using GeometryBasics: Mesh
 
 function example001()
@@ -54,4 +54,6 @@ end
 
 m = Mesh(example001())
 #save("example001.ply", m)
-#Descartes.visualize(m)
+
+using WGLMakie
+mesh(m)

@@ -19,4 +19,6 @@ end
 
 m = Mesh(beam())
 
+using WGLMakie
+mesh(m)
 #save("2d_beam.ply",m)
