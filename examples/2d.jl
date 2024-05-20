@@ -1,4 +1,4 @@
-using Descartes
+using Descartes: Circle, Square
 using GeometryBasics: Mesh
 
 function beam(beam_size = [50,10,10],
