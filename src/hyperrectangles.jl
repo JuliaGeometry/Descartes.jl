@@ -52,7 +52,7 @@ function HyperRectangle(csg::CSGIntersect)
 end
 
 function HyperRectangle(csg::CSGDiff)
-    diff(HyperRectangle(csg.left), HyperRectangle(csg.right))
+    HyperRectangle(csg.left)
 end
 
 function HyperRectangle(s::Shell)

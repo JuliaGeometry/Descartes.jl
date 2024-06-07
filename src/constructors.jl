@@ -76,12 +76,29 @@ end
 # diff
 function CSGDiff(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2}) where {N1, N2, T1, T2}
     N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
-    return CSGDiff{N1,T1, typeof(l), typeof(r)}(l,r)
+    return CSGDiff{N1,T1, typeof(l), typeof(r)}(l,[r])
 end
 
 function CSGDiff(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2}...) where {N1, N2, T1, T2}
     N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
-    return CSGDiff(l,CSGUnion(r[1], r[2:end]...))
+    return CSGDiff(l,[r...])
+end
+
+function CSGDiff(l::CSGDiff{N1}, r::AbstractPrimitive{N2,T2}...) where {N1, N2, T1, T2}
+    @show l
+    @show r, typeof(r)
+    N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
+    # This improves type stability if the CSG Type Tree is contructed by a loop
+    if eltype(l.right) == typeof(r[1])
+        push!(l.right, r[1])
+        if length(r) > 1
+            return CSGDiff(l, r[2:end]...)
+        else
+            return l
+        end
+    else
+        return CSGDiff(l, r)
+    end
 end
 
 CSGDiff(x::AbstractPrimitive) = x

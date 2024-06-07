@@ -49,7 +49,7 @@ end
 
 struct CSGUnion{N, T, L, R} <: AbstractCSGTree{N, T}
     left::L
-    right::R
+    right::Vector{R}
 end
 
 struct RadiusedCSGUnion{N, T, L, R} <: AbstractCSGTree{N, T}
@@ -67,12 +67,12 @@ The `left` and `right` fields represent the two CSG objects that are being subtr
 """
 struct CSGDiff{N,T,L,R} <: AbstractCSGTree{N,T}
     left::L
-    right::R
+    right::Vector{R}
 end
 
 struct CSGIntersect{N, T, L, R} <: AbstractCSGTree{N, T}
     left::L
-    right::R
+    right::Vector{R}
 end
 
 # Operations
