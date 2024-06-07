@@ -58,7 +58,14 @@ struct RadiusedCSGUnion{N, T, L, R} <: AbstractCSGTree{N, T}
     right::R
 end
 
-struct CSGDiff{N, T, L, R} <: AbstractCSGTree{N, T}
+"""
+    CSGDiff{N, T, L, R} <: AbstractCSGTree{N, T}
+
+A node in a Constructive Solid Geometry (CSG) tree representing the difference between two CSG objects.
+
+The `left` and `right` fields represent the two CSG objects that are being subtracted.
+"""
+struct CSGDiff{N,T,L,R} <: AbstractCSGTree{N,T}
     left::L
     right::R
 end
@@ -78,4 +85,17 @@ end
 struct LinearExtrude{N, T, P} <: AbstractPrimitive{3,T}
     primitive::P
     distance::T
+end
+
+struct TriangleWave{T}
+    period::T
+end
+
+"""
+    Grid{T}
+
+A simple grid structure with a `period` field of type `T`.
+"""
+struct Grid{T}
+    period::T
 end

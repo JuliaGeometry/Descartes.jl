@@ -242,3 +242,12 @@ function FRep(p::LinearExtrude,xyz::AbstractMatrix)
 
 end
 #----------------------------------
+
+function FRep(t::TriangleWave, v)
+    abs(mod(v, t.period) - t.period / 2)
+end
+
+
+function FRep(g::Grid, v)
+    minimum(FRep(TriangleWave(g.period), e) for e in v)
+end

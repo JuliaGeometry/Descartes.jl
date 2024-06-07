@@ -12,3 +12,6 @@ m = Mesh(u2)
 #Descartes.visualize(u2)
 
 save("radiused_union.ply",m)
+
+using WGLMakie
+mesh(m)
