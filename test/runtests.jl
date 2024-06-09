@@ -1,4 +1,4 @@
-using Descartes
+using Descartes: Sphere, Cuboid, Cylinder, CSGUnion, CSGIntersect, CSGDiff, MapContainer, Piping, FRep, Square, translate, rotate, Shell, RadiusedCSGUnion
 using StaticArrays
 using Test
 using Combinatorics

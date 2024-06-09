@@ -1,42 +1,32 @@
 # http://en.wikipedia.org/wiki/Function_representation
 #----------------------------------
 
-"""
- Overloading CoordinateTransformations.Translation for vectorized implementation.
-"""
-function (trans::Translation{V})(x::AbstractMatrix) where {V}
-    x .+ trans.translation
-end
-
-#function FRep(p::MapContainer{N,T,P}, v) where {N,T,P}
-#    FRep(p.primitive, p.inv(v))
-#end
-
-function FRep(p::MapContainer{N,T,P}, v) where {N,T,P}
-    FRep(p.primitive, p.inv)
+function FRep(p::MapContainer, v)
+    FRep(p.primitive, p.inv(v))
 end
 
 function FRep(u::CSGUnion, v)
-    v = FRep(u.left, v)
+    f = FRep(u.left, v)
     for p in u.right
-        v = min(v,FRep(p, v))
+        f = min(f, FRep(p, v))
     end
-    v
+    f
 end
 
 function FRep(u::CSGDiff, v)
-    v = FRep(u.left, v)
+    f = FRep(u.left, v)
     for p in u.right
-        v = max(v, -FRep(p, v))
+        f = max(f, -FRep(p, v))
     end
-    v
+    f
 end
 
 function FRep(u::CSGIntersect, v)
-    v = FRep(u.left, v)
+    f = FRep(u.left, v)
     for p in u.right
-        v = max.(v, FRep(p, v))
+        f = max(f, FRep(p, v))
     end
+    f
 end
 
 function FRep(p::Sphere,v)
@@ -120,7 +110,7 @@ function FRep(p::LinearExtrude, v)
     x = v[1]
     y = v[2]
     z = v[3]
-    r = FRep(p.primitive, (x,y))
+    r = FRep(p.primitive, SVector(x,y))
     max(max(-z,z-p.distance), r)
 end
 
