@@ -1,7 +1,8 @@
-using Descartes: Circle, Square
+using Revise
+using Descartes: Circle, Square, LinearExtrude, translate
 using GeometryBasics: Mesh
 
-function beam(beam_size = [50,10,10],
+function beam(;beam_size = [50,10,10],
               hole_ct = 5,
               hole_d = 3)
 
@@ -16,6 +17,11 @@ function beam(beam_size = [50,10,10],
     end
     LinearExtrude(c, beam_size[3])
 end
+
+beam(;hole_ct=3)
+beam(;hole_ct=5)
+
+@assert typeof(beam(;hole_ct=3)) == typeof(beam(;hole_ct=5))
 
 m = Mesh(beam())
 

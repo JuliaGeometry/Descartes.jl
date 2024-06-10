@@ -40,7 +40,11 @@ function HyperRectangle(m::MapContainer)
 end
 
 function HyperRectangle(csg::CSGUnion)
-    union(HyperRectangle(csg.left), HyperRectangle(csg.right))
+    h = HyperRectangle(csg.left)
+    for r in csg.right
+        union(h, HyperRectangle(r))
+    end
+    h
 end
 
 function HyperRectangle(csg::RadiusedCSGUnion)
@@ -48,11 +52,15 @@ function HyperRectangle(csg::RadiusedCSGUnion)
 end
 
 function HyperRectangle(csg::CSGIntersect)
-    intersect(HyperRectangle(csg.left), HyperRectangle(csg.right))
+    h = HyperRectangle(csg.left)
+    for r in csg.right
+        intersect(h, HyperRectangle(r))
+    end
+    h
 end
 
 function HyperRectangle(csg::CSGDiff)
-    diff(HyperRectangle(csg.left), HyperRectangle(csg.right))
+    HyperRectangle(csg.left)
 end
 
 function HyperRectangle(s::Shell)

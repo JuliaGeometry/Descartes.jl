@@ -1,6 +1,5 @@
 abstract type AbstractPrimitive{N, T} end # dimensionality, numeric type
-abstract type AbstractCSGTree{N,T} <: AbstractPrimitive{N, T} end
-abstract type AbstractOperation{N,T} <: AbstractPrimitive{N,T} end
+abstract type AbstractCSGSetOp{N,T} <: AbstractPrimitive{N, T} end
 
 # 2D Geometric Primitives
 
@@ -47,25 +46,32 @@ end
 # CSG
 # http://en.wikipedia.org/wiki/Constructive_solid_geometry
 
-struct CSGUnion{N, T, L, R} <: AbstractCSGTree{N, T}
+struct CSGUnion{N, T, L, R} <: AbstractCSGSetOp{N, T}
     left::L
-    right::R
+    right::Vector{R}
 end
 
-struct RadiusedCSGUnion{N, T, L, R} <: AbstractCSGTree{N, T}
+struct RadiusedCSGUnion{N, T, L, R} <: AbstractCSGSetOp{N, T}
     radius::T
     left::L
     right::R
 end
 
-struct CSGDiff{N, T, L, R} <: AbstractCSGTree{N, T}
+"""
+    CSGDiff{N, T, L, R} <: AbstractCSGSetOp{N, T}
+
+A node in a Constructive Solid Geometry (CSG) tree representing the difference between two CSG objects.
+
+The `left` and `right` fields represent the two CSG objects that are being subtracted.
+"""
+struct CSGDiff{N,T,L,R} <: AbstractCSGSetOp{N,T}
     left::L
-    right::R
+    right::Vector{R}
 end
 
-struct CSGIntersect{N, T, L, R} <: AbstractCSGTree{N, T}
+struct CSGIntersect{N, T, L, R} <: AbstractCSGSetOp{N, T}
     left::L
-    right::R
+    right::Vector{R}
 end
 
 # Operations
@@ -78,4 +84,17 @@ end
 struct LinearExtrude{N, T, P} <: AbstractPrimitive{3,T}
     primitive::P
     distance::T
+end
+
+struct TriangleWave{T}
+    period::T
+end
+
+"""
+    Grid{T}
+
+A simple grid structure with a `period` field of type `T`.
+"""
+struct Grid{T}
+    period::T
 end

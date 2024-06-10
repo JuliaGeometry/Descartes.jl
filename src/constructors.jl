@@ -41,25 +41,40 @@ function Piping(r, pts)
 end
 
 #
-#
 # CSG Operations
 #
-#
 
-# Union
-function CSGUnion(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2}) where {N1, N2, T1, T2}
-    N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
-    return CSGUnion{N1,T1, typeof(l), typeof(r)}(l,r)
+
+function (::Type{CSGOp})(l::AbstractPrimitive{N,T}, right::AbstractPrimitive...) where {N, T, CSGOp <: AbstractCSGSetOp}
+    for r in right
+        if dim(l) !== dim(r)
+            error("cannot create CSG between objects in R$N1 and R$N2")
+        end
+    end
+    # This improves type stability if the CSG Type Tree is contructed by a loop
+    if l isa AbstractCSGSetOp && eltype(l.right) == typeof(right[1])
+        push!(l.right, right[1])
+        if length(right) > 1
+            return CSGOp(l, right[2:end]...)
+        else
+            return l
+        end
+    else
+        return CSGOp(CSGOp{N, T, typeof(l), typeof(right[1])}(l, [right[1]]), right[2:end]...)
+    end
 end
 
-function CSGUnion(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2}...) where {N1, N2, T1, T2}
-    N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
-    return CSGUnion(l,CSGUnion(r[1], r[2:end]...))
+function (::Type{CSGOp})(x::AbstractPrimitive) where {CSGOp <: AbstractCSGSetOp}
+    x
 end
 
-CSGUnion(x::AbstractPrimitive) = x
-CSGUnion(::Nothing, x::AbstractPrimitive) = x
-CSGUnion(x::AbstractPrimitive, ::Nothing) = x
+function (::Type{CSGOp})(::Nothing, x::AbstractPrimitive) where {CSGOp <: AbstractCSGSetOp}
+    x
+end
+
+function (::Type{CSGOp})(x::AbstractPrimitive, ::Nothing) where {CSGOp <: AbstractCSGSetOp}
+    x
+end
 
 union(l::AbstractPrimitive, r::AbstractPrimitive...) = CSGUnion(l,r...)
 
@@ -73,21 +88,6 @@ function RadiusedCSGUnion(radius::Real, l::AbstractPrimitive{N1,T1}, r::Abstract
     return RadiusedCSGUnion{N1,T1, typeof(l), typeof(r)}(radius,l,r)
 end
 
-# diff
-function CSGDiff(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2}) where {N1, N2, T1, T2}
-    N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
-    return CSGDiff{N1,T1, typeof(l), typeof(r)}(l,r)
-end
-
-function CSGDiff(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2}...) where {N1, N2, T1, T2}
-    N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
-    return CSGDiff(l,CSGUnion(r[1], r[2:end]...))
-end
-
-CSGDiff(x::AbstractPrimitive) = x
-CSGDiff(::Nothing, x::AbstractPrimitive) = x
-CSGDiff(x::AbstractPrimitive, ::Nothing) = x
-
 diff(l::AbstractPrimitive, r::AbstractPrimitive...) = CSGDiff(l,r...)
 
 diff(x::AbstractPrimitive) = x
@@ -95,20 +95,6 @@ diff(::Nothing, x::AbstractPrimitive) = x
 diff(x::AbstractPrimitive, ::Nothing) = x
 
 # Intersect
-
-function CSGIntersect(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2}) where {N1, N2, T1, T2}
-    N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
-    return CSGIntersect{N1,T1, typeof(l), typeof(r)}(l,r)
-end
-
-function CSGIntersect(l::AbstractPrimitive{N1,T1}, r::AbstractPrimitive{N2,T2}...) where {N1, N2, T1, T2}
-    N1 == N2 || error("cannot create CSG between objects in R$N1 and R$N2")
-    return CSGIntersect(l,CSGIntersect(r[1], r[2:end]...))
-end
-
-CSGIntersect(x::AbstractPrimitive) = x
-CSGIntersect(::Nothing, x::AbstractPrimitive) = x
-CSGIntersect(x::AbstractPrimitive, ::Nothing) = x
 
 intersect(l::AbstractPrimitive, r::AbstractPrimitive...) = CSGIntersect(l,r...)
 

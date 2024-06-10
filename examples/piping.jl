@@ -1,4 +1,4 @@
-using Descartes
+using Descartes: Piping
 using GeometryBasics: Mesh
 
 p = Piping(1.0, [[0,0,0],
@@ -8,6 +8,9 @@ p = Piping(1.0, [[0,0,0],
                  [5,5,5]])
 
 m = Mesh(p)
+
+using WGLMakie
+mesh(m)
 
 #Descartes.visualize(m)
 
