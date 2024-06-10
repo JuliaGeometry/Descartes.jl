@@ -8,7 +8,7 @@
              "2d.jl"]
     for file in files
         @testset "$file" begin
-                include("$dir/$file")
+            include("$dir/$file")
         end
     end
 end
