@@ -20,7 +20,7 @@ translate([24,0,0]) {
 """
 
 
-using Descartes: Cuboid, Sphere
+using Descartes: Cuboid, Sphere, translate
 using GeometryBasics
 
 a = translate([-24,0,0])union(

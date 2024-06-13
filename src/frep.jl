@@ -121,3 +121,9 @@ end
 function FRep(g::Grid, v)
     minimum(FRep(TriangleWave(g.period), e) for e in v)
 end
+
+function FRep(p::PolarWarp, v)
+    mr = hypot(v...)
+    mt = atan(v[2], v[1])*p.w/2π
+    [FRep(p.primitive, mr), FRep(p.primitive, mt)]
+end

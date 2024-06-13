@@ -1,5 +1,5 @@
 using Revise
-using Descartes: Circle, Square, LinearExtrude, translate
+using Descartes: Circle, Square, LinearExtrude, translate, Grid
 using GeometryBasics: Mesh
 
 function beam(;beam_size = [50,10,10],
@@ -15,6 +15,7 @@ function beam(;beam_size = [50,10,10],
         h = translate([hole_interval*i, beam_size[2]/2])Circle(hole_d/2)
         c = diff(c, h)
     end
+    c = intersect(c, Grid(1))
     LinearExtrude(c, beam_size[3])
 end
 
@@ -26,5 +27,6 @@ beam(;hole_ct=5)
 m = Mesh(beam())
 
 using WGLMakie
+WGLMakie.activate!(resize_to=:body)
 mesh(m)
 #save("2d_beam.ply",m)

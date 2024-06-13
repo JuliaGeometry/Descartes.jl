@@ -95,6 +95,11 @@ end
 
 A simple grid structure with a `period` field of type `T`.
 """
-struct Grid{T}
+struct Grid{T} <: AbstractPrimitive{2, T}
     period::T
+end
+
+struct PolarWarp{T} <: AbstractPrimitive{2, T}
+    primitive
+    w::T
 end

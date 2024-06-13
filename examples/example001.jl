@@ -28,7 +28,7 @@ example001();
 
 """
 
-using Descartes: Cylinder, Sphere
+using Descartes: Cylinder, Sphere, rotate
 using GeometryBasics: Mesh
 
 function example001()
