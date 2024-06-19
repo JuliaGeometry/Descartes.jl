@@ -20,7 +20,7 @@ translate([24,0,0]) {
 """
 
 
-using Descartes: Cuboid, Sphere
+using Descartes: Cuboid, Sphere, translate
 using GeometryBasics
 
 a = translate([-24,0,0])union(
@@ -37,6 +37,7 @@ c = translate([24,0,0])diff(
 
 m = Mesh(a,b,c)
 @show typeof(m)
-using WGLMakie
 
-scene = WGLMakie.mesh(coordinates(m), faces(m); shading=true, color=:yellow)
+using WGLMakie
+WGLMakie.activate!(resize_to=:body)
+scene = WGLMakie.mesh(m; shading=true, color=:yellow)
