@@ -101,6 +101,10 @@ function intersect(h1::HyperRectangle, h2::HyperRectangle)
     HyperRectangle(m, mm - m)
 end
 
+function intersect(::Nothing, h1::HyperRectangle)
+    h1
+end
+
 function Base.intersect(h1::HyperRectangle, ::Nothing)
     h1
 end
