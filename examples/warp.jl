@@ -1,6 +1,7 @@
 # https://www.desmos.com/calculator/mcjscmo6fq
 
 using WGLMakie
+WGLMakie.activate!(resize_to=:body)
 #Plots.plotly()
 # Parameters (TODO: make const or propogate through functions for better performance)
 p = 1

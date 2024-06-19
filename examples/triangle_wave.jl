@@ -1,5 +1,5 @@
 using Revise
-using Descartes: Descartes, TriangleWave, FRep, Grid, PolarWarp
+using Descartes: Descartes, TriangleWave, FRep, Grid, PolarWarp, Cuboid
 using WGLMakie, Makie
 using CoordinateTransformations
 using StaticArrays
@@ -12,7 +12,7 @@ y = [FRep(t, e) for e in x]
 
 lines(x,y)
 
-g = Grid(1.0)
+g = Grid(Square([10, 10]), 1.0)
 
 x_vals = -10:0.1:10
 y_vals = -10:0.1:10

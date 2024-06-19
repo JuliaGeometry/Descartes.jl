@@ -1,4 +1,4 @@
-using Descartes
+using Descartes: rotate, Cuboid, Cylinder, Shell, translate, RadiusedCSGUnion
 using GeometryBasics: Mesh
 
 c2 = Cuboid([4,4.0,4])
@@ -9,9 +9,9 @@ u2 = diff(u, Cuboid([2,2,2]))
 
 m = Mesh(u2)
 
-#Descartes.visualize(u2)
 
-save("radiused_union.ply",m)
+#save("radiused_union.ply",m)
 
 using WGLMakie
+WGLMakie.activate!(resize_to=:body)
 mesh(m)
