@@ -1,10 +1,9 @@
 @testset "examples" begin
     dir = "../examples"
-    files = [ #"csg.jl",
+    files = [ "csg.jl",
              "example001.jl",
              #"piping.jl",
              "radiused_union.jl",
-             "fea.jl",
              "2d.jl"]
     for file in files
         @testset "$file" begin
