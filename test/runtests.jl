@@ -1,4 +1,4 @@
-using Descartes: Sphere, Cuboid, Cylinder, CSGUnion, CSGIntersect, CSGDiff, MapContainer, Piping, FRep, Square, Circle, translate, rotate, Shell, RadiusedCSGUnion, LinearExtrude
+using Descartes: Descartes, Sphere, Cuboid, Cylinder, CSGUnion, CSGIntersect, CSGDiff, MapContainer, Piping, FRep, Square, Circle, translate, rotate, Shell, RadiusedCSGUnion, LinearExtrude
 using StaticArrays
 using Test
 using Combinatorics
@@ -18,3 +18,9 @@ include("hyperrectangles.jl")
 include("meshes.jl")
 include("examples.jl")
 include("frep.jl")
+
+
+using Aqua
+@testset "Aqua" begin
+    Aqua.test_all(Descartes; ambiguities=false, piracies=false)
+end
