@@ -5,6 +5,7 @@ version = "0.1.0"
 
 [deps]
 CoordinateTransformations = "150eb455-5306-5404-9cee-2592286d6298"
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
 GeometryBasics = "5c1252a2-5f33-56bf-86c9-59e7332b4326"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Meshing = "e6723b4c-ebff-59f1-b4b7-d97aa5274f73"
@@ -12,27 +13,33 @@ Rotations = "6038ab10-8711-5258-84ad-4b1120ba62dc"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
 [compat]
+Aqua = "0.8"
 CoordinateTransformations = "0.6"
+Combinatorics = "1"
+FileIO = "1"
+ForwardDiff = "0.10"
 GeometryBasics = "0.4"
+LinearAlgebra = "1"
 Meshing = "0.5"
+MeshIO = "0.4"
+Revise = "3"
 Rotations = "1"
 StaticArrays = "1"
+Test = "1"
+WGLMakie = "0.10"
 julia = "1.6"
 
 [extras]
-BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
 Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
-Descartes = "ea4ead7c-22ac-5e77-afc5-cd927cdc0b20"
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
 GeometryBasics = "5c1252a2-5f33-56bf-86c9-59e7332b4326"
-HCubature = "19dc6840-f33b-545b-b366-655c7e3ffd49"
 MeshIO = "7269a6da-0436-5bbc-96c2-40638cbb6118"
 Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
-QuadGK = "1fd47b50-473d-5c70-9696-f719f8f3bcdc"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 WGLMakie = "276b4fcb-3e11-5398-bf8b-a0c2d153d008"
 
 [targets]
-test = ["Test", "Revise", "Combinatorics", "StaticArrays", "MeshIO", "FileIO", "WGLMakie", "BenchmarkTools"]
+test = ["Test", "Aqua", "Revise", "StaticArrays", "MeshIO", "FileIO", "WGLMakie", "Combinatorics"]

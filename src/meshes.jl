@@ -1,7 +1,7 @@
-function (::Type{MT})(primitives::AbstractPrimitive{3, T}...;
+function (::Type{MT})(primitives::AbstractPrimitive...;
                                          samples=(128,128,128),
                                          algorithm=MarchingCubes(),
-                                         adf=false) where {T, MT <: AbstractMesh}
+                                         adf=false) where {MT <: AbstractMesh}
 
     f(x) = FRep(primitives[1], x)
     meshes = Vector{MT}(undef, length(primitives))

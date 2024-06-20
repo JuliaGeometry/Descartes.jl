@@ -12,6 +12,8 @@ using StaticArrays,
       CoordinateTransformations,
       Rotations
 
+using ForwardDiff: gradient, jacobian
+
 include("types.jl")
 include("utils.jl")
 include("constructors.jl")

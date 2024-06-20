@@ -115,15 +115,25 @@ function FRep(p::LinearExtrude, v)
 end
 
 function FRep(t::TriangleWave, v)
-    abs(mod(v, t.period) - t.period / 2)
+    abs(mod(v[t.direction], t.period) - t.period / 2)
 end
 
-function FRep(g::Grid, v)
-    minimum(FRep(TriangleWave(g.period), e) for e in v)
-end
 
 function FRep(p::PolarWarp, v)
-    mr = hypot(v...)
-    mt = atan(v[2], v[1])*p.w/2π
-    [FRep(p.primitive, mr), FRep(p.primitive, mt)]
+    inner_warp(p.primitive, p.w, v)
+end
+
+function inner_warp(p::AbstractPrimitive, w, v)
+    T(a) = SVector(hypot(a...), atan(a[2], a[1])*w/2π) #cartesian to polar
+    hr = gradient(a -> FRep(p, T(a)), SVector(v...))
+    mr, mt = T(v)
+    FRep(p, SVector(mr, mt))/norm(hr)
+end
+
+function inner_warp(p::CSGUnion, w, v)
+    m = inner_warp(p.left, w, v)
+    for r in p.right
+        m = min(m, inner_warp(r, w, v))
+    end
+    m
 end

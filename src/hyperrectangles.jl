@@ -59,10 +59,6 @@ function HyperRectangle(csg::CSGIntersect)
     h
 end
 
-function HyperRectangle(g::Grid{T}) where T
-    HyperRectangle(Vec(-100,100), Vec(200,200))
-end
-
 function HyperRectangle(csg::CSGDiff)
     HyperRectangle(csg.left)
 end
@@ -99,6 +95,10 @@ function intersect(h1::HyperRectangle, h2::HyperRectangle)
     m = max.(minimum(h1), minimum(h2))
     mm = min.(maximum(h1), maximum(h2))
     HyperRectangle(m, mm - m)
+end
+
+function intersect(::Nothing, h1::HyperRectangle)
+    h1
 end
 
 function Base.intersect(h1::HyperRectangle, ::Nothing)

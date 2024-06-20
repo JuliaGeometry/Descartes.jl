@@ -86,17 +86,9 @@ struct LinearExtrude{N, T, P} <: AbstractPrimitive{3,T}
     distance::T
 end
 
-struct TriangleWave{T}
+struct TriangleWave{T} <: AbstractPrimitive{2, T}
     period::T
-end
-
-"""
-    Grid{T}
-
-A simple grid structure with a `period` field of type `T`.
-"""
-struct Grid{T} <: AbstractPrimitive{2, T}
-    period::T
+    direction::Int
 end
 
 struct PolarWarp{T} <: AbstractPrimitive{2, T}
