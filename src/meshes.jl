@@ -1,13 +1,19 @@
-function (::Type{MT})(primitives::AbstractPrimitive...;
+function GeometryBasics.mesh(primitives::AbstractPrimitive...;
                                          samples=(128,128,128),
-                                         algorithm=MarchingCubes(),
-                                         adf=false) where {MT <: AbstractMesh}
+                                         algorithm=MarchingCubes())
 
     f(x) = FRep(primitives[1], x)
-    meshes = Vector{MT}(undef, length(primitives))
+    meshes = Vector{Mesh}(undef, length(primitives))
     for i = 1:length(primitives)
         b = HyperRectangle(primitives[i])
-        meshes[i] = MT(x -> FRep(primitives[i], x), b, samples, algorithm)
+        rng = range.(b.origin, b.origin.+ b.widths)
+        @show rng
+        sdf(v) = FRep(primitives[i], SVector(v...))
+        vts, fcs = isosurface(sdf, algorithm, rng[1], rng[2], rng[3]; samples)
+        _points = map(GeometryBasics.Point, vts)
+        _faces = map(v -> GeometryBasics.TriangleFace{GeometryBasics.OneIndex}(v), fcs)
+        normals = map(v -> GeometryBasics.Vec3f(gradient(sdf, SVector(v...))...), vts) 
+        meshes[i] = GeometryBasics.Mesh(GeometryBasics.meta(_points; normals=normals), _faces)
     end
     return merge(meshes)
 end
