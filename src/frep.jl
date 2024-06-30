@@ -29,6 +29,12 @@ function FRep(u::CSGIntersect, v)
     f
 end
 
+_gyroid(v) = cos(v[1])*sin(v[2])+cos(v[2])*sin(v[3])+cos(v[3])*sin(v[1])
+
+function FRep(p::Gyroid, v)
+    max(_gyroid(v)-p.width,-_gyroid(v)-p.width)
+end
+
 function FRep(p::Sphere,v)
     norm(v) - p.radius
 end
@@ -124,10 +130,10 @@ function FRep(p::PolarWarp, v)
 end
 
 function inner_warp(p::AbstractPrimitive, w, v)
-    T(a) = SVector(hypot(a...), atan(a[2], a[1])*w/2π) #cartesian to polar
+    T(a) = SVector(hypot(a[1], a[2]), atan(a[2], a[1])*w/2π, a[3]) #cartesian to polar
     hr = gradient(a -> FRep(p, T(a)), SVector(v...))
     mr, mt = T(v)
-    FRep(p, SVector(mr, mt))/norm(hr)
+    FRep(p, SVector(mr, mt, v[3]))/norm(hr)
 end
 
 function inner_warp(p::CSGUnion, w, v)

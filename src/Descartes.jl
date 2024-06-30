@@ -1,10 +1,12 @@
 module Descartes
 
 import Base: *, union, diff, intersect
+using GeometryBasics: GeometryBasics
 import GeometryBasics: AbstractMesh,
                        HyperRectangle,
                        Vec,
                        Mesh
+
 
 using StaticArrays,
       Meshing,
