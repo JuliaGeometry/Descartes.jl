@@ -9,3 +9,4 @@ Manifest*
 
 *.swp
 *.DS_Store
+.vscode/*
