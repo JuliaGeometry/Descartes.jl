@@ -4,7 +4,7 @@ using Descartes
 makedocs(
     sitename = "Descartes",
     format = Documenter.HTML(),
-    modules = [Descartes],
+    #modules = [Descartes],
     authors = "Steve Kelly",
     pages = ["Primitives" => "primitives.md",
              "Design" => "design.md"]
