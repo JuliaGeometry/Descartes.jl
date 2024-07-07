@@ -3,17 +3,35 @@ function GeometryBasics.mesh(primitives::AbstractPrimitive...;
                                          algorithm=MarchingCubes())
 
     f(x) = FRep(primitives[1], x)
-    meshes = Vector{Mesh}(undef, length(primitives))
+    meshes = Vector{GeometryBasics.Mesh}(undef, length(primitives))
+    sdf_arr = Array{Float64}(undef, samples)
+
     for i = 1:length(primitives)
         b = HyperRectangle(primitives[i])
         rng = range.(b.origin, b.origin.+ b.widths)
-        @show rng
+
+        @info "Sampling SDF"
+        xp = LinRange(first(rng[1]), last(rng[1]), samples[1])
+        yp = LinRange(first(rng[2]), last(rng[2]), samples[2])
+        zp = LinRange(first(rng[3]), last(rng[3]), samples[3])        
         sdf(v) = FRep(primitives[i], SVector(v...))
-        vts, fcs = isosurface(sdf, algorithm, rng[1], rng[2], rng[3]; samples)
-        _points = map(GeometryBasics.Point, vts)
-        _faces = map(v -> GeometryBasics.TriangleFace{GeometryBasics.OneIndex}(v), fcs)
-        normals = map(v -> GeometryBasics.Vec3f(gradient(sdf, SVector(v...))...), vts) 
-        meshes[i] = GeometryBasics.Mesh(GeometryBasics.meta(_points; normals=normals), _faces)
+        sdf_normal(v) = gradient(sdf, SVector(v...))
+
+        @time Threads.@threads for x in eachindex(xp)
+            for y in eachindex(yp), z in eachindex(zp)
+                sdf_arr[x,y,z] = sdf((xp[x],yp[y],zp[z]))
+            end
+        end
+
+        @info "generating mesh"
+        @time vts, fcs = isosurface(sdf_arr, algorithm, rng[1], rng[2], rng[3])
+        @info "remapping data types"
+        @time _points = map(GeometryBasics.Point, vts)
+        @time _faces = map(v -> GeometryBasics.TriangleFace{GeometryBasics.OneIndex}(v), fcs)
+        @info "evaluating normals"
+        @time normals = map(v -> GeometryBasics.Vec3f(sdf_normal(v)), vts) 
+        @info "remapping mesh"
+        @time meshes[i] = GeometryBasics.Mesh(GeometryBasics.meta(_points; normals=normals), _faces)
     end
     return merge(meshes)
 end

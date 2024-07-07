@@ -1,5 +1,5 @@
 using Revise
-using Descartes: Descartes, TriangleWave, FRep, Grid, PolarWarp, Cuboid, union
+using Descartes: Descartes, TriangleWave, FRep, PolarWarp, Cuboid, union
 using WGLMakie
 using CoordinateTransformations
 using StaticArrays

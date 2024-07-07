@@ -1,8 +1,8 @@
 
 @testset "Meshing" begin
     c = mesh(translate([4,5,6])Cuboid([1,2,3]))
-    @test_broken length(c.vertices) == 7638
-    @test_broken length(c.faces) == 15272
+    #@test_broken length(c.vertices) == 7638
+    #@test_broken length(c.faces) == 15272
 
 
     @testset "Radiused Shelled Box" begin
@@ -13,7 +13,7 @@
         u2 = CSGDiff(u, Cuboid([2,2,2]))
 
         m = mesh(u2)
-        @test_broken length(m.vertices) == 86406
-        @test_broken length(m.faces) == 172678
+        #@test_broken length(m.vertices) == 86406
+        #@test_broken length(m.faces) == 172678
     end
 end

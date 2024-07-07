@@ -5,7 +5,7 @@ using GeometryBasics: GeometryBasics
 import GeometryBasics: AbstractMesh,
                        HyperRectangle,
                        Vec,
-                       Mesh
+                       mesh
 
 
 using StaticArrays,
