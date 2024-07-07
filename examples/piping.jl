@@ -1,5 +1,5 @@
 using Descartes: Piping
-using GeometryBasics: Mesh
+using GeometryBasics: mesh
 
 p = Piping(1.0, [[0,0,0],
                  [10,0,0],
@@ -7,7 +7,7 @@ p = Piping(1.0, [[0,0,0],
                  [10,10,10],
                  [5,5,5]])
 
-m = Mesh(p)
+m = mesh(p)
 
 using WGLMakie
 mesh(m)
