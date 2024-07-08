@@ -18,6 +18,10 @@ function HyperRectangle(p::Circle{T}) where {T}
     HyperRectangle{2,T}(Vec(-p.radius,-p.radius), Vec(p.radius*2,p.radius*2))
 end
 
+function HyperRectangle(p::PolarWarp)
+    nothing
+end
+
 function HyperRectangle(p::Piping{T}) where {T}
     maxx, maxy, maxz = typemin(Float64), typemin(Float64), typemin(Float64)
     minx, miny, minz = typemax(Float64), typemax(Float64), typemax(Float64)
@@ -42,7 +46,7 @@ end
 function HyperRectangle(csg::CSGUnion)
     h = HyperRectangle(csg.left)
     for r in csg.right
-        union(h, HyperRectangle(r))
+        h = union(h, HyperRectangle(r))
     end
     h
 end
@@ -54,7 +58,7 @@ end
 function HyperRectangle(csg::CSGIntersect)
     h = HyperRectangle(csg.left)
     for r in csg.right
-        intersect(h, HyperRectangle(r))
+        h = intersect(h, HyperRectangle(r))
     end
     h
 end
@@ -91,16 +95,20 @@ diff(h1::HyperRectangle, h2::HyperRectangle) = h1
 """
 Perform a intersection between two HyperRectangles.
 """
-function intersect(h1::HyperRectangle, h2::HyperRectangle)
+function Base.intersect(h1::HyperRectangle, h2::HyperRectangle)
     m = max.(minimum(h1), minimum(h2))
     mm = min.(maximum(h1), maximum(h2))
     HyperRectangle(m, mm - m)
 end
 
-function intersect(::Nothing, h1::HyperRectangle)
+function Base.intersect(::Nothing, h1::HyperRectangle)
     h1
 end
 
 function Base.intersect(h1::HyperRectangle, ::Nothing)
     h1
+end
+
+function HyperRectangle(g::Gyroid)
+    nothing
 end

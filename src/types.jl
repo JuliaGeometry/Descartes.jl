@@ -91,7 +91,12 @@ struct TriangleWave{T} <: AbstractPrimitive{2, T}
     direction::Int
 end
 
-struct PolarWarp{T} <: AbstractPrimitive{2, T}
-    primitive
+struct PolarWarp{T, P} <: AbstractPrimitive{3, T}
+    primitive::P
     w::T
+end
+
+struct Gyroid{T} <: AbstractPrimitive{3,T}
+    #TODO period, etc.
+    width::T
 end

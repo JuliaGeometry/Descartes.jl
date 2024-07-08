@@ -1,5 +1,5 @@
 using Revise
-using Descartes: Descartes, TriangleWave, FRep, Grid, PolarWarp, Cuboid, union
+using Descartes: Descartes, TriangleWave, FRep, PolarWarp, Cuboid, union
 using WGLMakie
 using CoordinateTransformations
 using StaticArrays
@@ -19,7 +19,7 @@ y2 = [FRep(t2, e) for e in x]
 
 lines(x,y2)
 
-g = union(TriangleWave(1., 1), TriangleWave(2., 2))
+g = union(TriangleWave(5., 1), TriangleWave(1., 2))
 
 x_vals = -10:0.1:10
 y_vals = -10:0.1:10
@@ -33,7 +33,7 @@ heatmap(x_vals, y_vals, z, alpha=0.6)
 FRep(g, (x, y))
 
 # Apply warp
-g_polar = PolarWarp(g, 8)
+g_polar = PolarWarp(g, 2)
 
 #FRep(g_polar, (x, y))
 
